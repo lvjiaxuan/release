@@ -27,6 +27,7 @@
     "@types/semver": "^7.3.13",
     "@types/shelljs": "^0.8.11",
     "@types/yargs": "^17.0.14",
+    "changelogithub": "^0.12.6",
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "conventional-recommended-bump": "^6.1.0",
     "esbuild": "^0.15.15",
