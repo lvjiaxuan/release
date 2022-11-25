@@ -21,7 +21,7 @@ describe('nx @lvjiaxuan/release --bump', () => {
   it('getBumpType test', async () => {
     shell.exec('git commit --allow-empty -m "fix: A breaking fix commit."')
     const snap_1 = await bump({ bump: [] })
-    expect(snap_1).toMatchInlineSnapshot()
+    expect(JSON.stringify(snap_1)).toMatchInlineSnapshot('"{"bumpVersion":"1.0.2","packagesResolvePaths":["package.json","packages/bar/package.json","packages/foo/package.json"]}"')
 
     // shell.exec('git commit --allow-empty -m "feat: A feature commit."')
     // const {
