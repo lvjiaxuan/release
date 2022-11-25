@@ -1,11 +1,5 @@
 import { type Options } from './config'
 import { bump } from './options/bump'
 
-export default (options: Options) => {
-  // ...
-  console.log(options)
-
-  void bump(options)
-
-}
+export default (options: Options) => void bump(options)
 

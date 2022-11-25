@@ -26,7 +26,7 @@ nx @lvjiaxuan/release
 
 ### Bump
 
-Bump version which comes from [changelogen](https://github.dev/unjs/changelogen).
+Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
 
 ```bash
 # Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.

@@ -2,17 +2,18 @@
   "name": "lvr",
   "version": "0.0.1",
   "private": false,
-  "description": "My own release script.",
+  "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
   "license": "MIT",
-  "main": "index.js",
+  "main": "./dist/index.cjs",
+  "module": "./dist/index.js",
   "type": "module",
   "bin": {
-    "lvr": "./bin/cli.mjs"
+    "lvr": "./bin/cli.js"
   },
   "scripts": {
     "lint:fix": "eslint . --fix",
-    "build": "nx tsup src/cli.ts --clean --format=esm --minify",
+    "build": "nx tsup src/cli.ts src/index.ts --clean --format=esm,cjs --minify",
     "jiti": "jiti src/cli.ts",
     "test": "jest"
   },

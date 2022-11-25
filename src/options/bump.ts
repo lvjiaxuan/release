@@ -78,7 +78,11 @@ export const bump = async (options: Options) => {
     bumpVersion = semver.inc(currentVersion, await getBumpType())!
   }
 
-  await writePkgsVersion(packages, bumpVersion)
+
+  if (process.env.NODE_ENV !== 'test') {
+    await writePkgsVersion(packages, bumpVersion)
+  }
+
 
   return {
     bumpVersion,

@@ -150,7 +150,8 @@ export default {
   // ],
 
   // An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-  testPathIgnorePatterns: [ '/node_modules/', '/dist/', '/types/' ],
+  testPathIgnorePatterns: [ '/node_modules/', '/dist/', '/types/', '/.git/' ],
+  watchPathIgnorePatterns: [ '/.git/' ],
 
   // The regexp pattern or array of patterns that Jest uses to detect test files
   // testRegex: [],

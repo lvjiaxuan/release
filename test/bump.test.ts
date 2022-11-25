@@ -1,7 +1,7 @@
-import { getBumpType } from './../src'
+import { bump } from './../src'
 import shell from 'shelljs'
 
-describe.skip('nx @lvjiaxuan/release --bump', () => {
+describe('nx @lvjiaxuan/release --bump', () => {
 
   // Mock git metadata which respects Conventional Commits
   beforeAll(() => {
@@ -20,16 +20,22 @@ describe.skip('nx @lvjiaxuan/release --bump', () => {
 
   it('getBumpType test', async () => {
     shell.exec('git commit --allow-empty -m "fix: A breaking fix commit."')
-    const version_1 = await getBumpType()
-    expect(version_1).toBe('patch')
+    const snap_1 = await bump({ bump: [] })
+    expect(snap_1).toMatchInlineSnapshot()
 
-    shell.exec('git commit --allow-empty -m "feat: A feature commit."')
-    const version_2 = await getBumpType()
-    expect(version_2).toBe('minor')
+    // shell.exec('git commit --allow-empty -m "feat: A feature commit."')
+    // const {
+    //   bumpVersion: bumpVersion_2,
+    //   packagesResolvePaths: packagesResolvePaths_2,
+    // } = await bump({ bump: [] })
+    // expect({ bumpVersion_2, packagesResolvePaths_2 }).toMatchInlineSnapshot()
 
-    shell.exec('git commit --allow-empty -m "chore!: A chore with breaking commit."')
-    const version_3 = await getBumpType()
-    expect(version_3).toBe('major')
+    // shell.exec('git commit --allow-empty -m "chore!: A chore with breaking commit."')
+    // const {
+    //   bumpVersion: bumpVersion_3,
+    //   packagesResolvePaths: packagesResolvePaths_3,
+    // } = await bump({ bump: [] })
+    // expect({ bumpVersion_3, packagesResolvePaths_3 }).toMatchInlineSnapshot()
   }, 10000)
 
 })
