@@ -1,6 +1,6 @@
 import pc from 'picocolors'
 import type { CliOptions, MarkdownOptions } from './index'
-import { bump, changelog } from './index'
+import { bump, changelog, execCMD } from './index'
 import { promises as fsp } from 'node:fs'
 
 async function addYml(isAdd: boolean) {
@@ -38,11 +38,50 @@ jobs:
   console.log('.github/workflows/changelogithub.yml added.')
 }
 
+async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) {
+
+  const { dry } = options
+
+  console.log()
+  if (!options.noCommit) {
+    options.commit = options.commit!.replace('{v}', 'v' + bumpVersion)
+    console.log('git add .')
+    !dry && await execCMD('git', [ 'add', '.' ])
+    console.log(`git commit -m ${ options.commit }`)
+    !dry && await execCMD('git', [ 'commit', '-m', options.commit ])
+
+    if (!options.noTag) {
+      const tagName = options.tag ? options.tag : 'v' + bumpVersion
+      console.log(`git tag ${ tagName }`)
+      !dry && await execCMD('git', [ 'tag', tagName ])
+    } else {
+      console.log('No Tag.')
+    }
+
+    if (!options.noPush) {
+      if (options.push !== 'tag') {
+        console.log('git push')
+        !dry && await execCMD('git', [ 'push' ])
+      }
+
+      if (options.push !== 'branch') {
+        console.log('git push --tags')
+        !dry && await execCMD('git', [ 'push', '--tags' ])
+      }
+    } else {
+      console.log('No Push.')
+    }
+  } else {
+    console.log('No Commit/Tag/Push.')
+  }
+}
+
 
 export default async (options: CliOptions & MarkdownOptions) => {
   try {
-
     options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
+
+    console.log(JSON.stringify(options, null, 2))
 
     const [ bumpResult, changelogResult ] = await Promise.all([
       bump(options), // CliOptions
@@ -50,14 +89,18 @@ export default async (options: CliOptions & MarkdownOptions) => {
       addYml(options.yml!),
     ])
 
-    if (!options.noBump) {
+    if (bumpResult) {
       console.log()
       console.log('Bump result: ', JSON.stringify(bumpResult, null, 2))
     }
 
-    if (!options.noChangelog) {
+    if (changelogResult) {
       console.log()
-      console.log(changelogResult?.md.slice(12, 50))
+      console.log('Changelog result: ', changelogResult.md.slice(12, 39))
+    }
+
+    if (bumpResult) {
+      await doGitJobs(options, bumpResult.bumpVersion)
     }
 
     process.exit(0)

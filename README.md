@@ -78,14 +78,37 @@ lvr -c=v1.0.1...v2.1.3
 # For 2 latest tag.
 lvr -c=2
 
-# Generate for specified tag.
+# Generate for a specified tag.
 lvr -c=v0.0.2
 
 # Generatec for latest tag only, which its notes is used to Release notes.
 lvr -c=latest
 ```
 
-### GitHub Release
+### Commit/Tag/Push
+
+Enable `--commit` `--tag` `--push` by default. (opt-out by `--no-push`, etc.)
+
+```bash
+# Use `Release {v}` as commit message by default.
+# Customizable. The `{v}` would be replaced by `bumpVersion`.
+lvr --commit="R: {v}"
+
+# Use `bumpVersion` by default.
+# Customizable.
+lvr --tag=BatMan
+
+# Push current branch and new tag by default.
+lvr --push
+
+# Push current branch only.
+lvr --push=branch
+
+# Push new tag only
+lvr --push=tag
+```
+
+### GitHub Release by *GitHub Action*
 
 Using [antfu/changelogithub](https://github.com/antfu/changelogithub).
 
@@ -137,7 +160,7 @@ export type CliOptions = {
   changelog?: string
 
   /**
-   * Disable generate Changelog
+   * Disable generate Changelog.
    *
    * @default false
    */
@@ -149,6 +172,33 @@ export type CliOptions = {
    * @default false
    */
   yml?: boolean
+
+  /**
+   * Use `Release {v}` as commit message by default.
+   * Customizable. The `{v}` would be replaced by `bumpVersion`.
+   *
+   * @default "Release {v}"
+   */
+  commit?: string
+
+  /**
+   * Use `bumpVersion` by default.
+   * Customizable.
+   *
+   * @default `bumpVersion`
+   */
+  tag?: string
+
+  /**
+   * Push current branch and new tag.
+   *
+   * @default ''
+   */
+  push?: '' | 'tag' | 'branch'
+
+  noCommit?: boolean
+  noTag?: boolean
+  noPush?: boolean
 }
 
 export type MarkdownOptions = {

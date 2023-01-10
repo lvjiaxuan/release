@@ -52,6 +52,33 @@ export type CliOptions = {
    * @default false
    */
   yml?: boolean
+
+  /**
+   * Use `Release {v}` as commit message by default.
+   * Customizable. The `{v}` would be replaced by `bumpVersion`.
+   *
+   * @default "Release {v}"
+   */
+  commit?: string
+
+  /**
+   * Use `bumpVersion` by default.
+   * Customizable.
+   *
+   * @default `bumpVersion`
+   */
+  tag?: string
+
+  /**
+   * Push current branch and new tag.
+   *
+   * @default ''
+   */
+  push?: '' | 'tag' | 'branch'
+
+  noCommit?: boolean
+  noTag?: boolean
+  noPush?: boolean
 }
 
 export type MarkdownOptions = {

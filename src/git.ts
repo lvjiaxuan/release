@@ -1,7 +1,7 @@
 import { type GitCommit, type GitCommitAuthor, type RawGitCommit, type Reference, getGitDiff } from 'changelogen'
 import pc from 'picocolors'
 
-const execCMD = async (cmd: string, args: string[]) => {
+export const execCMD = async (cmd: string, args: string[]) => {
   const { execaSync } = await import('execa')
   return execaSync(cmd, args)
 }
