@@ -81,8 +81,6 @@ export default async (options: CliOptions & MarkdownOptions) => {
   try {
     options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
 
-    console.log(JSON.stringify(options, null, 2))
-
     const [ bumpResult, changelogResult ] = await Promise.all([
       bump(options), // CliOptions
       changelog(options), // CliOptions & MarkdownOptions
@@ -96,7 +94,7 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     if (changelogResult) {
       console.log()
-      console.log('Changelog result: ', changelogResult.md.slice(12, 39))
+      console.log('Changelog result: ', changelogResult.md.slice(12, 41))
     }
 
     if (bumpResult) {

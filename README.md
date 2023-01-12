@@ -41,7 +41,7 @@ Powered by [conventional-recommended-bump](https://github.com/conventional-chang
 
 CLI Arguments:
 - `--bump`, `-b` in short.
-- `--bump-prompt`, `-p` in short.
+- `--bumpPrompt`, `-p` in short.
 
 ```bash
 # Bump root package.json version. If project is detected as a monorepo, it would synchronize root version to other package.json in subdirectories.
@@ -87,7 +87,7 @@ lvr -c=latest
 
 ### Commit/Tag/Push
 
-Enable `--commit` `--tag` `--push` by default. (opt-out by `--no-push`, etc.)
+Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.

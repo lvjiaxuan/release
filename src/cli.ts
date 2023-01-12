@@ -27,14 +27,14 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'empty means all pkgs.',
     group: 'Bump options:',
   })
-  .option('bump-prompt', {
+  .option('bumpPrompt', {
     alias: 'p',
     array: true,
     description: 'Prompt version.',
     defaultDescription: 'empty means all pkgs.',
     group: 'Bump options:',
   })
-  .option('no-bump', {
+  .option('noBump', {
     alias: 'nb',
     boolean: true,
     default: false,
@@ -49,7 +49,7 @@ void yargs(hideBin(process.argv))
     description: 'Generate Changelog.',
     group: 'Changelog options:',
   })
-  .option('no-changelog', {
+  .option('noChangelog', {
     alias: 'nc',
     boolean: true,
     default: false,
@@ -78,15 +78,15 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'empty means both branch and tag',
     description: 'Push branch and tag which are optional.',
   })
-  .option('no-commit', {
+  .option('noCommit', {
     boolean: true,
     default: false,
   })
-  .option('no-tag', {
+  .option('noTag', {
     boolean: true,
     default: false,
   })
-  .option('no-push', {
+  .option('noPush', {
     boolean: true,
     default: false,
   })
