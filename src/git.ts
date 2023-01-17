@@ -50,8 +50,8 @@ export const getLastGitTag = async (delta = 0) => {
 
 export const getFirstGitCommit = async () => (await execCMD('git', [ 'rev-list', '--max-parents=0', 'HEAD' ])).stdout.trim()
 
-export const getCurrentGitBranch = async () =>
-  (await execCMD('git', [ 'tag', '--points-at', 'HEAD' ]) || await execCMD('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ])).stdout.trim()
+export const getCurrentGitBranch = async () => (await execCMD('git', [ 'tag', '--points-at', 'HEAD' ])).stdout.trim()
+    || (await execCMD('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ])).stdout.trim()
 
 export const getCommitFormatTime = async (commit: string) => {
   const time = await execCMD('git', [ 'log', '-1', '--format=%ai', commit ])

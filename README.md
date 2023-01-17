@@ -1,18 +1,18 @@
 # lvr
 
-<p align=center>Help me better to bump and generate changelog before github release in CI.</p>
+<p align=center>Help me better to bump and generate changelog.</p>
 
 ## Say sth.
 
 In my release flow, there are some steps such as:
-1. (optional) Do a test firstly.
+1. (optional) Do a test .
 2. Bump.
-3. Generate Changelog.
+3. Generate changelog.
 3. Commit / Tag.
 4. Push origin.
-5. Trigger CI jobs like github release(always) and publish stuff(depends).
+5. Trigger CI jobs like github release or publish stuff which are depended.
 
-Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite way, rather than requesting a github release or GitHub REST API stuff directly😂.
+Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.
 
 ## Usage
 
@@ -118,6 +118,8 @@ lvr --yml
 ```
 
 ## Configuration
+
+Check [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 

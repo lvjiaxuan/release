@@ -38,7 +38,7 @@ jobs:
   console.log('.github/workflows/changelogithub.yml added.')
 }
 
-async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) {
+async function execGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) {
 
   const { dry } = options
 
@@ -55,7 +55,7 @@ async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | '
       console.log(`git tag ${ tagName }`)
       !dry && await execCMD('git', [ 'tag', tagName ])
     } else {
-      console.log('No Tag.')
+      console.log('Skip Tag.')
     }
 
     if (!options.noPush) {
@@ -69,10 +69,10 @@ async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | '
         !dry && await execCMD('git', [ 'push', '--tags' ])
       }
     } else {
-      console.log('No Push.')
+      console.log('Skip Push.')
     }
   } else {
-    console.log('No Commit/Tag/Push.')
+    console.log('Skip Commit/Tag/Push.')
   }
 }
 
@@ -89,17 +89,19 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     if (bumpResult) {
       console.log()
-      console.log('Bump result: ', JSON.stringify(bumpResult, null, 2))
+      console.log('Bump result:', JSON.stringify(bumpResult, null, 2))
     }
 
     if (changelogResult) {
       console.log()
-      console.log('Changelog result: ', changelogResult.md.slice(12, 41))
+      console.log('Changelog result:', changelogResult.md.slice(13, 41))
     }
 
     if (bumpResult) {
-      await doGitJobs(options, bumpResult.bumpVersion)
+      await execGitJobs(options, bumpResult.bumpVersion)
     }
+
+    options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
 
     process.exit(0)
   } catch (error) {

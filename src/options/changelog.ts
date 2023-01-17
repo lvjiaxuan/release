@@ -1,6 +1,6 @@
 import pc from 'picocolors'
 import { promises as fsp } from 'fs'
-import { getLastGitTag, getParsedCommits, getTags } from '@/git'
+import { getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from '@/git'
 import type { CliOptions, MarkdownOptions } from '@/config'
 import { generateMarkdown } from '@/markdown'
 import semver from 'semver'
@@ -51,8 +51,10 @@ export const changelog = async (options: CliOptions & MarkdownOptions) => {
   md += `Tag range \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
 
   if (options.github) {
-    md += `[All GitHub Releases]( https://github.com/${ options.github }/releases)`
+    md += ` [All GitHub Releases]( https://github.com/${ options.github }/releases)`
   }
+
+  // fromToList.unshift([ 'v2.0.7', await getCurrentGitBranch() ])
 
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
