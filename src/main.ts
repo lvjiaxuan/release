@@ -81,11 +81,24 @@ export default async (options: CliOptions & MarkdownOptions) => {
   try {
     options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
 
-    const [ bumpResult, changelogResult ] = await Promise.all([
-      bump(options), // CliOptions
-      changelog(options), // CliOptions & MarkdownOptions
-      addYml(options.yml!),
-    ])
+    let bumpResult: Awaited<ReturnType<typeof bump>>
+    let changelogResult: Awaited<ReturnType<typeof changelog>>
+    const jobs = []
+    if (Object.hasOwn(options, 'bump') && !Object.hasOwn(options, 'changelog')) {
+      // bump only. CliOptions
+      console.log('Only bump.')
+      bumpResult = await bump(options)
+    } else if (!Object.hasOwn(options, 'bump') && Object.hasOwn(options, 'changelog')) {
+      // changelog only. CliOptions & MarkdownOptions
+      console.log('Only changelog.')
+      changelogResult = await changelog(options)
+    } else {
+      // both
+      options.bump = []
+      options.changelog = ''
+      bumpResult = await bump(options)
+      changelogResult = await changelog(options, bumpResult?.bumpVersion)
+    }
 
     if (bumpResult) {
       console.log()
@@ -93,15 +106,18 @@ export default async (options: CliOptions & MarkdownOptions) => {
     }
 
     if (changelogResult) {
+      // bumpResult && tag
       console.log()
-      console.log('Changelog result:', changelogResult.md.slice(13, 41))
+      console.log('Changelog result:', changelogResult.md.slice(13, 42))
     }
 
     if (bumpResult) {
-      await execGitJobs(options, bumpResult.bumpVersion)
+      // await execGitJobs(options, bumpResult.bumpVersion)
     }
 
-    options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
+    options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
+
+    console.log('\noptions: ', options)
 
     process.exit(0)
   } catch (error) {

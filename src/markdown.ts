@@ -145,14 +145,15 @@ export async function generateMarkdown(options: MarkdownOptions & {
   parsedCommits: ResolvedCommits
   unParsedCommits: RawGitCommit[]
   from: string
-  to: string
+  to: string,
+  titleMap: { [x: string]: string }
 }) {
   const { parsedCommits: commits, unParsedCommits, from, to } = options
 
   const lines: string[] = [
     '',
     '',
-    `## ${ to } <sub>(${ await getCommitFormatTime(to) })</sub>`,
+    `## ${ options.titleMap[to] ? options.titleMap[to] : to } <sub>(${ await getCommitFormatTime(to) })</sub>`,
   ]
 
   if (options.github) {

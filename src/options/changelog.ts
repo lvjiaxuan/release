@@ -18,22 +18,25 @@ const resolveFormToList = async (tags?: string[]) => {
   return list.reverse()
 }
 
-export const changelog = async (options: CliOptions & MarkdownOptions) => {
+export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: string) => {
   if (options.noChangelog) {
     console.log(`\nGenerate changelog ${ pc.bold(pc.yellow('skip')) }.`)
     return
   }
 
+  let appendNewTag = true
   let fromToList: string[][] = []
   if (options.changelog === '') {
     fromToList = await resolveFormToList()
   } else if (options.changelog!.includes('...')) {
+    appendNewTag = false
     const from2to = options.changelog!.split('...') as [ string, string ]
     fromToList = await resolveFormToList(from2to)
   } else if (Number.isInteger(-options.changelog!)) {
     const tags = await getTags()
     fromToList = await resolveFormToList(tags.slice(-options.changelog! - 1))
   } else if (semver.valid(options.changelog)) {
+    appendNewTag = false
     const tags = await getTags()
     if (!tags.includes(options.changelog!)) {
       throw new Error(`Inexistent tag ${ pc.bgYellow(`${ options.changelog! }`) }`)
@@ -48,13 +51,17 @@ export const changelog = async (options: CliOptions & MarkdownOptions) => {
   }
 
   let md = '# Changelog\n\n'
-  md += `Tag range \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
+  md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
 
   if (options.github) {
-    md += ` [All GitHub Releases]( https://github.com/${ options.github }/releases)`
+    md += ` [All GitHub Releases](https://github.com/${ options.github }/releases)`
   }
 
-  // fromToList.unshift([ 'v2.0.7', await getCurrentGitBranch() ])
+  let currentGitBranch = ''
+  if (appendNewTag && newTag) {
+    currentGitBranch = await getCurrentGitBranch()
+    fromToList.unshift([ fromToList[0][1], currentGitBranch ])
+  }
 
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
@@ -73,6 +80,7 @@ export const changelog = async (options: CliOptions & MarkdownOptions) => {
       unParsedCommits,
       from,
       to,
+      titleMap: { [currentGitBranch]: `v${ newTag! }` },
     })
   }
   /* eslint-enable no-await-in-loop */

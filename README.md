@@ -20,7 +20,7 @@ Network IO is not my expectation, so this tool is meant to bump and generate cha
 
 Quick trial:
 ```bash
-# as well as `nx lvr --bump --changelog`
+# as well as `nx lvr --bump --changelog --commit --tag --push``
 nx lvr
 ```
 
@@ -35,7 +35,7 @@ More CLI options:
 lvr -h
 ```
 
-### Bump
+### Bump only
 
 Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
 
@@ -60,9 +60,9 @@ lvr -p=pkg-a pkg-b
 > Root's **package.json** is always included, which means it would keep latest version among its packages.
 
 > TODO
-> - [ ] **Pre-Release** powered by [semver](https://github.com/npm/node-semver).
+> - [ ] **Pre-id** powered by [semver](https://github.com/npm/node-semver).
 
-### Changelog
+### Changelog only
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 
@@ -85,7 +85,7 @@ lvr -c=v0.0.2
 lvr -c=latest
 ```
 
-### Commit/Tag/Push
+### Commit / Tag / Push
 
 Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
 

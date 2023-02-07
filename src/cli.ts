@@ -9,7 +9,7 @@ void yargs(hideBin(process.argv))
   .scriptName('lvr')
   .usage( // `[ ... ]` means optional / `< ... >` means required
     '$0 [options]',
-    '`lvr` equals to `lvr -b -c`',
+    '`lvr` equals to `lvr -b -c --commit --tag --push`',
     args => args as Argv<CliOptions>,
     async args => main(await resolveConfig(args)),
   )
@@ -22,7 +22,6 @@ void yargs(hideBin(process.argv))
   .option('bump', {
     alias: 'b',
     array: true,
-    default: [],
     description: 'Bump version.',
     defaultDescription: 'empty means all pkgs.',
     group: 'Bump options:',
@@ -37,14 +36,12 @@ void yargs(hideBin(process.argv))
   .option('noBump', {
     alias: 'nb',
     boolean: true,
-    default: false,
     description: 'Disable bump.',
     group: 'Bump options:',
   })
   .option('changelog', {
     alias: 'c',
     string: true,
-    default: '',
     defaultDescription: 'empty means all tags.',
     description: 'Generate Changelog.',
     group: 'Changelog options:',
@@ -52,13 +49,11 @@ void yargs(hideBin(process.argv))
   .option('noChangelog', {
     alias: 'nc',
     boolean: true,
-    default: false,
     description: 'Disable generate Changelog.',
     group: 'Changelog options:',
   })
   .option('yml', {
     boolean: true,
-    default: false,
     description: 'Add .github/workflows/changelogithub.yml.',
   })
   .option('commit', {
@@ -70,7 +65,7 @@ void yargs(hideBin(process.argv))
     string: true,
     default: '',
     defaultDescription: '`bumpVersion`',
-    description: 'Tag name.'
+    description: 'Tag name.',
   })
   .option('push', {
     string: true,
@@ -78,18 +73,9 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'empty means both branch and tag',
     description: 'Push branch and tag which are optional.',
   })
-  .option('noCommit', {
-    boolean: true,
-    default: false,
-  })
-  .option('noTag', {
-    boolean: true,
-    default: false,
-  })
-  .option('noPush', {
-    boolean: true,
-    default: false,
-  })
+  .option('noCommit', { boolean: true })
+  .option('noTag', { boolean: true })
+  .option('noPush', { boolean: true })
   .help()
   .alias('h', 'help')
   .version(version)
