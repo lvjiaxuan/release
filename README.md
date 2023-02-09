@@ -4,7 +4,7 @@
 
 ## Say sth.
 
-In my release flow, there are some steps such as:
+In my release flow, there are some steps in order such as:
 1. (optional) Do a test .
 2. Bump.
 3. Generate changelog.
@@ -50,14 +50,14 @@ lvr -b
 # In a detected Monorepo, it would bump specified package.json version in subdirectories.
 lvr -b=pkg-a pkg-b
 
-# Prompt version rather than basing on git metadata.
+# Prompt version rather than basing on git metadata by default.
 lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
 > **Note**
 > 
-> Root's **package.json** is always included, which means it would keep latest version among its packages.
+> Root's **package.json** is always included, which means it would keep latest version from its packages.
 
 > TODO
 > - [ ] **Pre-id** powered by [semver](https://github.com/npm/node-semver).
@@ -70,15 +70,16 @@ CLI Arguments:
 - `--changelog`, `-c` in short.
 
 ```bash
-# Generate changelog for all tag.
+# Generate changelog for all tags.
 lvr -c # lvr --changelog
 
-# Generate changelog for tag range.
+# For a tag range.
 lvr -c=v1.0.1...v2.1.3
+
 # For 2 latest tag.
 lvr -c=2
 
-# Generate for a specified tag.
+# For a specified tag.
 lvr -c=v0.0.2
 
 # Generatec for latest tag only, which its notes is used to Release notes.
@@ -91,7 +92,7 @@ Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.
-# Customizable. The `{v}` would be replaced by `bumpVersion`.
+# The `{v}` would be replaced by `bumpVersion`.
 lvr --commit="R: {v}"
 
 # Use `bumpVersion` by default.
@@ -122,131 +123,6 @@ lvr --yml
 Check [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
-
-<!-- eslint-skip -->
-```ts
-export type CliOptions = {
-  /**
-   * Dry run.
-   *
-   * @default false
-   */
-  dry?: boolean
-
-  /**
-   * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
-   *
-   * @default []
-   */
-  bump?: string[]
-
-  /**
-   * Prompt version rather than basing on git metadata.
-   *
-   * @default []
-   */
-  bumpPrompt?: string[]
-
-  /**
-   * Disable bump
-   *
-   * @default false
-   */
-  noBump?: boolean
-
-  /**
-   * Generate changelog for all tag.
-   *
-   * @default ''
-   */
-  changelog?: string
-
-  /**
-   * Disable generate Changelog.
-   *
-   * @default false
-   */
-  noChangelog?: boolean
-
-  /**
-   * Add .github/workflows/changelogithub.yml
-   *
-   * @default false
-   */
-  yml?: boolean
-
-  /**
-   * Use `Release {v}` as commit message by default.
-   * Customizable. The `{v}` would be replaced by `bumpVersion`.
-   *
-   * @default "Release {v}"
-   */
-  commit?: string
-
-  /**
-   * Use `bumpVersion` by default.
-   * Customizable.
-   *
-   * @default `bumpVersion`
-   */
-  tag?: string
-
-  /**
-   * Push current branch and new tag.
-   *
-   * @default ''
-   */
-  push?: '' | 'tag' | 'branch'
-
-  noCommit?: boolean
-  noTag?: boolean
-  noPush?: boolean
-}
-
-export type MarkdownOptions = {
-  /**
-   * **Optional**
-   * PAT is used for requesting author GitHub Link for more detailed changelog.
-   */
-  token?: string
-
-  /**
-   * **Optional**
-   * Resolved by `git config --get remote.origin.url'` automatically for more detailed changelog.
-   */
-  github?: string
-
-  types: Record<string, {
-    title: string
-  }>
-
-  titles: {
-    breakingChanges: string
-    unParsedChanges: string
-  }
-}
-
-export const MarkdownConfigDefaults: MarkdownOptions = {
-  types: {
-    feat: { title: '✨ Enhancements' },
-    perf: { title: '⚡️ Performance' },
-    fix: { title: '🐛 Fixes' },
-    // refactor: { title: '♻️ Refactors' },
-    docs: { title: '📝 Documentation' },
-    // build: { title: '📦️ Build' },
-    // chore: { title: '🧱 Chore' },
-    // test: { title: '✅ Tests' },
-    // style: { title: '🎨 Styles' },
-    // ci: { title: '🤖 CI' },
-    // release: { title: '🔖 Release' },
-    // WIP: { title: '🚧 Work in Progress' },
-  },
-  titles: {
-    breakingChanges: '🚨 Breaking Changes',
-    unParsedChanges: '💥 Un-Parsed Changes',
-  },
-}
-```
 
 ## Credit
 

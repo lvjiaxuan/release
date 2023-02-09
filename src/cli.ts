@@ -54,6 +54,7 @@ void yargs(hideBin(process.argv))
   })
   .option('yml', {
     boolean: true,
+    default: false,
     description: 'Add .github/workflows/changelogithub.yml.',
   })
   .option('commit', {

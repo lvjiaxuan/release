@@ -83,14 +83,18 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     let bumpResult: Awaited<ReturnType<typeof bump>>
     let changelogResult: Awaited<ReturnType<typeof changelog>>
-    const jobs = []
+
+    if (options.yml) {
+      void addYml(true)
+    }
+
     if (Object.hasOwn(options, 'bump') && !Object.hasOwn(options, 'changelog')) {
       // bump only. CliOptions
-      console.log('Only bump.')
+      console.log('Bump only.')
       bumpResult = await bump(options)
     } else if (!Object.hasOwn(options, 'bump') && Object.hasOwn(options, 'changelog')) {
       // changelog only. CliOptions & MarkdownOptions
-      console.log('Only changelog.')
+      console.log('Changelog only.')
       changelogResult = await changelog(options)
     } else {
       // both
@@ -101,23 +105,19 @@ export default async (options: CliOptions & MarkdownOptions) => {
     }
 
     if (bumpResult) {
-      console.log()
-      console.log('Bump result:', JSON.stringify(bumpResult, null, 2))
+      console.log('\nBump result:', JSON.stringify(bumpResult, null, 2))
     }
 
     if (changelogResult) {
       // bumpResult && tag
-      console.log()
-      console.log('Changelog result:', changelogResult.md.slice(13, 42))
+      console.log('\nChangelog result:', changelogResult.md.slice(13, 42))
     }
 
     if (bumpResult) {
-      // await execGitJobs(options, bumpResult.bumpVersion)
+      await execGitJobs(options, bumpResult.bumpVersion)
     }
 
     options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
-
-    console.log('\noptions: ', options)
 
     process.exit(0)
   } catch (error) {

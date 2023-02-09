@@ -48,6 +48,8 @@ export const getLastGitTag = async (delta = 0) => {
   return tags[tags.length + delta - 1]
 }
 
+export const findTag = async (tag: string) => (await execCMD('git', [ 'tag', '-l', tag ])).stdout.trim()
+
 export const getFirstGitCommit = async () => (await execCMD('git', [ 'rev-list', '--max-parents=0', 'HEAD' ])).stdout.trim()
 
 export const getCurrentGitBranch = async () => (await execCMD('git', [ 'tag', '--points-at', 'HEAD' ])).stdout.trim()
