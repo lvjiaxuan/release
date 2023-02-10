@@ -71,7 +71,9 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
   console.log(fromToList)
 
   let md = '# Changelog\n\n'
-  md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
+  if (fromToList.length > 1) {
+    md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
+  }
 
   if (options.github) {
     md += ` [All GitHub Releases](https://github.com/${ options.github }/releases)`
