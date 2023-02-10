@@ -16,7 +16,7 @@ export const getTags = (() => {
         // eslint-disable-next-line require-atomic-updates
         cache = (await execCMD('git', [ '--no-pager', 'tag', '-l', '--sort=creatordate' ])).stdout.trim().split('\n')
       }
-      return cache
+      return cache.filter(Boolean)
     }
   }
 

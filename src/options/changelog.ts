@@ -1,8 +1,8 @@
 import pc from 'picocolors'
 import { promises as fsp } from 'fs'
-import { findTag, getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from '@/git'
-import type { CliOptions, MarkdownOptions } from '@/config'
-import { generateMarkdown } from '@/markdown'
+import { getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from './../git'
+import type { CliOptions, MarkdownOptions } from './../config'
+import { generateMarkdown } from './../markdown'
 import semver from 'semver'
 import { resolveAuthors } from 'changelogithub'
 
@@ -10,12 +10,18 @@ const resolveFormToList = async (tags?: string[]) => {
   const list: string[][] = []
   if (!tags) {
     tags = await getTags()
-    list.unshift([ '', tags[0] ])
+    tags[0] && list.unshift([ '', tags[0] ])
   }
   for (let i = 0, n = tags.length; i < n - 1; i++) {
     list.push([ tags[i], tags[i + 1] ])
   }
   return list.reverse()
+}
+
+const verifyTags = async (tags: string[][], ignore: string) => {
+  const existTags = await getTags()
+  const flatTags = tags.flat().filter(tag => tag && tag !== ignore)
+  return flatTags.every(tag => existTags.includes(tag))
 }
 
 export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: string) => {
@@ -48,26 +54,27 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
   } else if (semver.valid(options.changelog)) {
     // For a specified tag.
     appendNewTag = false
-    const tags = await getTags()
-    if (!tags.includes(options.changelog!)) {
-      throw new Error(`Inexistent tag ${ pc.bgYellow(`${ options.changelog! }`) }`)
-    }
     fromToList = [ [ '', options.changelog! ] ]
-  } else {
-    throw new Error('No idea how to generate changelog!')
   }
+
+  let currentGitBranch = ''
+  if (appendNewTag && newTag) {
+    currentGitBranch = await getCurrentGitBranch()
+    fromToList.unshift([ fromToList?.[0]?.[1] ?? '', currentGitBranch ])
+  }
+
+  if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
+    console.log(`\n${ pc.red('Illegal tags') } to generate changelog ${ pc.bold(pc.yellow('skip')) }.`)
+    return
+  }
+
+  console.log(fromToList)
 
   let md = '# Changelog\n\n'
   md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
 
   if (options.github) {
     md += ` [All GitHub Releases](https://github.com/${ options.github }/releases)`
-  }
-
-  let currentGitBranch = ''
-  if (appendNewTag && newTag) {
-    currentGitBranch = await getCurrentGitBranch()
-    fromToList.unshift([ fromToList[0][1], currentGitBranch ])
   }
 
   /* eslint-disable no-await-in-loop */

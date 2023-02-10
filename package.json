@@ -1,6 +1,6 @@
 {
   "name": "lvr",
-  "version": "0.0.1-alpha.0",
+  "version": "0.1.0",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
@@ -15,9 +15,9 @@
     "lint:fix": "eslint . --fix",
     "dev": "nr build --watch",
     "build": "nx tsup src/cli.ts --target=node16 --clean --format=cjs",
-    "jiti": "jiti src/cli.ts",
     "test": "nx cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "link": "nr build && pnpm link --global"
+    "link": "nr build && pnpm link --global",
+    "lvr": "jiti src/cli.ts"
   },
   "devDependencies": {
     "@antfu/utils": "^0.7.2",

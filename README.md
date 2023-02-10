@@ -126,5 +126,5 @@ Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) f
 
 ## Credit
 
-- https://github.com/unjs/changelogen
-- https://github.com/antfu/changelogithub
+- [changelogen](https://github.com/unjs/changelogen)
+- [changelogithub](https://github.com/antfu/changelogithub)

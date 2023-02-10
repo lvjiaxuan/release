@@ -121,9 +121,9 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     process.exit(0)
   } catch (error) {
-    console.log(`\n${ pc.bgRed('ERROR!') } Please check it.\n`)
-    console.log(error)
     console.log('\noptions: ', options)
+    console.log(error)
+    console.log(`\n${ pc.bgRed('ERROR!') } Please check it.\n`)
     process.exit(1)
   }
 }
