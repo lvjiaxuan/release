@@ -128,3 +128,10 @@ Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) f
 
 - [changelogen](https://github.com/unjs/changelogen)
 - [changelogithub](https://github.com/antfu/changelogithub)
+
+---
+
+# TODO
+
+- [ ] Do a onfirm at final.
+- [ ] Beautify terminal output.
