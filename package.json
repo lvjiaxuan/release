@@ -5,8 +5,7 @@
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
   "license": "MIT",
-  "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "main": "./dist/cli.cjs",
   "type": "commonjs",
   "bin": {
     "lvr": "./bin/cli.mjs"
