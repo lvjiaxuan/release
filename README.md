@@ -135,3 +135,4 @@ Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) f
 
 - [ ] Do a confirm before acting.
 - [ ] Beautify terminal output.
+- [ ] Pre-Release  id.

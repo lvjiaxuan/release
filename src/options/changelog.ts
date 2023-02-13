@@ -64,22 +64,24 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
-    console.log(`\n${ pc.red('Illegal tags') } to generate changelog ${ pc.bold(pc.yellow('skip')) }.`)
+    console.log(`\n${ pc.bold(pc.yellow('Skip')) }. ${ pc.red('Illegal tags') } to generate changelog.`)
     return
   }
 
   let md = '# Changelog\n\n'
   if (fromToList.length > 1) {
     md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
+  } else if (fromToList.length === 1) {
+    md += `Tag \`${ newTag! }\`.`
   }
 
   if (options.github) {
-    md += ` [All GitHub Releases](https://github.com/${ options.github }/releases)`
+    md += ` [All GitHub Releases](https://github.com/${ options.github }/releases).`
   }
 
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
-    const { parsedCommits, unParsedCommits } = await getParsedCommits(from, to)
+    const parsedCommits = await getParsedCommits(from, to)
 
     if (options.token) {
       await resolveAuthors(parsedCommits, {
@@ -91,7 +93,6 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
     md += await generateMarkdown({
       ...options,
       parsedCommits,
-      unParsedCommits,
       from,
       to,
       titleMap: { [currentGitBranch]: `v${ newTag! }` },

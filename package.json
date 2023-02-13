@@ -1,11 +1,14 @@
 {
   "name": "lvr",
-  "version": "0.0.1",
+  "version": "0.7.0",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
   "license": "MIT",
-  "files": ["bin", "dist"],
+  "files": [
+    "bin",
+    "dist"
+  ],
   "type": "commonjs",
   "main": "./dist/cli.cjs",
   "bin": {

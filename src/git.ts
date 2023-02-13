@@ -68,19 +68,14 @@ export const getParsedCommits = async (from: string, to: string) => {
 
   const rawCommits = await getGitDiff(from, to)
 
-  const unParsedCommits: RawGitCommit[] = []
   const parsedCommits = rawCommits.reduce((preValue, commit) => {
 
     const match = commit.message.match(ConventionalCommitRegex)
-    if (!match) {
-      unParsedCommits.push(commit)
-      return preValue
-    }
 
-    const type = match.groups!.type
-    const scope = match.groups?.scope || ''
-    const isBreaking = Boolean(match.groups?.breaking)
-    let description = match.groups!.description
+    const type = match?.groups!.type ?? '__UnParsed__'
+    const scope = match?.groups?.scope ?? ''
+    const isBreaking = Boolean(match?.groups?.breaking ?? false)
+    let description = match?.groups!.description ?? commit.message
 
     // Extract references from message
     const references: Reference[] = []
@@ -101,8 +96,8 @@ export const getParsedCommits = async (from: string, to: string) => {
     const authors: GitCommitAuthor[] = [ commit.author ]
     for (const match of commit.body.matchAll(CoAuthoredByRegex)) {
       authors.push({
-        name: (match.groups?.name || '').trim(),
-        email: (match.groups?.email || '').trim(),
+        name: (match.groups?.name ?? '').trim(),
+        email: (match.groups?.email ?? '').trim(),
       })
     }
 
@@ -118,8 +113,5 @@ export const getParsedCommits = async (from: string, to: string) => {
     return preValue
   }, [] as GitCommit[])
 
-  return {
-    parsedCommits,
-    unParsedCommits,
-  }
+  return parsedCommits
 }

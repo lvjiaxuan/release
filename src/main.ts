@@ -114,8 +114,8 @@ export default async (options: CliOptions & MarkdownOptions) => {
       console.log('\nChangelog result:', changelogResult.md.slice(13, 42))
     }
 
-    if (bumpResult) {
-      await execGitJobs(options, bumpResult.bumpVersion)
+    if (!Object.hasOwn(options, 'bump') && !Object.hasOwn(options, 'changelog')) {
+      // await execGitJobs(options, bumpResult!.bumpVersion)
     }
 
     options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))

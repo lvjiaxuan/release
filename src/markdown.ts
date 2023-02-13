@@ -66,6 +66,7 @@ function formatLine(commit: ResolvedCommits[number], options: MarkdownOptions) {
         : commit.authors?.map(i => `**${ i.name }**`),
     ),
   ])?.trim()
+
   if (authors) {
     authors = `by ${ authors }`
   }
@@ -118,23 +119,6 @@ function formatSection(commits: ResolvedCommits, sectionName: string, options: M
   return lines
 }
 
-function formatUnParsedSection(commits: RawGitCommit[], options: MarkdownOptions) {
-  if (!commits.length)
-    return []
-
-  const lines: string[] = [
-    '',
-    `### &nbsp;&nbsp;&nbsp;${ options.titles.unParsedChanges }`,
-    '',
-  ]
-
-  lines.push(
-    ...commits.reverse().map(commit => `- ${ commit.message }`),
-  )
-
-  return lines
-}
-
 type ResolvedCommits = (GitCommit & { resolvedAuthors?: {
   commits: string[]
   login?: string
@@ -143,12 +127,11 @@ type ResolvedCommits = (GitCommit & { resolvedAuthors?: {
 }[] })[]
 export async function generateMarkdown(options: MarkdownOptions & {
   parsedCommits: ResolvedCommits
-  unParsedCommits: RawGitCommit[]
   from: string
   to: string,
   titleMap: { [x: string]: string }
 }) {
-  const { parsedCommits: commits, unParsedCommits, from, to } = options
+  const { parsedCommits: commits, from, to } = options
 
   const lines: string[] = [
     '',
@@ -173,10 +156,6 @@ export async function generateMarkdown(options: MarkdownOptions & {
       ...formatSection(items, options.types[type].title, options),
     )
   }
-
-  lines.push(
-    ...formatUnParsedSection(unParsedCommits, options),
-  )
 
   return lines.join('\n').trimEnd()
 }

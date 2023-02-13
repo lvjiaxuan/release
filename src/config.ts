@@ -89,7 +89,6 @@ export type MarkdownOptions = {
   }>
   titles: {
     breakingChanges: string
-    unParsedChanges: string
   }
 }
 
@@ -107,11 +106,9 @@ export const MarkdownConfigDefaults: MarkdownOptions = {
     // ci: { title: '🤖 CI' },
     // release: { title: '🔖 Release' },
     // WIP: { title: '🚧 Work in Progress' },
+    __UnParsed__: { title: '💥 Un-Parsed Changes' },
   },
-  titles: {
-    breakingChanges: '🚨 Breaking Changes',
-    unParsedChanges: '💥 Un-Parsed Changes',
-  },
+  titles: { breakingChanges: '🚨 Breaking Changes' },
 }
 
 
