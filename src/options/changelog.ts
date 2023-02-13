@@ -68,8 +68,6 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
     return
   }
 
-  console.log(fromToList)
-
   let md = '# Changelog\n\n'
   if (fromToList.length > 1) {
     md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
