@@ -59,9 +59,6 @@ lvr -p=pkg-a pkg-b
 > 
 > Root's **package.json** is always included, which means it would keep latest version from its packages.
 
-> TODO
-> - [ ] **Pre-id** powered by [semver](https://github.com/npm/node-semver).
-
 ### Changelog only
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
