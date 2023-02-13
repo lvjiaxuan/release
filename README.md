@@ -124,7 +124,7 @@ Check [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
-## Credit
+## Credits
 
 - [changelogen](https://github.com/unjs/changelogen)
 - [changelogithub](https://github.com/antfu/changelogithub)
@@ -133,5 +133,5 @@ Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) f
 
 # TODO
 
-- [ ] Do a onfirm at final.
+- [ ] Do a confirm before acting.
 - [ ] Beautify terminal output.
