@@ -86,6 +86,7 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     if (options.yml) {
       void addYml(true)
+      return
     }
 
     if (Object.hasOwn(options, 'bump') && !Object.hasOwn(options, 'changelog')) {
