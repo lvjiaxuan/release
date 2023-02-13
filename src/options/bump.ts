@@ -3,7 +3,7 @@ import fg from 'fast-glob'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
-import type { CliOptions } from '@/config'
+import type { CliOptions } from './../config'
 import { promises as fsp } from 'node:fs'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType

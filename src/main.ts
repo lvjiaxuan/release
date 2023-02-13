@@ -38,7 +38,7 @@ jobs:
   console.log('.github/workflows/changelogithub.yml added.')
 }
 
-async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) {
+async function execGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) {
 
   const { dry } = options
 
@@ -55,7 +55,7 @@ async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | '
       console.log(`git tag ${ tagName }`)
       !dry && await execCMD('git', [ 'tag', tagName ])
     } else {
-      console.log('No Tag.')
+      console.log('Skip Tag.')
     }
 
     if (!options.noPush) {
@@ -69,10 +69,10 @@ async function doGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | '
         !dry && await execCMD('git', [ 'push', '--tags' ])
       }
     } else {
-      console.log('No Push.')
+      console.log('Skip Push.')
     }
   } else {
-    console.log('No Commit/Tag/Push.')
+    console.log('Skip Commit/Tag/Push.')
   }
 }
 
@@ -81,31 +81,52 @@ export default async (options: CliOptions & MarkdownOptions) => {
   try {
     options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
 
-    const [ bumpResult, changelogResult ] = await Promise.all([
-      bump(options), // CliOptions
-      changelog(options), // CliOptions & MarkdownOptions
-      addYml(options.yml!),
-    ])
+    let bumpResult: Awaited<ReturnType<typeof bump>>
+    let changelogResult: Awaited<ReturnType<typeof changelog>>
+
+    if (options.yml) {
+      void addYml(true)
+      return
+    }
+
+    let isExecGitJobs = false
+    if (Object.hasOwn(options, 'bump') && !Object.hasOwn(options, 'changelog')) {
+      // bump only. CliOptions
+      console.log('Bump only.')
+      bumpResult = await bump(options)
+    } else if (!Object.hasOwn(options, 'bump') && Object.hasOwn(options, 'changelog')) {
+      // changelog only. CliOptions & MarkdownOptions
+      console.log('Changelog only.')
+      changelogResult = await changelog(options)
+    } else {
+      // both
+      isExecGitJobs = true
+      options.bump = []
+      options.changelog = ''
+      bumpResult = await bump(options)
+      changelogResult = await changelog(options, bumpResult?.bumpVersion)
+    }
 
     if (bumpResult) {
-      console.log()
-      console.log('Bump result: ', JSON.stringify(bumpResult, null, 2))
+      console.log('\nBump result:', JSON.stringify(bumpResult, null, 2))
     }
 
     if (changelogResult) {
-      console.log()
-      console.log('Changelog result: ', changelogResult.md.slice(12, 41))
+      // bumpResult && tag
+      console.log('\nChangelog result:', changelogResult.md.slice(13, 42))
     }
 
-    if (bumpResult) {
-      await doGitJobs(options, bumpResult.bumpVersion)
+    if (isExecGitJobs) {
+      await execGitJobs(options, bumpResult!.bumpVersion)
     }
+
+    options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
 
     process.exit(0)
   } catch (error) {
-    console.log(`\n${ pc.bgRed('ERROR!') } Please check it.\n`)
-    console.log(error)
     console.log('\noptions: ', options)
+    console.log(error)
+    console.log(`\n${ pc.bgRed('ERROR!') } Please check it.\n`)
     process.exit(1)
   }
 }

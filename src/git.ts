@@ -16,7 +16,7 @@ export const getTags = (() => {
         // eslint-disable-next-line require-atomic-updates
         cache = (await execCMD('git', [ '--no-pager', 'tag', '-l', '--sort=creatordate' ])).stdout.trim().split('\n')
       }
-      return cache
+      return cache.filter(Boolean)
     }
   }
 
@@ -48,10 +48,12 @@ export const getLastGitTag = async (delta = 0) => {
   return tags[tags.length + delta - 1]
 }
 
+export const findTag = async (tag: string) => (await execCMD('git', [ 'tag', '-l', tag ])).stdout.trim()
+
 export const getFirstGitCommit = async () => (await execCMD('git', [ 'rev-list', '--max-parents=0', 'HEAD' ])).stdout.trim()
 
-export const getCurrentGitBranch = async () =>
-  (await execCMD('git', [ 'tag', '--points-at', 'HEAD' ]) || await execCMD('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ])).stdout.trim()
+export const getCurrentGitBranch = async () => (await execCMD('git', [ 'tag', '--points-at', 'HEAD' ])).stdout.trim()
+    || (await execCMD('git', [ 'rev-parse', '--abbrev-ref', 'HEAD' ])).stdout.trim()
 
 export const getCommitFormatTime = async (commit: string) => {
   const time = await execCMD('git', [ 'log', '-1', '--format=%ai', commit ])
@@ -66,19 +68,14 @@ export const getParsedCommits = async (from: string, to: string) => {
 
   const rawCommits = await getGitDiff(from, to)
 
-  const unParsedCommits: RawGitCommit[] = []
   const parsedCommits = rawCommits.reduce((preValue, commit) => {
 
     const match = commit.message.match(ConventionalCommitRegex)
-    if (!match) {
-      unParsedCommits.push(commit)
-      return preValue
-    }
 
-    const type = match.groups!.type
-    const scope = match.groups?.scope || ''
-    const isBreaking = Boolean(match.groups?.breaking)
-    let description = match.groups!.description
+    const type = match?.groups!.type ?? '__UnParsed__'
+    const scope = match?.groups?.scope ?? ''
+    const isBreaking = Boolean(match?.groups?.breaking ?? false)
+    let description = match?.groups!.description ?? commit.message
 
     // Extract references from message
     const references: Reference[] = []
@@ -99,8 +96,8 @@ export const getParsedCommits = async (from: string, to: string) => {
     const authors: GitCommitAuthor[] = [ commit.author ]
     for (const match of commit.body.matchAll(CoAuthoredByRegex)) {
       authors.push({
-        name: (match.groups?.name || '').trim(),
-        email: (match.groups?.email || '').trim(),
+        name: (match.groups?.name ?? '').trim(),
+        email: (match.groups?.email ?? '').trim(),
       })
     }
 
@@ -116,8 +113,5 @@ export const getParsedCommits = async (from: string, to: string) => {
     return preValue
   }, [] as GitCommit[])
 
-  return {
-    parsedCommits,
-    unParsedCommits,
-  }
+  return parsedCommits
 }

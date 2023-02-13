@@ -13,36 +13,26 @@ export type CliOptions = {
 
   /**
    * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
-   *
-   * @default []
    */
   bump?: string[]
 
   /**
    * Prompt version rather than basing on git metadata.
-   *
-   * @default []
    */
   bumpPrompt?: string[]
 
   /**
    * Disable bump
-   *
-   * @default false
    */
   noBump?: boolean
 
   /**
    * Generate changelog for all tag.
-   *
-   * @default ''
    */
   changelog?: string
 
   /**
    * Disable generate Changelog
-   *
-   * @default false
    */
   noChangelog?: boolean
 
@@ -55,17 +45,17 @@ export type CliOptions = {
 
   /**
    * Use `Release {v}` as commit message by default.
-   * Customizable. The `{v}` would be replaced by `bumpVersion`.
+   * The `{v}` would be replaced by `bumpVersion`.
    *
    * @default "Release {v}"
    */
   commit?: string
 
   /**
-   * Use `bumpVersion` by default.
+   * Use `bumpResult.bumpVersion` by default.
    * Customizable.
    *
-   * @default `bumpVersion`
+   * @default `bumpResult.bumpVersion`
    */
   tag?: string
 
@@ -99,7 +89,6 @@ export type MarkdownOptions = {
   }>
   titles: {
     breakingChanges: string
-    unParsedChanges: string
   }
 }
 
@@ -117,11 +106,9 @@ export const MarkdownConfigDefaults: MarkdownOptions = {
     // ci: { title: '🤖 CI' },
     // release: { title: '🔖 Release' },
     // WIP: { title: '🚧 Work in Progress' },
+    __UnParsed__: { title: '💥 Un-Parsed Changes' },
   },
-  titles: {
-    breakingChanges: '🚨 Breaking Changes',
-    unParsedChanges: '💥 Un-Parsed Changes',
-  },
+  titles: { breakingChanges: '🚨 Breaking Changes' },
 }
 
 

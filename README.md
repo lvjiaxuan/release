@@ -1,18 +1,18 @@
 # lvr
 
-<p align=center>Help me better to bump and generate changelog before github release in CI.</p>
+<p align=center>Help me better to bump and generate changelog.</p>
 
 ## Say sth.
 
-In my release flow, there are some steps such as:
-1. (optional) Do a test firstly.
+In my release flow, there are some steps in order such as:
+1. (optional) Do a test .
 2. Bump.
-3. Generate Changelog.
+3. Generate changelog.
 3. Commit / Tag.
 4. Push origin.
-5. Trigger CI jobs like github release(always) and publish stuff(depends).
+5. Trigger CI jobs like github release or publish stuff which are depended.
 
-Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite way, rather than requesting a github release or GitHub REST API stuff directly😂.
+Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.
 
 ## Usage
 
@@ -20,7 +20,7 @@ Network IO is not my expectation, so this tool is meant to bump and generate cha
 
 Quick trial:
 ```bash
-# as well as `nx lvr --bump --changelog`
+# as well as `nx lvr --bump --changelog --commit --tag --push``
 nx lvr
 ```
 
@@ -35,7 +35,7 @@ More CLI options:
 lvr -h
 ```
 
-### Bump
+### Bump only
 
 Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
 
@@ -50,19 +50,16 @@ lvr -b
 # In a detected Monorepo, it would bump specified package.json version in subdirectories.
 lvr -b=pkg-a pkg-b
 
-# Prompt version rather than basing on git metadata.
+# Prompt version rather than basing on git metadata by default.
 lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
 > **Note**
 > 
-> Root's **package.json** is always included, which means it would keep latest version among its packages.
+> Root's **package.json** is always included, which means it would keep latest version from its packages.
 
-> TODO
-> - [ ] **Pre-Release** powered by [semver](https://github.com/npm/node-semver).
-
-### Changelog
+### Changelog only
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 
@@ -70,28 +67,29 @@ CLI Arguments:
 - `--changelog`, `-c` in short.
 
 ```bash
-# Generate changelog for all tag.
+# Generate changelog for all tags.
 lvr -c # lvr --changelog
 
-# Generate changelog for tag range.
+# For a tag range.
 lvr -c=v1.0.1...v2.1.3
+
 # For 2 latest tag.
 lvr -c=2
 
-# Generate for a specified tag.
+# For a specified tag.
 lvr -c=v0.0.2
 
 # Generatec for latest tag only, which its notes is used to Release notes.
 lvr -c=latest
 ```
 
-### Commit/Tag/Push
+### Commit / Tag / Push
 
 Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.
-# Customizable. The `{v}` would be replaced by `bumpVersion`.
+# The `{v}` would be replaced by `bumpVersion`.
 lvr --commit="R: {v}"
 
 # Use `bumpVersion` by default.
@@ -119,134 +117,19 @@ lvr --yml
 
 ## Configuration
 
+Check [src/config.ts](./src/config.ts).
+
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
-<!-- eslint-skip -->
-```ts
-export type CliOptions = {
-  /**
-   * Dry run.
-   *
-   * @default false
-   */
-  dry?: boolean
+## Credits
 
-  /**
-   * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
-   *
-   * @default []
-   */
-  bump?: string[]
+- [changelogen](https://github.com/unjs/changelogen)
+- [changelogithub](https://github.com/antfu/changelogithub)
 
-  /**
-   * Prompt version rather than basing on git metadata.
-   *
-   * @default []
-   */
-  bumpPrompt?: string[]
+---
 
-  /**
-   * Disable bump
-   *
-   * @default false
-   */
-  noBump?: boolean
+# TODO
 
-  /**
-   * Generate changelog for all tag.
-   *
-   * @default ''
-   */
-  changelog?: string
-
-  /**
-   * Disable generate Changelog.
-   *
-   * @default false
-   */
-  noChangelog?: boolean
-
-  /**
-   * Add .github/workflows/changelogithub.yml
-   *
-   * @default false
-   */
-  yml?: boolean
-
-  /**
-   * Use `Release {v}` as commit message by default.
-   * Customizable. The `{v}` would be replaced by `bumpVersion`.
-   *
-   * @default "Release {v}"
-   */
-  commit?: string
-
-  /**
-   * Use `bumpVersion` by default.
-   * Customizable.
-   *
-   * @default `bumpVersion`
-   */
-  tag?: string
-
-  /**
-   * Push current branch and new tag.
-   *
-   * @default ''
-   */
-  push?: '' | 'tag' | 'branch'
-
-  noCommit?: boolean
-  noTag?: boolean
-  noPush?: boolean
-}
-
-export type MarkdownOptions = {
-  /**
-   * **Optional**
-   * PAT is used for requesting author GitHub Link for more detailed changelog.
-   */
-  token?: string
-
-  /**
-   * **Optional**
-   * Resolved by `git config --get remote.origin.url'` automatically for more detailed changelog.
-   */
-  github?: string
-
-  types: Record<string, {
-    title: string
-  }>
-
-  titles: {
-    breakingChanges: string
-    unParsedChanges: string
-  }
-}
-
-export const MarkdownConfigDefaults: MarkdownOptions = {
-  types: {
-    feat: { title: '✨ Enhancements' },
-    perf: { title: '⚡️ Performance' },
-    fix: { title: '🐛 Fixes' },
-    // refactor: { title: '♻️ Refactors' },
-    docs: { title: '📝 Documentation' },
-    // build: { title: '📦️ Build' },
-    // chore: { title: '🧱 Chore' },
-    // test: { title: '✅ Tests' },
-    // style: { title: '🎨 Styles' },
-    // ci: { title: '🤖 CI' },
-    // release: { title: '🔖 Release' },
-    // WIP: { title: '🚧 Work in Progress' },
-  },
-  titles: {
-    breakingChanges: '🚨 Breaking Changes',
-    unParsedChanges: '💥 Un-Parsed Changes',
-  },
-}
-```
-
-## Credit
-
-- https://github.com/unjs/changelogen
-- https://github.com/antfu/changelogithub
+- [ ] Do a confirm before acting.
+- [ ] Beautify terminal output.
+- [ ] Pre-Release  id.
