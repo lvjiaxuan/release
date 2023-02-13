@@ -23,25 +23,25 @@ jobs:
 
   publish:
     runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v3
+    steps:
+      - uses: actions/checkout@v3
 
-        - uses: actions/setup-node@v2
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      - uses: actions/setup-node@v2
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+      with:
+        node-version: 16
+        registry-url: https://registry.npmjs.org
+
+      - uses: pnpm/action-setup@v2
         with:
-          node-version: 16
-          registry-url: https://registry.npmjs.org
+          version: 7
 
-        - uses: pnpm/action-setup@v2
-          with:
-            version: 7
+      - run: pnpm config set auto-install-peers=true
 
-        - run: pnpm config set auto-install-peers=true
+      - name: Setup
+        run: pnpm i -g @antfu/ni
 
-        - name: Setup
-          run: pnpm i -g @antfu/ni
-
-        - run: |
-            nci
-            pnpm publish --access public --no-git-checks
+      - run: |
+          nci
+          pnpm publish --access public --no-git-checks
