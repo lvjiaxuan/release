@@ -1,14 +1,21 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.1.1`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v0.1.2`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v0.1.2 <sub>(2023-02-16)</sub>
+[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.1...main)
 
 ## v0.1.1 <sub>(2023-02-16)</sub>
-[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.0...main)
+[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.0...v0.1.1)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
 - changelog content. &nbsp;-&nbsp; by **lvjiaxuan 吕嘉轩** [<samp>(f63e0)</samp>](https://github.com/lvjiaxuan/release/commit/f63e06c)
 - **ci**: add build script. &nbsp;-&nbsp; by **lvjiaxuan 吕嘉轩** [<samp>(d8e56)</samp>](https://github.com/lvjiaxuan/release/commit/d8e56c4)
+
+### &nbsp;&nbsp;&nbsp;💥 Un-Parsed Changes
+
+- Release v0.1.1 &nbsp;-&nbsp; by **lvjiaxuan 吕嘉轩** [<samp>(06556)</samp>](https://github.com/lvjiaxuan/release/commit/06556f5)
 
 ## v0.1.0 <sub>(2023-02-13)</sub>
 [compare changes](https://github.com/lvjiaxuan/release/compare/...v0.1.0)
