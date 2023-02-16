@@ -60,7 +60,7 @@ export const getCommitFormatTime = async (commit: string) => {
   return time.stdout.trim().slice(0, 10)
 }
 
-export const getParsedCommits = async (from: string, to: string) => {
+export const getParsedCommits = async (from: string, to: string, types: string[]) => {
   const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i
   const CoAuthoredByRegex = /Co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gmi
   const PullRequestRE = /\([a-z ]*(#[0-9]+)\s*\)/gm
@@ -72,10 +72,10 @@ export const getParsedCommits = async (from: string, to: string) => {
 
     const match = commit.message.match(ConventionalCommitRegex)
 
-    const type = match?.groups!.type ?? '__UnParsed__'
+    const type = types.includes(match?.groups?.type as string) ? match?.groups!.type as string : '__Other__'
     const scope = match?.groups?.scope ?? ''
     const isBreaking = Boolean(match?.groups?.breaking ?? false)
-    let description = match?.groups!.description ?? commit.message
+    let description = type === '__Other__' ? commit.message : match?.groups!.description ?? commit.message
 
     // Extract references from message
     const references: Reference[] = []

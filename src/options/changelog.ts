@@ -83,7 +83,7 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
 
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
-    const parsedCommits = await getParsedCommits(from, to)
+    const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
 
     if (options.token) {
       await resolveAuthors(parsedCommits, {

@@ -106,9 +106,9 @@ export const MarkdownConfigDefaults: MarkdownOptions = {
     // ci: { title: '🤖 CI' },
     // release: { title: '🔖 Release' },
     // WIP: { title: '🚧 Work in Progress' },
-    __UnParsed__: { title: '💥 Un-Parsed Changes' },
+    __Other__: { title: '📌 Other Changes' },
   },
-  titles: { breakingChanges: '🚨 Breaking Changes' },
+  titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
 
