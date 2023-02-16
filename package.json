@@ -26,6 +26,9 @@
     "link": "nr build && pnpm link --global",
     "lvr": "jiti src/cli.ts"
   },
+  "peerDependencies": {
+    "conventional-changelog-conventionalcommits": "^5.0.0"
+  },
   "devDependencies": {
     "@antfu/utils": "^0.7.2",
     "@lvjiaxuan/eslint-plugin": "^0.4.2",
