@@ -68,9 +68,11 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
     return
   }
 
+  const titleMap = { [currentGitBranch]: `v${ newTag! }` }
+
   let md = '# Changelog\n\n'
   if (fromToList.length > 1) {
-    md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ fromToList[0][1] }\`.`
+    md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1] }\`.`
   } else if (fromToList.length === 1) {
     md += `Tag \`${ newTag! }\`.`
   }
@@ -95,7 +97,7 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
       parsedCommits,
       from,
       to,
-      titleMap: { [currentGitBranch]: `v${ newTag! }` },
+      titleMap,
     })
   }
   /* eslint-enable no-await-in-loop */
