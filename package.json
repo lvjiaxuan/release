@@ -1,23 +1,23 @@
 {
   "name": "lvr",
+  "type": "commonjs",
   "version": "0.1.0",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
   "license": "MIT",
-  "files": [
-    "bin",
-    "dist"
-  ],
-  "type": "commonjs",
-  "main": "./dist/cli.cjs",
-  "bin": {
-    "lvr": "./bin/cli.mjs"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/lvjiaxuan/release"
   },
+  "main": "./dist/cli.cjs",
+  "bin": {
+    "lvr": "./bin/cli.mjs"
+  },
+  "files": [
+    "bin",
+    "dist"
+  ],
   "scripts": {
     "lint:fix": "eslint . --fix",
     "dev": "nr build --watch",
