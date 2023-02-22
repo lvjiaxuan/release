@@ -6,13 +6,13 @@
 
 In my release flow, there are some steps in order such as:
 1. (optional) Do a test .
-2. Bump.
+2. Bump version.
 3. Generate changelog.
 3. Commit / Tag.
-4. Push origin.
+4. Push to origin.
 5. Trigger CI jobs like github release or publish stuff which are depended.
 
-Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.
+*Network IO is not my intention, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.*
 
 ## Usage
 
@@ -20,8 +20,11 @@ Network IO is not my expectation, so this tool is meant to bump and generate cha
 
 Quick trial:
 ```bash
-# as well as `nx lvr --bump --changelog --commit --tag --push``
-nx lvr
+# As well as `nix lvr --bump --changelog --commit --tag --push``
+nix lvr
+
+# Maybe you want to check what will execute. Use Dry run.
+nix lvr -d
 ```
 
 Globally use. Installation:
@@ -44,7 +47,7 @@ CLI Arguments:
 - `--bumpPrompt`, `-p` in short.
 
 ```bash
-# Bump root package.json version. If project is detected as a monorepo, it would synchronize root version to other package.json in subdirectories.
+# Bump root package.json version. If project is detected as a MonoRepo, it would synchronize root version to other package.json in subdirectories.
 lvr -b
 
 # In a detected Monorepo, it would bump specified package.json version in subdirectories.
@@ -67,8 +70,8 @@ CLI Arguments:
 - `--changelog`, `-c` in short.
 
 ```bash
-# Generate changelog for all tags.
-lvr -c # lvr --changelog
+# Generate changelog for all existing tags.
+lvr -c
 
 # For a tag range.
 lvr -c=v1.0.1...v2.1.3
@@ -79,7 +82,7 @@ lvr -c=2
 # For a specified tag.
 lvr -c=v0.0.2
 
-# Generatec for latest tag only, which its notes is used to Release notes.
+# For latest tag only
 lvr -c=latest
 ```
 

@@ -84,6 +84,7 @@ export default async (options: CliOptions & MarkdownOptions) => {
     let bumpResult: Awaited<ReturnType<typeof bump>>
     let changelogResult: Awaited<ReturnType<typeof changelog>>
 
+    // --yml
     if (options.yml) {
       void addYml(true)
       return
