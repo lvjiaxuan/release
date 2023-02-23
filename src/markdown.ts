@@ -1,4 +1,5 @@
-import type { GitCommit, RawGitCommit, Reference } from 'changelogen'
+import type { Reference } from 'changelogen'
+import type { Commit } from 'changelogithub'
 import { partition } from '@antfu/utils'
 import type { MarkdownOptions } from './index'
 import { getCommitFormatTime } from './index'
@@ -55,7 +56,7 @@ function formatReferences(references: Reference[], github: string | undefined, t
 }
 
 
-function formatLine(commit: ResolvedCommits[number], options: MarkdownOptions) {
+function formatLine(commit: Commit, options: MarkdownOptions) {
   const prRefs = formatReferences(commit.references, options.github, 'issues')
   const hashRefs = formatReferences(commit.references, options.github, 'hash')
 
@@ -80,7 +81,7 @@ function formatLine(commit: ResolvedCommits[number], options: MarkdownOptions) {
 }
 
 
-function formatSection(commits: ResolvedCommits, sectionName: string, options: MarkdownOptions) {
+function formatSection(commits: Commit[], sectionName: string, options: MarkdownOptions) {
   if (!commits.length)
     return []
 
@@ -119,14 +120,8 @@ function formatSection(commits: ResolvedCommits, sectionName: string, options: M
   return lines
 }
 
-type ResolvedCommits = (GitCommit & { resolvedAuthors?: {
-  commits: string[]
-  login?: string
-  email: string
-  name: string
-}[] })[]
 export async function generateMarkdown(options: MarkdownOptions & {
-  parsedCommits: ResolvedCommits
+  parsedCommits: Commit[]
   from: string
   to: string,
   titleMap: { [x: string]: string }

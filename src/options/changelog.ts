@@ -4,7 +4,81 @@ import { getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from '.
 import type { CliOptions, MarkdownOptions } from './../config'
 import { generateMarkdown } from './../markdown'
 import semver from 'semver'
-import { resolveAuthors } from 'changelogithub'
+import { $fetch } from 'ohmyfetch'
+import { notNullish } from '@antfu/utils'
+import type { AuthorInfo, Commit } from 'changelogithub'
+
+type ChangelogOptions = CliOptions & MarkdownOptions
+
+// https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
+const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) => {
+  if (info.login || !options.github)
+    return info
+
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+  try {
+    const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers: { accept: 'application/vnd.github+json' } })
+    info.login = data.items[0].login
+  }
+  catch {}
+
+  if (info.login)
+    return info
+
+  if (info.commits.length) {
+    try {
+      const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers: { accept: 'application/vnd.github+json' } })
+      info.login = data.author.login
+    }
+    catch {}
+  }
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+
+  return info
+}
+
+// https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L82
+const resolveAuthors = async (commits: Commit[], options: ChangelogOptions) => {
+  const map = new Map<string, AuthorInfo>()
+  commits.forEach(commit => commit.resolvedAuthors = commit.authors.map((a, idx) => {
+    if (!a.email || !a.name)
+      return null
+    if (!map.has(a.email)) {
+      map.set(a.email, {
+        commits: [],
+        name: a.name,
+        email: a.email,
+      })
+    }
+    const info = map.get(a.email)!
+
+    // record commits only for the first author
+    if (idx === 0)
+      info.commits.push(commit.shortHash)
+
+    return info
+  }).filter(notNullish))
+  const authors = Array.from(map.values())
+  const resolved = await Promise.all(authors.map(info => resolveAuthorInfo(options, info)))
+
+  const loginSet = new Set<string>()
+  const nameSet = new Set<string>()
+  return resolved
+    .sort((a, b) => (a.login || a.name).localeCompare(b.login || b.name))
+    .filter(i => {
+      if (i.login && loginSet.has(i.login))
+        return false
+      if (i.login) {
+        loginSet.add(i.login)
+      }
+      else {
+        if (nameSet.has(i.name))
+          return false
+        nameSet.add(i.name)
+      }
+      return true
+    })
+}
 
 const resolveFormToList = async (tags?: string[]) => {
   const list: string[][] = []
@@ -24,7 +98,7 @@ const verifyTags = async (tags: string[][], ignore: string) => {
   return flatTags.every(tag => existTags.includes(tag))
 }
 
-export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: string) => {
+export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   if (options.noChangelog) {
     console.log(`\nGenerate changelog ${ pc.bold(pc.yellow('skip')) }.`)
     return
@@ -85,12 +159,7 @@ export const changelog = async (options: CliOptions & MarkdownOptions, newTag?: 
   for (const [ from, to ] of fromToList) {
     const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
 
-    if (options.token) {
-      await resolveAuthors(parsedCommits, {
-        token: options.token,
-        github: options.github,
-      })
-    }
+    await resolveAuthors(parsedCommits, options)
 
     md += await generateMarkdown({
       ...options,

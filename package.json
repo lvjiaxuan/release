@@ -53,6 +53,7 @@
     "jest": "^29.4.3",
     "jiti": "^1.17.1",
     "lodash.merge": "^4.6.2",
+    "ohmyfetch": "^0.4.21",
     "picocolors": "^1.0.0",
     "prompts": "^2.4.2",
     "semver": "^7.3.8",
