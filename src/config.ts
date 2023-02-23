@@ -12,6 +12,11 @@ export type CliOptions = {
   dry?: boolean
 
   /**
+   * Create a release on Github Action.
+   */
+  release: boolean
+
+  /**
    * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
    */
   bump?: string[]

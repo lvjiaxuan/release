@@ -6,13 +6,13 @@
 
 In my release flow, there are some steps in order such as:
 1. (optional) Do a test .
-2. Bump.
+2. Bump version.
 3. Generate changelog.
 3. Commit / Tag.
-4. Push origin.
+4. Push to origin.
 5. Trigger CI jobs like github release or publish stuff which are depended.
 
-Network IO is not my expectation, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.
+*Requesting GitHub Rest API locally is not my option for reasons such as the network likely being instable and requiring a token for authentication, etc. So this tool just to **Bump**  and **Generate changelog** on local. I prefer to put the release job on CI env.*
 
 ## Usage
 
@@ -20,14 +20,16 @@ Network IO is not my expectation, so this tool is meant to bump and generate cha
 
 Quick trial:
 ```bash
-# as well as `nx lvr --bump --changelog --commit --tag --push``
-nx lvr
+# As well as `nix lvr --bump --changelog --commit --tag --push``
+nix lvr
+
+# Maybe you want to check what will execute. Use Dry run.
+nix lvr -d
 ```
 
 Globally use. Installation:
 ```bash
 pnpm i lvr -g
-npm i lvr -g
 ```
 
 More CLI options:
@@ -44,7 +46,7 @@ CLI Arguments:
 - `--bumpPrompt`, `-p` in short.
 
 ```bash
-# Bump root package.json version. If project is detected as a monorepo, it would synchronize root version to other package.json in subdirectories.
+# Bump root package.json version. If project is detected as a MonoRepo, it would synchronize root version to other package.json in subdirectories.
 lvr -b
 
 # In a detected Monorepo, it would bump specified package.json version in subdirectories.
@@ -55,9 +57,7 @@ lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
-> **Note**
-> 
-> Root's **package.json** is always included, which means it would keep latest version from its packages.
+> **Note** Root's **package.json** is always included, which means it would keep latest version from its packages.
 
 ### Changelog only
 
@@ -67,8 +67,8 @@ CLI Arguments:
 - `--changelog`, `-c` in short.
 
 ```bash
-# Generate changelog for all tags.
-lvr -c # lvr --changelog
+# Generate changelog for all existing tags.
+lvr -c
 
 # For a tag range.
 lvr -c=v1.0.1...v2.1.3
@@ -79,13 +79,13 @@ lvr -c=2
 # For a specified tag.
 lvr -c=v0.0.2
 
-# Generatec for latest tag only, which its notes is used to Release notes.
+# For latest tag only
 lvr -c=latest
 ```
 
 ### Commit / Tag / Push
 
-Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
+Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--noPush`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.
@@ -108,28 +108,25 @@ lvr --push=tag
 
 ### GitHub Release by *GitHub Action*
 
-Using [antfu/changelogithub](https://github.com/antfu/changelogithub).
+See [yml.ts](./src/options/yml.ts).
 
 ```bash
-# Add .github/workflows/changelogithub.yml
+# Add .github/workflows/lvr-release.yml
 lvr --yml
 ```
 
 ## Configuration
 
-Check [src/config.ts](./src/config.ts).
+See [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
 ## Credits
 
-- [changelogen](https://github.com/unjs/changelogen)
-- [changelogithub](https://github.com/antfu/changelogithub)
-
----
+- [unjs/changelogen](https://github.com/unjs/changelogen)
+- [antfu/changelogithub](https://github.com/antfu/changelogithub)
 
 # TODO
 
 - [ ] Do a confirm before acting.
-- [ ] Beautify terminal output.
-- [ ] Pre-Release  id.
+- [ ] Pre-Release.
