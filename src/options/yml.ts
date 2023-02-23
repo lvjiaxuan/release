@@ -6,7 +6,7 @@ export const addYml = async (isAdd: boolean) => {
     return
   }
 
-  const yml = `name: Release by Changelogithub
+  const yml = `name: Release
 
 on:
   push:
@@ -18,14 +18,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
 
       - uses: actions/setup-node@v3
         with:
           node-version: 16.x
 
-      - run: npx changelogithub # or changelogithub@0.12 if ensure the stable result
+      - run: npx lvr --release
         env:
           GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}
 `

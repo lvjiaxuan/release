@@ -12,7 +12,7 @@ In my release flow, there are some steps in order such as:
 4. Push to origin.
 5. Trigger CI jobs like github release or publish stuff which are depended.
 
-*Network IO is not my intention, so this tool is meant to bump and generate changelog in local by my favorite path, instead of requesting a github release or other GitHub REST API stuff directly😂.*
+*Requesting GitHub Rest API locally is not my option for reasons such as the network likely being instable and requiring a token for authentication, etc. So this tool just to **Bump**  and **Generate changelog** on local. I prefer to put the release job on CI env.*
 
 ## Usage
 
@@ -30,7 +30,6 @@ nix lvr -d
 Globally use. Installation:
 ```bash
 pnpm i lvr -g
-npm i lvr -g
 ```
 
 More CLI options:
@@ -58,9 +57,7 @@ lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
-> **Note**
-> 
-> Root's **package.json** is always included, which means it would keep latest version from its packages.
+> **Note** Root's **package.json** is always included, which means it would keep latest version from its packages.
 
 ### Changelog only
 
@@ -88,7 +85,7 @@ lvr -c=latest
 
 ### Commit / Tag / Push
 
-Enable `--commit` `--tag` `--push` by default. (opt-out by `--noPush`, etc.)
+Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--noPush`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.
@@ -111,10 +108,8 @@ lvr --push=tag
 
 ### GitHub Release by *GitHub Action*
 
-Using [antfu/changelogithub](https://github.com/antfu/changelogithub).
-
 ```bash
-# Add .github/workflows/changelogithub.yml
+# Add .github/workflows/lvr-release.yml
 lvr --yml
 ```
 
