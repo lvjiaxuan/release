@@ -66,5 +66,10 @@
   "eslintConfig": {
     "root": true,
     "extends": "plugin:@lvjiaxuan/recommended"
+  },
+  "lv": {
+    "release": {
+      "commit": "Release: {v}"
+    }
   }
 }

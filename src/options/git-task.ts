@@ -1,8 +1,7 @@
-import type { CliOptions } from './../index'
-import { execCMD } from './../index'
+import type { CliOptions } from '../index'
+import { execCMD } from '../index'
 
 export const execGitJobs = async (options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'noCommit' | 'noTag' | 'noPush' | 'dry'>, bumpVersion: string) => {
-
   const { dry } = options
 
   console.log()

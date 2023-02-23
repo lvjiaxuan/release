@@ -14,7 +14,7 @@ export type CliOptions = {
   /**
    * Create a release on Github Action.
    */
-  release: boolean
+  release?: boolean
 
   /**
    * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
@@ -32,17 +32,17 @@ export type CliOptions = {
   noBump?: boolean
 
   /**
-   * Generate changelog for all tag.
+   * Generate changelog for tags.
    */
   changelog?: string
 
   /**
-   * Disable generate Changelog
+   * Disable generate changelog.
    */
   noChangelog?: boolean
 
   /**
-   * Add .github/workflows/changelogithub.yml
+   * Add .github/workflows/lvr-release.yml
    *
    * @default false
    */
@@ -97,7 +97,7 @@ export type MarkdownOptions = {
   }
 }
 
-export const MarkdownConfigDefaults: MarkdownOptions = {
+const MarkdownOptionDefaults: MarkdownOptions = {
   types: {
     feat: { title: '✨ Enhancements' },
     perf: { title: '⚡️ Performance' },
@@ -116,6 +116,11 @@ export const MarkdownConfigDefaults: MarkdownOptions = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
+const CliOptionDefaults: CliOptions = {
+  commit: 'Release {v}',
+  tag: '',
+  push: '',
+}
 
 const resolveConfig = async <T extends CliOptions>(options: T) => {
   const config = await loadConfig<T>({
@@ -150,10 +155,10 @@ const resolveConfig = async <T extends CliOptions>(options: T) => {
   let mergeOptions: T & MarkdownOptions
 
   if (!config.sources.length) {
-    mergeOptions = lodashMerge(options, MarkdownConfigDefaults)
+    mergeOptions = lodashMerge(MarkdownOptionDefaults, options)
   } else {
-    console.log(`Config file found: ${ config.sources[0] }`, config.config)
-    mergeOptions = lodashMerge(config.config, options, MarkdownConfigDefaults)
+    console.log(`Config file found: ${ config.sources[0] } \n`, config.config)
+    mergeOptions = lodashMerge(CliOptionDefaults, config.config, MarkdownOptionDefaults, options)
   }
 
   if (!mergeOptions.github){

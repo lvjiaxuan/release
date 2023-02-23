@@ -15,7 +15,7 @@ void yargs(hideBin(process.argv))
   )
   .option('release', {
     boolean: true,
-    description: 'Create a release in GitHub Action.',
+    description: 'Create a release in GitHub Action only.',
   })
   .option('dry', {
     alias: 'd',
@@ -27,14 +27,14 @@ void yargs(hideBin(process.argv))
     alias: 'b',
     array: true,
     description: 'Bump version.',
-    defaultDescription: 'empty means all pkgs.',
+    defaultDescription: 'For all packages.',
     group: 'Bump options:',
   })
   .option('bumpPrompt', {
     alias: 'p',
     array: true,
     description: 'Prompt version.',
-    defaultDescription: 'empty means all pkgs.',
+    defaultDescription: 'For all packages.',
     group: 'Bump options:',
   })
   .option('noBump', {
@@ -46,7 +46,7 @@ void yargs(hideBin(process.argv))
   .option('changelog', {
     alias: 'c',
     string: true,
-    defaultDescription: 'empty means all tags.',
+    defaultDescription: 'For all tags.',
     description: 'Generate Changelog.',
     group: 'Changelog options:',
   })
@@ -58,24 +58,20 @@ void yargs(hideBin(process.argv))
   })
   .option('yml', {
     boolean: true,
-    default: false,
     description: 'Add .github/workflows/changelogithub.yml.',
   })
   .option('commit', {
     string: true,
-    default: 'Release {v}',
     description: 'Commit message which is customizable.\n`{v}` equal to new version.',
   })
   .option('tag', {
     string: true,
-    default: '',
-    defaultDescription: '`bumpVersion`',
+    defaultDescription: '`bumpVersion`.',
     description: 'Tag name.',
   })
   .option('push', {
     string: true,
-    default: '',
-    defaultDescription: 'empty means both branch and tag',
+    defaultDescription: 'Both branch and tag.',
     description: 'Push branch and tag which are optional.',
   })
   .option('noCommit', { boolean: true })

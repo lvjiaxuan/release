@@ -59,8 +59,8 @@ const resolveValidPackages = async (packages: string[]) => {
   }
 }
 
-export const bump = async (options: CliOptions) => {
 
+export const bump = async (options: CliOptions) => {
   if (options.noBump) {
     console.log(`\nBump ${ pc.bold(pc.yellow('skip')) }.`)
     return

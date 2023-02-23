@@ -98,6 +98,7 @@ const verifyTags = async (tags: string[][], ignore: string) => {
   return flatTags.every(tag => existTags.includes(tag))
 }
 
+
 export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   if (options.noChangelog) {
     console.log(`\nGenerate changelog ${ pc.bold(pc.yellow('skip')) }.`)

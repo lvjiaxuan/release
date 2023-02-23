@@ -5,7 +5,7 @@ import { addYml, bump, changelog, execGitJobs, sendRelease } from './index'
 
 export default async (options: CliOptions & MarkdownOptions) => {
   try {
-    options.dry && console.log(pc.bold(pc.blue('Dry run.\n')))
+    options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
 
     let bumpResult: Awaited<ReturnType<typeof bump>>
     let changelogResult: Awaited<ReturnType<typeof changelog>>
@@ -46,18 +46,18 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     if (changelogResult) {
       // bumpResult && tag
-      console.log('\nChangelog result:', changelogResult.md.slice(0, 200))
+      console.log('\nChangelog result:', `(${ changelogResult.md.slice(0, 200) })`)
     }
 
     if (isExecGitJobs) {
       await execGitJobs(options, bumpResult!.bumpVersion)
     }
 
-    options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
+    options.dry && console.log(pc.bold(pc.blue('\n\nDry run.')))
 
     process.exit(0)
   } catch (error) {
-    console.log('\noptions: ', options)
+    console.log('\nOptions: ', options)
     console.log(error)
     console.log(`\n${ pc.bgRed('ERROR!') } Please check it.\n`)
     process.exit(1)
