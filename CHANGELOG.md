@@ -1,9 +1,57 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.1.3`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v0.1.4`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v0.1.4 <sub>(2023-02-23)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.3-2...main)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- new resolve authors &nbsp;-&nbsp; by @lvjiaxuan [<samp>(04e15)</samp>](https://github.com/lvjiaxuan/release/commit/04e156f)
+- new release &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1a751)</samp>](https://github.com/lvjiaxuan/release/commit/1a75193)
+
+### &nbsp;&nbsp;&nbsp;📌 Other Changes
+
+- doc: update &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ebab8)</samp>](https://github.com/lvjiaxuan/release/commit/ebab8dd)
+- chore: split yml and  git jobs &nbsp;-&nbsp; by @lvjiaxuan [<samp>(7339d)</samp>](https://github.com/lvjiaxuan/release/commit/7339d3e)
+- chore: yml release stuff &nbsp;-&nbsp; by @lvjiaxuan [<samp>(bd018)</samp>](https://github.com/lvjiaxuan/release/commit/bd0184a)
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(cfefe)</samp>](https://github.com/lvjiaxuan/release/commit/cfefe04)
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(27500)</samp>](https://github.com/lvjiaxuan/release/commit/2750080)
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(c9115)</samp>](https://github.com/lvjiaxuan/release/commit/c9115bb)
+- A set of chore/feat &nbsp;-&nbsp; by @lvjiaxuan in [#5](https://github.com/lvjiaxuan/release/issues/5) [<samp>(86910)</samp>](https://github.com/lvjiaxuan/release/commit/8691057)
+- chore: style. close #4 &nbsp;-&nbsp; by @lvjiaxuan in [#4](https://github.com/lvjiaxuan/release/issues/4) [<samp>(8f819)</samp>](https://github.com/lvjiaxuan/release/commit/8f819c8)
+
+## v0.1.3-2 <sub>(2023-02-23)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.3-1...v0.1.3-2)
+
+### &nbsp;&nbsp;&nbsp;📌 Other Changes
+
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(c9115)</samp>](https://github.com/lvjiaxuan/release/commit/c9115bb)
+
+## v0.1.3-1 <sub>(2023-02-23)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.3-0...v0.1.3-1)
+
+### &nbsp;&nbsp;&nbsp;📌 Other Changes
+
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(27500)</samp>](https://github.com/lvjiaxuan/release/commit/2750080)
+
+## v0.1.3-0 <sub>(2023-02-23)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.3...v0.1.3-0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- new resolve authors &nbsp;-&nbsp; by @lvjiaxuan [<samp>(04e15)</samp>](https://github.com/lvjiaxuan/release/commit/04e156f)
+- new release &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1a751)</samp>](https://github.com/lvjiaxuan/release/commit/1a75193)
+
+### &nbsp;&nbsp;&nbsp;📌 Other Changes
+
+- doc: update &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ebab8)</samp>](https://github.com/lvjiaxuan/release/commit/ebab8dd)
+- chore: split yml and  git jobs &nbsp;-&nbsp; by @lvjiaxuan [<samp>(7339d)</samp>](https://github.com/lvjiaxuan/release/commit/7339d3e)
+- chore: yml release stuff &nbsp;-&nbsp; by @lvjiaxuan [<samp>(bd018)</samp>](https://github.com/lvjiaxuan/release/commit/bd0184a)
+- test: ci &nbsp;-&nbsp; by @lvjiaxuan [<samp>(cfefe)</samp>](https://github.com/lvjiaxuan/release/commit/cfefe04)
 
 ## v0.1.3 <sub>(2023-02-16)</sub>
-[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.2...v0.1.3)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.2...v0.1.3)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
@@ -14,7 +62,7 @@ Tag ranges `v0.1.0...v0.1.3`. [All GitHub Releases](https://github.com/lvjiaxuan
 - Release v0.1.3 &nbsp;-&nbsp; by @lvjiaxuan [<samp>(80d50)</samp>](https://github.com/lvjiaxuan/release/commit/80d5084)
 
 ## v0.1.2 <sub>(2023-02-16)</sub>
-[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.1...v0.1.2)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.1...v0.1.2)
 
 ### &nbsp;&nbsp;&nbsp;📌 Other Changes
 
@@ -22,7 +70,7 @@ Tag ranges `v0.1.0...v0.1.3`. [All GitHub Releases](https://github.com/lvjiaxuan
 - Release v0.1.2 &nbsp;-&nbsp; by @lvjiaxuan [<samp>(8d6cf)</samp>](https://github.com/lvjiaxuan/release/commit/8d6cf1f)
 
 ## v0.1.1 <sub>(2023-02-16)</sub>
-[compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.0...v0.1.1)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.0...v0.1.1)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
@@ -37,7 +85,7 @@ Tag ranges `v0.1.0...v0.1.3`. [All GitHub Releases](https://github.com/lvjiaxuan
 - Release v0.1.1 &nbsp;-&nbsp; by @lvjiaxuan [<samp>(06556)</samp>](https://github.com/lvjiaxuan/release/commit/06556f5)
 
 ## v0.1.0 <sub>(2023-02-13)</sub>
-[compare changes](https://github.com/lvjiaxuan/release/compare/...v0.1.0)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/...v0.1.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
