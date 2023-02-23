@@ -27,13 +27,14 @@ const resolveTagSection = async () => {
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L7
 export const sendRelease = async () => {
   const { CI, GITHUB_ACTION_REPOSITORY: repository, GITHUB_BASE_REF: tag, GITHUB_TOKEN: token } = process.env
+  console.log(process.env)
   console.log({
     CI,
     repository,
     tag,
     token: !!token,
   })
-  if (!CI) {
+  if (CI !== 'true') {
     console.log(p.yellow('Not in CI env. Skip release.'))
     return
   }

@@ -28,6 +28,7 @@ jobs:
           nr lvr --release
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_ACTION_REPOSITORY: ${{GITHUB_ACTION_REPOSITORY}}
 
   # publish:
   #   runs-on: ubuntu-latest
