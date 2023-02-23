@@ -15,7 +15,7 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   if (info.login || !options.github)
     return info
 
-  /* eslint-disable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+  /* eslint-disable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
   try {
     const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers: { accept: 'application/vnd.github+json' } })
     info.login = data.items[0].login
@@ -32,7 +32,7 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
     }
     catch {}
   }
-  /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
+  /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
 
   return info
 }

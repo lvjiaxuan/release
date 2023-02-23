@@ -135,7 +135,7 @@ export async function generateMarkdown(options: MarkdownOptions & {
   ]
 
   if (options.github) {
-    lines.push(`[compare changes](https://github.com/${ options.github }/compare/${ from }...${ to })`)
+    lines.push(`[Compare changes](https://github.com/${ options.github }/compare/${ from }...${ to })`)
   }
 
   const [ breaking, changes ] = partition(commits, c => c.isBreaking)

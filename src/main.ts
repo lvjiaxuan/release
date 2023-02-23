@@ -1,6 +1,6 @@
 import pc from 'picocolors'
 import type { CliOptions, MarkdownOptions } from './index'
-import { addYml, bump, changelog, execGitJobs } from './index'
+import { addYml, bump, changelog, execGitJobs, sendRelease } from './index'
 
 
 export default async (options: CliOptions & MarkdownOptions) => {
@@ -9,6 +9,12 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     let bumpResult: Awaited<ReturnType<typeof bump>>
     let changelogResult: Awaited<ReturnType<typeof changelog>>
+
+    // --release
+    if (options.release) {
+      await sendRelease()
+      return
+    }
 
     // --yml
     if (options.yml) {

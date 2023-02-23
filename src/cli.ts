@@ -13,7 +13,11 @@ void yargs(hideBin(process.argv))
     args => args as Argv<CliOptions>,
     async args => main(await resolveConfig(args)),
   )
-  .options('dry', {
+  .option('release', {
+    boolean: true,
+    description: 'Create a release in GitHub Action.',
+  })
+  .option('dry', {
     alias: 'd',
     boolean: true,
     default: false,
