@@ -108,6 +108,8 @@ lvr --push=tag
 
 ### GitHub Release by *GitHub Action*
 
+See [yml.ts](./src/options/yml.ts).
+
 ```bash
 # Add .github/workflows/lvr-release.yml
 lvr --yml
@@ -115,19 +117,16 @@ lvr --yml
 
 ## Configuration
 
-Check [src/config.ts](./src/config.ts).
+See [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
 ## Credits
 
-- [changelogen](https://github.com/unjs/changelogen)
-- [changelogithub](https://github.com/antfu/changelogithub)
-
----
+- [unjs/changelogen](https://github.com/unjs/changelogen)
+- [antfu/changelogithub](https://github.com/antfu/changelogithub)
 
 # TODO
 
 - [ ] Do a confirm before acting.
-- [ ] Beautify terminal output.
-- [ ] Pre-Release  id.
+- [ ] Pre-Release.

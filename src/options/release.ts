@@ -26,14 +26,8 @@ const resolveTagSection = async () => {
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L7
 export const sendRelease = async () => {
-  const { CI, GITHUB_ACTION_REPOSITORY: repository, GITHUB_BASE_REF: tag, GITHUB_TOKEN: token } = process.env
-  console.log(process.env)
-  console.log({
-    CI,
-    repository,
-    tag,
-    token: !!token,
-  })
+  const { CI, GITHUB_REPOSITORY: repository, GITHUB_REF_NAME: tag, GITHUB_TOKEN: token } = process.env
+
   if (CI !== 'true') {
     console.log(p.yellow('Not in CI env. Skip release.'))
     return
@@ -67,12 +61,12 @@ export const sendRelease = async () => {
 
   console.log(body)
 
-  // const res = await $fetch(url, {
-  //   method,
-  //   body: JSON.stringify(body),
-  //   headers,
-  // })
+  const res = await $fetch(url, {
+    method,
+    body: JSON.stringify(body),
+    headers,
+  })
 
-  // console.log(p.green(`Released on ${ res.html_url }`))
+  console.log(p.green(`Released on ${ res.html_url }`))
 }
 /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
