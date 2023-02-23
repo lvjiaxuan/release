@@ -22,7 +22,7 @@
     "lint:fix": "eslint . --fix",
     "dev": "nr build --watch",
     "build": "tsup src/cli.ts --target=node16 --clean --format=cjs",
-    "test": "nx cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "nix cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "link": "nr build && pnpm link --global",
     "lvr": "jiti src/cli.ts"
   },

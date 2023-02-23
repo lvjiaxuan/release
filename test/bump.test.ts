@@ -44,8 +44,8 @@ describe('nx @lvjiaxuan/release --bump', () => {
   "currentVersion": "1.0.1",
   "packagesResolvePaths": [
     "package.json",
-    "packages/foo/package.json",
     "packages/bar/package.json",
+    "packages/foo/package.json",
   ],
   "unResolvedPkgs": [],
 }

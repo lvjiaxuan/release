@@ -1,11 +1,6 @@
 import { promises as fsp } from 'node:fs'
 
-export const addYml = async (isAdd: boolean) => {
-
-  if (!isAdd) {
-    return
-  }
-
+export const addYml = async (isDry?: boolean) => {
   const yml = `name: Release
 
 on:
@@ -25,8 +20,15 @@ jobs:
 
       - run: npx lvr --release
         env:
-          GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}
-`
+          GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}`
+
+
+  if (isDry) {
+    console.log(yml)
+    return
+  }
+
+
   await fsp.mkdir('.github/workflows/', { recursive: true })
   await fsp.writeFile('.github/workflows/lvr-release.yml', yml, { encoding: 'utf-8' })
 

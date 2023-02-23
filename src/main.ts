@@ -13,13 +13,13 @@ export default async (options: CliOptions & MarkdownOptions) => {
     // --release
     if (options.release) {
       await sendRelease()
-      return
+      return process.exit(0)
     }
 
     // --yml
     if (options.yml) {
-      void addYml(true)
-      return
+      await addYml(options.dry)
+      return process.exit(0)
     }
 
     let isExecGitJobs = false

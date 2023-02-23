@@ -1,4 +1,4 @@
-name: Release by Changelogithub
+name: Release
 
 on:
   push:
@@ -15,32 +15,42 @@ jobs:
         with:
           node-version: 16.x
 
-      - run: npx lvr --release
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-
-  publish:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-
-      - uses: actions/setup-node@v3
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
-        with:
-          node-version: 16.x
-          registry-url: https://registry.npmjs.org
-
       - uses: pnpm/action-setup@v2
         with:
           version: 7
-
-      - run: pnpm config set auto-install-peers=true
 
       - name: Setup
         run: pnpm i -g @antfu/ni
 
       - run: |
           nci
-          pnpm build
-          pnpm publish --access public --no-git-checks
+          nr build
+          nr lvr --release
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+
+  # publish:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v3
+
+  #     - uses: actions/setup-node@v3
+  #       env:
+  #         NODE_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+  #       with:
+  #         node-version: 16.x
+  #         registry-url: https://registry.npmjs.org
+
+  #     - uses: pnpm/action-setup@v2
+  #       with:
+  #         version: 7
+
+  #     - run: pnpm config set auto-install-peers=true
+
+  #     - name: Setup
+  #       run: pnpm i -g @antfu/ni
+
+  #     - run: |
+  #         nci
+  #         nr build
+  #         pnpm publish --access public --no-git-checks

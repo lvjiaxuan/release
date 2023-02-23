@@ -8,7 +8,7 @@ import { promises as fsp } from 'node:fs'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 
-export const getBumpType = () => new Promise<BumpType>((resolve, reject) =>
+const getBumpType = () => new Promise<BumpType>((resolve, reject) =>
   conventionalRecommendedBump(
     { preset: 'conventionalcommits' },
     (error, recommendation) => {
@@ -19,14 +19,14 @@ export const getBumpType = () => new Promise<BumpType>((resolve, reject) =>
       resolve(recommendation.releaseType!)
     }))
 
-export const writePkgsVersion = (pkgPaths: string[], version: string) =>
+const writePkgsVersion = (pkgPaths: string[], version: string) =>
   Promise.all(pkgPaths.map(async pkgPath => {
     const pkg = JSON.parse(await fsp.readFile(pkgPath, 'utf8')) as { version: string }
     pkg.version = version
     return fsp.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8')
   }))
 
-export const resolveValidPackages = async (packages: string[]) => {
+const resolveValidPackages = async (packages: string[]) => {
   let packagesResolvePaths = await fg('**/package.json', {
     ignore: [
       '**/node_modules/**',
