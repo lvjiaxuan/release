@@ -72,10 +72,10 @@ export const getParsedCommits = async (from: string, to: string, types: string[]
 
     const match = commit.message.match(ConventionalCommitRegex)
 
-    const type = types.includes(match?.groups?.type as string) ? match?.groups!.type as string : '__Other__'
+    const type = types.includes(match?.groups?.type as string) ? match?.groups!.type as string : '__OTHER__'
     const scope = match?.groups?.scope ?? ''
     const isBreaking = Boolean(match?.groups?.breaking ?? false)
-    let description = type === '__Other__' ? commit.message : match?.groups!.description ?? commit.message
+    let description = type === '__OTHER__' ? commit.message : match?.groups!.description ?? commit.message
 
     // Extract references from message
     const references: Reference[] = []

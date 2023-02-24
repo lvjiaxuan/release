@@ -19,7 +19,7 @@ export type CliOptions = {
   /**
    * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
    */
-  bump?: string[]
+  bump?: string[] | [false]
 
   /**
    * Prompt version rather than basing on git metadata.
@@ -27,19 +27,9 @@ export type CliOptions = {
   bumpPrompt?: string[]
 
   /**
-   * Disable bump
-   */
-  noBump?: boolean
-
-  /**
    * Generate changelog for tags.
    */
-  changelog?: string
-
-  /**
-   * Disable generate changelog.
-   */
-  noChangelog?: boolean
+  changelog?: string | false
 
   /**
    * Add .github/workflows/lvr-release.yml
@@ -54,7 +44,7 @@ export type CliOptions = {
    *
    * @default "Release {v}"
    */
-  commit?: string
+  commit?: string | false
 
   /**
    * Use `bumpResult.bumpVersion` by default.
@@ -62,18 +52,14 @@ export type CliOptions = {
    *
    * @default `bumpResult.bumpVersion`
    */
-  tag?: string
+  tag?: string | false
 
   /**
    * Push current branch and new tag.
    *
    * @default ''
    */
-  push?: '' | 'tag' | 'branch'
-
-  noCommit?: boolean
-  noTag?: boolean
-  noPush?: boolean
+  push?: '' | 'tag' | 'branch' | false
 }
 
 export type MarkdownOptions = {
@@ -111,7 +97,7 @@ const MarkdownOptionDefaults: MarkdownOptions = {
     // ci: { title: '🤖 CI' },
     // release: { title: '🔖 Release' },
     // WIP: { title: '🚧 Work in Progress' },
-    __Other__: { title: '📌 Other Changes' },
+    __OTHER__: { title: '📌 Other Changes' },
   },
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
@@ -158,7 +144,7 @@ const resolveConfig = async <T extends CliOptions>(options: T) => {
     mergeOptions = lodashMerge(MarkdownOptionDefaults, options)
   } else {
     console.log(`Config file found: ${ config.sources[0] } \n`, config.config)
-    mergeOptions = lodashMerge(CliOptionDefaults, config.config, MarkdownOptionDefaults, options)
+    mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
   }
 
   if (!mergeOptions.github){

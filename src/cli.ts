@@ -30,17 +30,11 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'For all packages.',
     group: 'Bump options:',
   })
-  .option('bumpPrompt', {
+  .option('bump-prompt', {
     alias: 'p',
     array: true,
     description: 'Prompt version.',
     defaultDescription: 'For all packages.',
-    group: 'Bump options:',
-  })
-  .option('noBump', {
-    alias: 'nb',
-    boolean: true,
-    description: 'Disable bump.',
     group: 'Bump options:',
   })
   .option('changelog', {
@@ -50,16 +44,12 @@ void yargs(hideBin(process.argv))
     description: 'Generate Changelog.',
     group: 'Changelog options:',
   })
-  .option('noChangelog', {
-    alias: 'nc',
-    boolean: true,
-    description: 'Disable generate Changelog.',
-    group: 'Changelog options:',
-  })
   .option('yml', {
     boolean: true,
     description: 'Add .github/workflows/changelogithub.yml.',
   })
+  // These three args are improper to be set default value.
+  // Because of the args from cwd owns top priority which would overwrite config of files.
   .option('commit', {
     string: true,
     defaultDescription: 'Release {v}',
@@ -75,9 +65,6 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'Both branch and tag.',
     description: 'Push branch and tag which are optional.',
   })
-  .option('noCommit', { boolean: true })
-  .option('noTag', { boolean: true })
-  .option('noPush', { boolean: true })
   .help()
   .alias('h', 'help')
   .version(version)

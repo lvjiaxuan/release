@@ -43,7 +43,8 @@ Powered by [conventional-recommended-bump](https://github.com/conventional-chang
 
 CLI Arguments:
 - `--bump`, `-b` in short.
-- `--bumpPrompt`, `-p` in short.
+- `--bump-prompt`, `-p` in short.
+- `--no-bump`, `--no-b` to disable.
 
 ```bash
 # Bump root package.json version. If project is detected as a MonoRepo, it would synchronize root version to other package.json in subdirectories.
@@ -65,6 +66,7 @@ Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [
 
 CLI Arguments:
 - `--changelog`, `-c` in short.
+- `--no-changelog`, `--no-c` to disable.
 
 ```bash
 # Generate changelog for all existing tags.
@@ -85,7 +87,7 @@ lvr -c=latest
 
 ### Commit / Tag / Push
 
-Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--noPush`, etc.)
+Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
 
 ```bash
 # Use `Release {v}` as commit message by default.
