@@ -85,6 +85,12 @@ lvr -c=v0.0.2
 lvr -c=latest
 ```
 
+#### `--verbose-change` argument
+
+Disable by default.
+
+It means that CHANGELOG.md would contain more changes which could not be parsed by conventional commits.
+
 ### Commit / Tag / Push
 
 Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
