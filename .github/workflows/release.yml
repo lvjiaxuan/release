@@ -29,9 +29,9 @@ jobs:
 
       - name: Create a release and Publish to npmjs
         run: |
-            nci
-            nr build
-            nr lvr --release
-            pnpm publish --access public --no-git-checks
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          nci
+          nr build
+          nr lvr --release
+          pnpm publish --access public --no-git-checks
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
