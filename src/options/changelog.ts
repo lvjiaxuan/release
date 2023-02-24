@@ -156,6 +156,10 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
     md += ` [All GitHub Releases](https://github.com/${ options.github }/releases).`
   }
 
+  if (!options.verboseChange) {
+    delete options.types['__OTHER__']
+  }
+
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
     const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))

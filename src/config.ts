@@ -32,7 +32,12 @@ export type CliOptions = {
   changelog?: string | false
 
   /**
-   * Add .github/workflows/lvr-release.yml
+   * CHANGELOG.md contains more changes.
+   */
+  verboseChange?: boolean,
+
+  /**
+   * Add .github/workflows/lvr-release.yml.
    *
    * @default false
    */

@@ -1,6 +1,6 @@
 # lvr
 
-<p align=center>Help me better to bump and generate changelog.</p>
+<p align=center>Help me better to bump version and generate changelog.</p>
 
 ## Say sth.
 
@@ -10,9 +10,9 @@ In my release flow, there are some steps in order such as:
 3. Generate changelog.
 3. Commit / Tag.
 4. Push to origin.
-5. Trigger CI jobs like github release or publish stuff which are depended.
+5. Trigger CI workflow that includes github release or publish stuff which are depended.
 
-*Requesting GitHub Rest API locally is not my option for reasons such as the network likely being instable and requiring a token for authentication, etc. So this tool just to **Bump**  and **Generate changelog** on local. I prefer to put the release job on CI env.*
+*Requesting GitHub Rest API locally is not my purpose for reasons such as the network likely being instable  requiring a token for authentication, etc. So this tool just to **Bump**  and **Generate changelog** on local. I prefer to put the release job on CI env.*
 
 ## Usage
 
@@ -47,7 +47,7 @@ CLI Arguments:
 - `--no-bump`, `--no-b` to disable.
 
 ```bash
-# Bump root package.json version. If project is detected as a MonoRepo, it would synchronize root version to other package.json in subdirectories.
+# Bump root's package.json version. If project is detected as a Monorepo, it would synchronize root's version to other package.json in subdirectories.
 lvr -b
 
 # In a detected Monorepo, it would bump specified package.json version in subdirectories.
@@ -121,7 +121,7 @@ lvr --yml
 
 See [src/config.ts](./src/config.ts).
 
-Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
+Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd which has highest priority. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
 ## Credits
 

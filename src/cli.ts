@@ -44,12 +44,16 @@ void yargs(hideBin(process.argv))
     description: 'Generate Changelog.',
     group: 'Changelog options:',
   })
+  .option('verbose-change', {
+    boolean: true,
+    description: 'CHANGELOG.md contains more changes.',
+  })
   .option('yml', {
     boolean: true,
     description: 'Add .github/workflows/changelogithub.yml.',
   })
   // These three args are improper to be set default value.
-  // Because of the args from cwd owns top priority which would overwrite config of files.
+  // Because of the args from cwd owns highest priority which would overwrite config of files.
   .option('commit', {
     string: true,
     defaultDescription: 'Release {v}',
