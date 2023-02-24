@@ -128,5 +128,5 @@ Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) f
 
 # TODO
 
-- [ ] Do a confirm before acting.
+- [ ] Do a confirm before doing execution.
 - [ ] Pre-Release.

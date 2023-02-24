@@ -62,7 +62,8 @@ void yargs(hideBin(process.argv))
   })
   .option('commit', {
     string: true,
-    description: 'Commit message which is customizable.\n`{v}` equal to new version.',
+    defaultDescription: 'Release {v}',
+    description: 'Customizable commit message which its `{v}` is a version placeholder.',
   })
   .option('tag', {
     string: true,
