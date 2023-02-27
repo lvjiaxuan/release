@@ -1,9 +1,16 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.2.0`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v0.2.1`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v0.2.1 <sub>(2023-02-27)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.0...main)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- miss default config. &nbsp;-&nbsp; by **lvjiaxuan** [<samp>(a167e)</samp>](https://github.com/lvjiaxuan/release/commit/a167e48)
 
 ## v0.2.0 <sub>(2023-02-24)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.5...main)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.1.5...v0.2.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
