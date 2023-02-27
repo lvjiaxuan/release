@@ -146,7 +146,7 @@ const resolveConfig = async <T extends CliOptions>(options: T) => {
   let mergeOptions: T & MarkdownOptions
 
   if (!config.sources.length) {
-    mergeOptions = lodashMerge(MarkdownOptionDefaults, options)
+    mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
   } else {
     console.log(`Config file found: ${ config.sources[0] } \n`, config.config)
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
