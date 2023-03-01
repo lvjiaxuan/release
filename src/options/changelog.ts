@@ -101,7 +101,7 @@ const verifyTags = async (tags: string[][], ignore: string) => {
 
 export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   if (options.changelog === false) {
-    console.log(`\nGenerate changelog ${ pc.bold(pc.yellow('skip')) }.`)
+    console.log(`\n${ pc.bold(pc.yellow('Skip')) } generate CHANGELOG.md.`)
     return
   }
 

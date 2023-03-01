@@ -5,6 +5,11 @@ import { addYml, bump, changelog, execGitJobs, sendRelease } from './index'
 
 export default async (options: CliOptions & MarkdownOptions) => {
   try {
+    // @ts-ignore
+    if (options.debug) {
+      console.log('\nOptions: ', options)
+    }
+
     options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
 
     let bumpResult: Awaited<ReturnType<typeof bump>>
@@ -34,8 +39,8 @@ export default async (options: CliOptions & MarkdownOptions) => {
     } else {
       // Both
       isExecGitJobs = true
-      options.bump = []
-      options.changelog = ''
+      options.bump = options.bump ?? []
+      options.changelog = options.changelog ?? ''
       bumpResult = await bump(options)
       changelogResult = await changelog(options, bumpResult?.bumpVersion)
     }

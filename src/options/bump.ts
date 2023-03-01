@@ -37,7 +37,7 @@ const resolveValidPackages = async (packages: string[]) => {
     onlyFiles: true,
   })
 
-  if (packages.length != 0) {
+  if (packages.length !== 0) {
     packagesResolvePaths = packagesResolvePaths.filter(path => {
 
       if (path === 'package.json') {
@@ -62,7 +62,7 @@ const resolveValidPackages = async (packages: string[]) => {
 
 export const bump = async (options: CliOptions) => {
   if (options.bump?.[0] === false) {
-    console.log(`\nBump ${ pc.bold(pc.yellow('skip')) }.`)
+    console.log(`\n${ pc.bold(pc.yellow('Skip')) } Bump.`)
     return
   }
 
