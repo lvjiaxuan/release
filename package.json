@@ -1,7 +1,7 @@
 {
   "name": "lvr",
   "type": "commonjs",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
