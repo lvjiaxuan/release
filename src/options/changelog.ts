@@ -15,9 +15,12 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   if (info.login || !options.github)
     return info
 
+  const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
+  options.token && (headers.authorization = `token ${ options.token }`)
+
   /* eslint-disable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
   try {
-    const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers: { accept: 'application/vnd.github+json' } })
+    const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers })
     info.login = data.items[0].login
   }
   catch {}
@@ -27,7 +30,7 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
 
   if (info.commits.length) {
     try {
-      const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers: { accept: 'application/vnd.github+json' } })
+      const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers })
       info.login = data.author.login
     }
     catch {}

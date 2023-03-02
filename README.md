@@ -85,6 +85,10 @@ lvr -c=v0.0.2
 lvr -c=latest
 ```
 
+#### About author
+
+To try richness in the `CHANGELOG.md`, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP. To bypass this, it is recommended to include a token by passing `--token` when encountering this case.
+
 #### `--verbose-change` argument
 
 Disable by default.
