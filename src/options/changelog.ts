@@ -10,8 +10,14 @@ import type { AuthorInfo, Commit } from 'changelogithub'
 
 type ChangelogOptions = CliOptions & MarkdownOptions
 
+const globalAuthorCache = new Map<string, AuthorInfo>()
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
 const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) => {
+
+  if (globalAuthorCache.has(info.email)) {
+    return globalAuthorCache.get(info.email)!
+  }
+
   if (info.login)
     return info
 
@@ -25,8 +31,10 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   }
   catch {}
 
-  if (info.login)
+  if (info.login) {
+    globalAuthorCache.set(info.email, info)
     return info
+  }
 
   if (info.commits.length && options.github) {
     try {
@@ -37,6 +45,7 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   }
   /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
 
+  globalAuthorCache.set(info.email, info)
   return info
 }
 

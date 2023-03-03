@@ -45,7 +45,7 @@ Powered by [conventional-recommended-bump](https://github.com/conventional-chang
 CLI Arguments:
 - `--bump`, `-b` in short.
 - `--bump-prompt`, `-p` in short.
-- `--no-bump`, `--no-b` to disable.
+- `--no-bump`, `--no-b` to disable. It seems useless.
 
 ```bash
 # Bump root's package.json version. If project is detected as a monorepo, it would synchronize workspace root's version to other package.json in subdirectories.
@@ -100,7 +100,7 @@ It means that CHANGELOG would contain more changes which could not be parsed by 
 
 Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
 
-> `--no-bump` and `--no-changelog` are included to enable git jobs.
+> `--no-changelog` is considered to enable git jobs, while `--no-bump` makes no sense to next step.
 
 ```bash
 # Use `Release {v}` as commit message by default.

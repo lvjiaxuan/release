@@ -2,6 +2,21 @@ import pc from 'picocolors'
 import type { CliOptions, MarkdownOptions } from './index'
 import { addYml, bump, changelog, execGitJobs, sendRelease } from './index'
 
+const isOnlyBump = (options: CliOptions) => {
+  // lvr -b
+  const onlyBump = (Object.hasOwn(options, 'bump') || Object.hasOwn(options, 'bumpPrompt')) && !Object.hasOwn(options, 'changelog')
+  // lvr --no-b
+  const releaseWithoutBump = Object.hasOwn(options, 'bump') && options.bump?.[0] === false
+  return onlyBump && !releaseWithoutBump
+}
+
+const isOnlyChangelog = (options: CliOptions) => {
+  // lvr -c
+  const onlyChangelog = !(Object.hasOwn(options, 'bump') || Object.hasOwn(options, 'bumpPrompt')) && Object.hasOwn(options, 'changelog')
+  // lvr --no-c
+  const releaseWithoutChangelog = options.changelog === false
+  return onlyChangelog && !releaseWithoutChangelog
+}
 
 export default async (options: CliOptions & MarkdownOptions) => {
   try {
@@ -28,20 +43,20 @@ export default async (options: CliOptions & MarkdownOptions) => {
     }
 
     let isExecGitJobs = false
-    if ((Object.hasOwn(options, 'bump') || Object.hasOwn(options, 'bumpPrompt')) && !Object.hasOwn(options, 'changelog')) {
+    if (isOnlyBump(options)) {
       // Bump only. CliOptions
       console.log('Bump only.')
       bumpResult = await bump(options)
-    } else if (!(Object.hasOwn(options, 'bump') || Object.hasOwn(options, 'bumpPrompt')) && Object.hasOwn(options, 'changelog')) {
+    } else if (isOnlyChangelog(options)) {
       // Changelog only. CliOptions & MarkdownOptions
       console.log('Changelog only.')
       changelogResult = await changelog(options)
     } else {
       // Both
-      isExecGitJobs = true
       options.bump = options.bump ?? []
       options.changelog = options.changelog ?? ''
       bumpResult = await bump(options)
+      isExecGitJobs = !!bumpResult
       changelogResult = await changelog(options, bumpResult?.bumpVersion)
     }
 

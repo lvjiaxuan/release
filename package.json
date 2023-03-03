@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "lint:fix": "eslint . --fix",
+    "lint": "eslint .",
     "dev": "nr build --watch",
     "build": "tsup src/cli.ts --target=node16 --clean --format=cjs",
     "test": "nix cross-env NODE_OPTIONS=--experimental-vm-modules jest",
