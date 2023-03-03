@@ -12,7 +12,7 @@ type ChangelogOptions = CliOptions & MarkdownOptions
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
 const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) => {
-  if (info.login || !options.github)
+  if (info.login)
     return info
 
   const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
@@ -28,7 +28,7 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   if (info.login)
     return info
 
-  if (info.commits.length) {
+  if (info.commits.length && options.github) {
     try {
       const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers })
       info.login = data.author.login
