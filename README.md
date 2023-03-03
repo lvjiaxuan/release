@@ -1,18 +1,18 @@
 # lvr
 
-<p align=center>Help me better to bump version and generate changelog.</p>
+<p align=center>Help me better to bump version and generate CHANGELOG.</p>
 
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
-1. (optional) Do a test .
+1. (optional) Do some test .
 2. Bump version.
-3. Generate changelog.
+3. Generate CHANGELOG.
 3. Commit / Tag.
 4. Push to origin.
 5. Trigger CI workflow that includes github release or publish stuff which are depended.
 
-*Requesting GitHub Rest API locally is not my purpose for reasons such as the network likely being instable  requiring a token for authentication, etc. So this tool just to **Bump**  and **Generate changelog** on local. I prefer to put the release job on CI env.*
+*Requesting GitHub Rest API locally is not my purpose for reasons such as the network likely being instable and requiring a explicit token for authentication, etc. So this tool just to **Bump**  and **Generate CHANGELOG** on local. I prefer to put the release job on CI workflow.*
 
 ## Usage
 
@@ -23,7 +23,8 @@ Quick trial:
 # As well as `nix lvr --bump --changelog --commit --tag --push``
 nix lvr
 
-# Maybe you want to check what will execute. Use Dry run.
+# Maybe you want to check what will execute in advance.
+# Please use Dry run.
 nix lvr -d
 ```
 
@@ -47,10 +48,10 @@ CLI Arguments:
 - `--no-bump`, `--no-b` to disable.
 
 ```bash
-# Bump root's package.json version. If project is detected as a Monorepo, it would synchronize root's version to other package.json in subdirectories.
+# Bump root's package.json version. If project is detected as a monorepo, it would synchronize workspace root's version to other package.json in subdirectories.
 lvr -b
 
-# In a detected Monorepo, it would bump specified package.json version in subdirectories.
+# In a detected monorepo, it would bump specified package.json version in subdirectories.
 lvr -b=pkg-a pkg-b
 
 # Prompt version rather than basing on git metadata by default.
@@ -58,7 +59,7 @@ lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
-> **Note** Root's **package.json** is always included, which means it would keep latest version from its packages.
+> **Note** Workspace root's **package.json** is always included, which means it would keep latest version from its packages.
 
 ### Changelog only
 
@@ -87,17 +88,19 @@ lvr -c=latest
 
 #### About author
 
-To try richness in the `CHANGELOG.md`, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP. To bypass this, it is recommended to include a token by passing `--token` when encountering this case.
+To approach more rich info in the CHANGELOG, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP. To bypass this, it is recommended to include a token by passing `--token` when encountering this case 😔. 
 
 #### `--verbose-change` argument
 
 Disable by default.
 
-It means that CHANGELOG.md would contain more changes which could not be parsed by conventional commits.
+It means that CHANGELOG would contain more changes which could not be parsed by conventional commits.
 
 ### Commit / Tag / Push
 
 Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
+
+> `--no-bump` and `--no-changelog` are included to enable git jobs.
 
 ```bash
 # Use `Release {v}` as commit message by default.
