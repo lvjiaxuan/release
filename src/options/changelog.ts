@@ -95,16 +95,45 @@ const resolveAuthors = async (commits: Commit[], options: ChangelogOptions) => {
     })
 }
 
-const resolveFormToList = async (tags?: string[]) => {
+const resolveFormToList = async (tags?: string[] | number) => {
   const list: string[][] = []
+  const allTags = await getTags()
+
   if (!tags) {
-    tags = await getTags()
+    tags = allTags
     tags[0] && list.unshift([ '', tags[0] ])
+
+  } else if (Array.isArray(tags)) {
+
+    // @ts-ignore
+    const head = allTags.findIndex(i => i === tags[0])
+    // @ts-ignore
+    const tail = allTags.findIndex(i => i === tags[tags.length - 1])
+
+    if (head > -1 && tail > -1) {
+      const filter = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
+      for (let i = 0, n = filter.length; i < n - 1; i++) {
+        list.push([ filter[i], filter[i + 1] ])
+      }
+      return list.reverse()
+    }
+
+    return []
+  } else {
+    if (tags >= allTags.length) {
+      list.unshift([ '', allTags[0] ])
+    }
+
+    tags = allTags.slice(-tags - 1)
+
+    for (let i = 0, n = tags.length; i < n - 1; i++) {
+      list.push([ tags[i], tags[i + 1] ])
+    }
+    return list.reverse()
   }
-  for (let i = 0, n = tags.length; i < n - 1; i++) {
-    list.push([ tags[i], tags[i + 1] ])
-  }
-  return list.reverse()
+
+  // For type checking. Meaningless.
+  return list
 }
 
 const verifyTags = async (tags: string[][], ignore: string) => {
@@ -131,20 +160,21 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
     const from2to = options.changelog!.split('...') as [ string, string ]
     fromToList = await resolveFormToList(from2to)
   } else if (Number.isInteger(-options.changelog!)) {
-    // For few latest tags.
-    const tags = await getTags()
-    fromToList = await resolveFormToList(tags.slice(-options.changelog! - 1))
-  } else if (options.changelog === 'latest') {
-    // For the latest tag.
-    const [ latestTag, beforeLatestTag ] = await Promise.all([
+    // For few last tags.
+    fromToList = await resolveFormToList(+options.changelog!)
+  } else if (options.changelog === 'last') {
+    // For the last tag.
+    const [ lastTag, beforeLastTag ] = await Promise.all([
       getLastGitTag(),
       getLastGitTag(-1),
     ])
-    fromToList = [ [ beforeLatestTag, latestTag ] ]
+    fromToList = [ [ beforeLastTag, lastTag ] ]
   } else if (semver.valid(options.changelog)) {
     // For a specified tag.
     appendNewTag = false
-    fromToList = [ [ '', options.changelog! ] ]
+    const tags = await getTags()
+    const idx = tags.findIndex(i => i === options.changelog)
+    fromToList = [ [ idx > -1 ? tags[idx - 1] : '', options.changelog! ] ]
   }
 
   let currentGitBranch = ''
@@ -154,7 +184,7 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
-    console.log(`\n${ pc.bold(pc.yellow('Skip')) }. ${ pc.red('Illegal tags') } to generate changelog.`)
+    console.log(`\n${ pc.bold(pc.yellow('Skip')) }. ${ pc.red('Illegal tags') } to generate CHANGELOG.`)
     return
   }
 
@@ -162,7 +192,7 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
 
   let md = '# Changelog\n\n'
   if (fromToList.length > 1) {
-    md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1] }\`.`
+    md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1] }\` (${ fromToList.length }).`
   } else if (fromToList.length === 1) {
     md += `Tag \`${ newTag! }\`.`
   }

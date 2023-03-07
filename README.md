@@ -76,14 +76,14 @@ lvr -c
 # For a tag range.
 lvr -c=v1.0.1...v2.1.3
 
-# For 2 latest tag.
+# For 2 last tag.
 lvr -c=2
 
 # For a specified tag.
 lvr -c=v0.0.2
 
-# For latest tag only
-lvr -c=latest
+# For last tag only
+lvr -c=last
 ```
 
 #### About author
