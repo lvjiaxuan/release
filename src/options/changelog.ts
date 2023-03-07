@@ -7,6 +7,8 @@ import semver from 'semver'
 import { $fetch } from 'ohmyfetch'
 import { notNullish } from '@antfu/utils'
 import type { AuthorInfo, Commit } from 'changelogithub'
+import { execCMD } from '../index'
+
 
 type ChangelogOptions = CliOptions & MarkdownOptions
 
@@ -204,6 +206,8 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   if (!options.verboseChange) {
     delete options.types['__OTHER__']
   }
+
+  await execCMD('git', [ 'push' ])
 
   /* eslint-disable no-await-in-loop */
   for (const [ from, to ] of fromToList) {
