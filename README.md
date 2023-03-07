@@ -88,7 +88,11 @@ lvr -c=latest
 
 #### About author
 
-To approach more rich info in the CHANGELOG, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP. To bypass this, it is recommended to include a token by passing `--token` when encountering this case 😔. 
+To generate more rich info in the CHANGELOG and release note, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
+
+To bypass this, it is recommended to include a token by passing `--token` when encountering this case 😔.
+
+Alternatively, It uses [dotenv](https://github.com/motdotla/dotenv) o load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
 
 #### `--verbose-change` argument
 
@@ -100,7 +104,7 @@ It means that CHANGELOG would contain more changes which could not be parsed by 
 
 Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
 
-> `--no-changelog` is considered to enable git jobs, while `--no-bump` makes no sense to next step.
+> `--no-changelog` is considered to enable git jobs in the same way, while `--no-bump` makes no sense to further step.
 
 ```bash
 # Use `Release {v}` as commit message by default.
