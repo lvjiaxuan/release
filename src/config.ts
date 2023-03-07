@@ -2,7 +2,6 @@ import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import { getGitHubRepo } from './git'
 import path from 'node:path'
-import * as dotenv from 'dotenv'
 
 export type CliOptions = {
   /**
@@ -66,15 +65,15 @@ export type CliOptions = {
    * @default ''
    */
   push?: '' | 'tag' | 'branch' | false
+
+  /**
+   * **Optional**
+   * A GitHub PAT for fetching author info.
+   */
+  token?: string
 }
 
 export type MarkdownOptions = {
-  /**
-   * **Optional**
-   * PAT is used for requesting author GitHub Link for more detailed changelog.
-   */
-  token?: string
-
   /**
    * **Optional**
    * Resolved by `git config --get remote.origin.url'` automatically for more detailed changelog.
@@ -84,6 +83,7 @@ export type MarkdownOptions = {
   types: Record<string, {
     title: string
   }>
+
   titles: {
     breakingChanges: string
   }
@@ -157,8 +157,11 @@ const resolveConfig = async <T extends CliOptions>(options: T) => {
     mergeOptions.github = await getGitHubRepo()
   }
 
-  dotenv.config({ path: path.join(process.cwd(), '.env.local') })
-  mergeOptions.token = process.env.GITHUB_TOKEN
+  if (!mergeOptions.token) {
+    const dotenv = await import('dotenv')
+    dotenv.config({ path: path.join(process.cwd(), '.env.local') })
+    mergeOptions.token = process.env.GITHUB_TOKEN
+  }
 
   return mergeOptions
 }

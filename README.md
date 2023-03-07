@@ -90,7 +90,7 @@ lvr -c=latest
 
 To generate more rich info in the CHANGELOG and release note, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
 
-To bypass this, it is recommended to include a token by passing `--token` when encountering this case 😔.
+To bypass this, it is recommended to include a GitHub PAT by passing `--token` when encountering this case 😔.
 
 Alternatively, It uses [dotenv](https://github.com/motdotla/dotenv) o load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
 

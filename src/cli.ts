@@ -69,6 +69,10 @@ void yargs(hideBin(process.argv))
     defaultDescription: 'Both branch and tag.',
     description: 'Push branch and tag which are optional.',
   })
+  .option('token', {
+    string: true,
+    description: 'A GitHub PAT for fetching author info.',
+  })
   .help()
   .alias('h', 'help')
   .version(version)
