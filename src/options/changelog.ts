@@ -113,29 +113,22 @@ const resolveFormToList = async (tags?: string[] | number) => {
     const tail = allTags.findIndex(i => i === tags[tags.length - 1])
 
     if (head > -1 && tail > -1) {
-      const filter = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
-      for (let i = 0, n = filter.length; i < n - 1; i++) {
-        list.push([ filter[i], filter[i + 1] ])
-      }
-      return list.reverse()
+      tags = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
+    } else {
+      return []
     }
-
-    return []
   } else {
     if (tags >= allTags.length) {
       list.unshift([ '', allTags[0] ])
     }
 
     tags = allTags.slice(-tags - 1)
-
-    for (let i = 0, n = tags.length; i < n - 1; i++) {
-      list.push([ tags[i], tags[i + 1] ])
-    }
-    return list.reverse()
   }
 
-  // For type checking. Meaningless.
-  return list
+  for (let i = 0, n = tags.length; i < n - 1; i++) {
+    list.push([ tags[i], tags[i + 1] ])
+  }
+  return list.reverse()
 }
 
 const verifyTags = async (tags: string[][], ignore: string) => {
