@@ -66,7 +66,7 @@ export default async (options: CliOptions & MarkdownOptions) => {
 
     if (changelogResult) {
       // bumpResult && tag
-      console.log('\nChangelog result:', `(${ changelogResult.md.slice(0, 200) })`)
+      console.log('\nChangelog result:', `(${ changelogResult.md.replaceAll(/\n|\r/g, '').slice(0, 300) })`)
     }
 
     if (isExecGitJobs) {

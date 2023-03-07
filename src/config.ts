@@ -1,6 +1,7 @@
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import { getGitHubRepo } from './git'
+import path from 'node:path'
 import * as dotenv from 'dotenv'
 
 export type CliOptions = {
@@ -156,7 +157,7 @@ const resolveConfig = async <T extends CliOptions>(options: T) => {
     mergeOptions.github = await getGitHubRepo()
   }
 
-  dotenv.config({ path: '.env.local' })
+  dotenv.config({ path: path.join(process.cwd(), '.env.local') })
   mergeOptions.token = process.env.GITHUB_TOKEN
 
   return mergeOptions

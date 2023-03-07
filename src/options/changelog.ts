@@ -13,7 +13,6 @@ type ChangelogOptions = CliOptions & MarkdownOptions
 const globalAuthorCache = new Map<string, AuthorInfo>()
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
 const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) => {
-
   if (globalAuthorCache.has(info.email)) {
     return globalAuthorCache.get(info.email)!
   }
@@ -67,6 +66,10 @@ const resolveAuthors = async (commits: Commit[], options: ChangelogOptions) => {
     // record commits only for the first author
     if (idx === 0)
       info.commits.push(commit.shortHash)
+
+    if (globalAuthorCache.has(info.email)) {
+      info.login = globalAuthorCache.get(info.email)!.login
+    }
 
     return info
   }).filter(notNullish))
