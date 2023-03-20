@@ -1,9 +1,24 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.2.2`. [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v0.3.0` (13). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v0.3.0 <sub>(2023-03-07)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.2...main)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- token for search author. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(8a174)</samp>](https://github.com/lvjiaxuan/release/commit/8a1745d)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- dup query &nbsp;-&nbsp; by @lvjiaxuan [<samp>(3c11f)</samp>](https://github.com/lvjiaxuan/release/commit/3c11fa8)
+- respect author cache. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(9d7c0)</samp>](https://github.com/lvjiaxuan/release/commit/9d7c033)
+- changelog tag bugs. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(6c5a0)</samp>](https://github.com/lvjiaxuan/release/commit/6c5a0cb)
+- push before fetching. fix #7. &nbsp;-&nbsp; by @lvjiaxuan in [#7](https://github.com/lvjiaxuan/release/issues/7) [<samp>(f444f)</samp>](https://github.com/lvjiaxuan/release/commit/f444fbd)
+- `-c` bug. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(deacf)</samp>](https://github.com/lvjiaxuan/release/commit/deacff1)
 
 ## v0.2.2 <sub>(2023-03-01)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.1...main)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.1...v0.2.2)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
@@ -75,8 +90,8 @@ Tag ranges `v0.1.0...v0.2.2`. [All GitHub Releases](https://github.com/lvjiaxuan
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
-- support commit/tag/push. &nbsp;-&nbsp; by **lvjiaxuan 吕嘉轩** [<samp>(b97a8)</samp>](https://github.com/lvjiaxuan/release/commit/b97a8df)
+- support commit/tag/push. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(b97a8)</samp>](https://github.com/lvjiaxuan/release/commit/b97a8df)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
-- yargs options should not use kebab-case. &nbsp;-&nbsp; by **lvjiaxuan 吕嘉轩** [<samp>(a792e)</samp>](https://github.com/lvjiaxuan/release/commit/a792eed)
+- yargs options should not use kebab-case. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(a792e)</samp>](https://github.com/lvjiaxuan/release/commit/a792eed)
