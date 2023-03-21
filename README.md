@@ -2,6 +2,8 @@
 
 <p align=center>Help me better to bump version and generate CHANGELOG.</p>
 
+![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
+[![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
