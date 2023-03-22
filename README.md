@@ -7,14 +7,21 @@
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
-1. (optional) Do some test .
+1. Do some test .
 2. Bump version.
 3. Generate CHANGELOG.
 3. Commit / Tag.
 4. Push to origin.
 5. Trigger CI workflow that includes github release or publish stuff which are depended.
 
-*Requesting GitHub Rest API locally is not my purpose for reasons such as the network likely being instable and requiring a explicit token for authentication, etc. So this tool just to **Bump**  and **Generate CHANGELOG** on local. I prefer to put the release job on CI workflow.*
+More purposes:
+1. I want to only an one script to finish releasing, rather than such as an additional `git pull` after releasing.
+2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), while in CI env is more efficient.
+3. Do the heavy jobs like compile/build in CI env is more efficient.
+
+As mentioned above, I have put the bump job and CHANGELOG generation in local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
+
+> The testing job, a heavy job which has to be done at the very beginning in local environment. Until now, I haven't found a better way.
 
 ## Usage
 
@@ -25,7 +32,7 @@ Quick trial:
 # As well as `nix lvr --bump --changelog --commit --tag --push``
 nix lvr
 
-# Maybe you want to check what will execute in advance.
+# Maybe you want to confirm what will execute.
 # Please use Dry run.
 nix lvr -d
 ```
@@ -42,7 +49,7 @@ lvr -h
 
 ### Bump only
 
-Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
+Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 CLI Arguments:
 - `--bump`, `-b` in short.
@@ -53,10 +60,10 @@ CLI Arguments:
 # Bump root's package.json version. If project is detected as a monorepo, it would synchronize workspace root's version to other package.json in subdirectories.
 lvr -b
 
-# In a detected monorepo, it would bump specified package.json version in subdirectories.
+# In a detected monorepo, it would only bump the specified package.json version in subdirectories.
 lvr -b=pkg-a pkg-b
 
-# Prompt version rather than basing on git metadata by default.
+# Prompt version rather than basing on Conventional Commits.
 lvr -p
 lvr -p=pkg-a pkg-b
 ```
@@ -90,11 +97,11 @@ lvr -c=last
 
 #### About author
 
-To generate more rich info in the CHANGELOG and release note, I utilize the GitHub API to search for a valid author name. However, be advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
+To generate more rich info in the CHANGELOG and release note, I utilize the GitHub Rest API to search for a valid author name. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
 
-To bypass this, it is recommended to include a GitHub PAT by passing `--token` when encountering this case 😔.
+To solve this, it could pass a GitHub PAT by `--token` when encountering this situation 😔.
 
-Alternatively, It uses [dotenv](https://github.com/motdotla/dotenv) o load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
+Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
 
 #### `--verbose-change` argument
 
@@ -106,15 +113,15 @@ It means that CHANGELOG would contain more changes which could not be parsed by 
 
 Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
 
-> `--no-changelog` is considered to enable git jobs in the same way, while `--no-bump` makes no sense to further step.
+> `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
 ```bash
 # Use `Release {v}` as commit message by default.
-# The `{v}` would be replaced by `bumpVersion`.
+# The `{v}` would be replaced by the `bumpVersion` from bump job.
 lvr --commit="R: {v}"
 
 # Use `bumpVersion` by default.
-# Customizable.
+# Customizable as below.
 lvr --tag=BatMan
 
 # Push current branch and new tag by default.
@@ -127,7 +134,7 @@ lvr --push=branch
 lvr --push=tag
 ```
 
-### GitHub Release by *GitHub Action*
+### Send a GitHub Release in *GitHub Action*
 
 See [yml.ts](./src/options/yml.ts).
 
@@ -142,12 +149,7 @@ See [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd which has highest priority. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
 
-## Credits
-
-- [unjs/changelogen](https://github.com/unjs/changelogen)
-- [antfu/changelogithub](https://github.com/antfu/changelogithub)
-
 # TODO
 
-- [ ] Do a confirm before doing execution.
+- [ ] ~~Do a confirm before doing execution~~.
 - [ ] Pre-Release.
