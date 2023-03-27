@@ -4,24 +4,31 @@
 
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
+
+
+## Feature
+
+1. Bump and CHANGELOG are both supported with monorepo.
+2. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
-1. Do some test .
+1. perform some tests.
 2. Bump version.
 3. Generate CHANGELOG.
 3. Commit / Tag.
 4. Push to origin.
-5. Trigger CI workflow that includes github release or publish stuff which are depended.
+5. Trigger CI workflow that involves github release or publish stuff which are depended on.
 
-More purposes:
-1. I want to only an one script to finish releasing, rather than such as an additional `git pull` after releasing.
+More:
+1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
 2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), while in CI env is more efficient.
-3. Do the heavy jobs like compile/build in CI env is more efficient.
+3. perform the heavy jobs like compile / build in CI env is more efficient.
 
-As mentioned above, I have put the bump job and CHANGELOG generation in local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
+As mentioned above, I have put the bump job and CHANGELOG generation in the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
 
-> The testing job, a heavy job which has to be done at the very beginning in local environment. Until now, I haven't found a better way.
+> The testing job, a heavy job which has to be performed at the very beginning in the local environment. Until now, I haven't found a better way.
 
 ## Usage
 
@@ -49,7 +56,7 @@ lvr -h
 
 ### Bump only
 
-Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
 
 CLI Arguments:
 - `--bump`, `-b` in short.
@@ -97,7 +104,7 @@ lvr -c=last
 
 #### About author
 
-To generate more rich info in the CHANGELOG and release note, I utilize the GitHub Rest API to search for a valid author name. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
+To generate more rich info in the CHANGELOG.md as same as release note, I utilize the GitHub Rest API to search for a valid author name. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
 
 To solve this, it could pass a GitHub PAT by `--token` when encountering this situation 😔.
 
@@ -134,7 +141,7 @@ lvr --push=branch
 lvr --push=tag
 ```
 
-### Send a GitHub Release in *GitHub Action*
+### Send a GitHub Release by *GitHub Action*
 
 See [yml.ts](./src/options/yml.ts).
 
@@ -148,8 +155,3 @@ lvr --yml
 See [src/config.ts](./src/config.ts).
 
 Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd which has highest priority. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
-
-# TODO
-
-- [ ] ~~Do a confirm before doing execution~~.
-- [ ] Pre-Release.
