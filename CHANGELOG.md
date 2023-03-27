@@ -1,9 +1,20 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.3.0` (13). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v0.3.1` (14). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
-## v0.3.0 <sub>(2023-03-07)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.2...main)
+## v0.3.1 <sub>(2023-03-27)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.0...main)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- regex for release note &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ac36a)</samp>](https://github.com/lvjiaxuan/release/commit/ac36a83)
+
+### &nbsp;&nbsp;&nbsp;📝 Documentation
+
+- practice my english &nbsp;-&nbsp; by @lvjiaxuan [<samp>(21b1d)</samp>](https://github.com/lvjiaxuan/release/commit/21b1d49)
+
+## v0.3.0 <sub>(2023-03-20)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.2.2...v0.3.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
