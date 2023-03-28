@@ -1,5 +1,5 @@
 import { bump } from './../src'
-import path from 'path'
+import path from 'node:path'
 import shell from 'shelljs'
 
 describe('nx @lvjiaxuan/release --bump', () => {
@@ -87,6 +87,7 @@ describe('nx @lvjiaxuan/release --bump', () => {
   })
 
   it('--no-bump', async () => {
+    // @ts-ignore
     const snap = await bump({ bump: [ 'foo', 'fake' ], noBump: true })
     // eslint-disable-next-line @typescript-eslint/quotes
     expect(snap).toMatchInlineSnapshot(`undefined`)

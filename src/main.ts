@@ -1,6 +1,6 @@
 import pc from 'picocolors'
 import type { CliOptions, MarkdownOptions } from './index'
-import { addYml, bump, changelog, execGitJobs, sendRelease } from './index'
+import { addYml, bump, changelog, execCMD, execGitJobs, sendRelease } from './index'
 
 const isOnlyBump = (options: CliOptions) => {
   // lvr -b
@@ -26,6 +26,11 @@ export default async (options: CliOptions & MarkdownOptions) => {
     }
 
     options.dry && console.log(pc.bold(pc.blue('\nDry run.\n')))
+
+    if (!(await execCMD('git', [ 'status' ])).stdout.includes('nothing to commit, working tree clean')) {
+      console.log(`${ pc.yellow('\nWorking tree is not clean.') }`)
+      return
+    }
 
     let bumpResult: Awaited<ReturnType<typeof bump>>
     let changelogResult: Awaited<ReturnType<typeof changelog>>
