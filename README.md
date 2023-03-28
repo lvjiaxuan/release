@@ -8,8 +8,9 @@
 
 ## Feature
 
-1. Bump and CHANGELOG are both supported with monorepo.
-2. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+1. Bump version for some specific package.json in a monorepo.
+2. Generate CHANGELOG within a specific version range.
+3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## Say sth.
 
@@ -26,7 +27,7 @@ More:
 2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), while in CI env is more efficient.
 3. perform the heavy jobs like compile / build in CI env is more efficient.
 
-As mentioned above, I have put the bump job and CHANGELOG generation in the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
+As mentioned above, I have put the bump job and CHANGELOG generation in the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
 
 > The testing job, a heavy job which has to be performed at the very beginning in the local environment. Until now, I haven't found a better way.
 
@@ -39,7 +40,7 @@ Quick trial:
 # As well as `nix lvr --bump --changelog --commit --tag --push``
 nix lvr
 
-# Maybe you want to confirm what will execute.
+# Maybe you want to confirm what will be executed.
 # Please use Dry run.
 nix lvr -d
 ```
@@ -64,18 +65,21 @@ CLI Arguments:
 - `--no-bump`, `--no-b` to disable. It seems useless.
 
 ```bash
-# Bump root's package.json version. If project is detected as a monorepo, it would synchronize workspace root's version to other package.json in subdirectories.
+# Bump root's package.json version.
+# If project is detected as a monorepo, it would bump all version of other package.json in subdirectories.
 lvr -b
 
-# In a detected monorepo, it would only bump the specified package.json version in subdirectories.
+# In a detected monorepo, it would only bump the specific package.json's version in subdirectories.
 lvr -b=pkg-a pkg-b
 
-# Prompt version rather than basing on Conventional Commits.
+# Prompt the version rather than basing on Conventional Commits.
 lvr -p
 lvr -p=pkg-a pkg-b
 ```
 
-> **Note** Workspace root's **package.json** is always included, which means it would keep latest version from its packages.
+> **Note**
+> 
+> A monorepo is no need to specify a version prop in root's package.json.
 
 ### Changelog only
 
@@ -86,16 +90,16 @@ CLI Arguments:
 - `--no-changelog`, `--no-c` to disable.
 
 ```bash
-# Generate changelog for all existing tags.
+# Generate CHANGELOG for all existing tags.
 lvr -c
 
-# For a tag range.
+# Within a tag range.
 lvr -c=v1.0.1...v2.1.3
 
 # For 2 last tag.
 lvr -c=2
 
-# For a specified tag.
+# For a specific tag.
 lvr -c=v0.0.2
 
 # For last tag only
@@ -125,9 +129,11 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 ```bash
 # Use `Release {v}` as commit message by default.
 # The `{v}` would be replaced by the `bumpVersion` from bump job.
+# In a monorepo, the `{v}` would reference to its last tag version.
 lvr --commit="R: {v}"
 
 # Use `bumpVersion` by default.
+# In a monorepo, it would reference to its last tag version.
 # Customizable as below.
 lvr --tag=BatMan
 
