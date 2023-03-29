@@ -1,3 +1,5 @@
+> :warning: It has some confusions in how to release a monorepo. For now, it doesn't make sense to bump the version for a few of specific package within a monorepo. However, I will figure it out at a later time.
+
 # lvr
 
 <p align=center>Help me better to bump version and generate CHANGELOG.</p>
@@ -5,11 +7,10 @@
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
-
 ## Feature
 
-1. Bump version for some specific package.json in a monorepo.
-2. Generate CHANGELOG within a specific version range.
+1. Bump version for a few of specific package.json within a monorepo.
+2. Generate CHANGELOG.md within a specific version range.
 3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 
 ## Say sth.
@@ -25,11 +26,11 @@ In my release flow, there are some steps in order such as:
 More:
 1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
 2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), while in CI env is more efficient.
-3. perform the heavy jobs like compile / build in CI env is more efficient.
+3. Perform the heavy jobs like compile / build on CI is more efficient.
 
-As mentioned above, I have put the bump job and CHANGELOG generation in the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
+As mentioned above, I have put the bump job and CHANGELOG generation on the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
 
-> The testing job, a heavy job which has to be performed at the very beginning in the local environment. Until now, I haven't found a better way.
+> The testing job, a heavy job which has to be performed at the very beginning on the local environment. Until now, I haven't found a better way.
 
 ## Usage
 
