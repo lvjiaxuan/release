@@ -86,7 +86,7 @@ lvr bump --prompt --pkg
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 
 ```bash
-# Generate CHANGELOG for all existing tags.
+# Generate CHANGELOG with all existing tags.
 lvr changelog
 
 # Within a tag range.
@@ -100,6 +100,10 @@ lvr changelog --tag=v0.0.2
 
 # For last tag only
 lvr changelog --tag=last
+
+# It means that CHANGELOG.md would contain more changes which could not be parsed by conventional commits.
+# Disable by default.
+lvr changelog --verbose
 ```
 
 #### About author
@@ -109,12 +113,6 @@ To generate valid author GitHub name in the CHANGELOG.md as same as release note
 To solve this, I have to pass a GitHub PAT by `--token` when encountering this situation 😔.
 
 Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
-
-#### `--verbose-change` argument
-
-Disable by default.
-
-It means that CHANGELOG would contain more changes which could not be parsed by conventional commits.
 
 ### Commit / Tag / Push
 
