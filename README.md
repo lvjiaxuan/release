@@ -2,26 +2,26 @@
 
 # lvr
 
-<p align=center>Help me better to bump version and generate CHANGELOG.</p>
+<p align=center>Bump and generate CHANGELOG on local.</p>
 
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
 ## Feature
 
-1. Bump version for a few of specific package.json within a monorepo.
+1. Bump and generate CHANGELOG for few specific packages within a monorepo.
 2. Generate CHANGELOG.md within a specific version range.
-3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
 
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
 1. perform some tests.
 2. Bump version.
-3. Generate CHANGELOG.
+3. Generate CHANGELOG.md file.
 3. Commit / Tag.
 4. Push to origin.
-5. Trigger CI workflow that involves github release or publish stuff which are depended on.
+5. Trigger CI workflow that involves build/release/publish stuff which are depended on.
 
 More:
 1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
@@ -30,52 +30,51 @@ More:
 
 As mentioned above, I have put the bump job and CHANGELOG generation on the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
 
-> The testing job, a heavy job which has to be performed at the very beginning on the local environment. Until now, I haven't found a better way.
+> The testing job should be performed at the very beginning. Until now, I haven't found a better way to deal with it.
 
 ## Usage
 
 > First off: `npm i @antfu/ni -g`
 
-Quick trial:
+Quick trial.
 ```bash
-# As well as `nix lvr --bump --changelog --commit --tag --push``
+# One script to Bump\CHANGELOG\commit\tag\push
 nix lvr
 
-# Maybe you want to confirm what will be executed.
-# Please use Dry run.
+# Support the dry run to confirm what will be executed.
 nix lvr -d
 ```
 
-Globally use. Installation:
+Install on global.
 ```bash
 pnpm i lvr -g
 ```
 
-More CLI options:
+More CLI options.
 ```bash
 lvr -h
 ```
 
-### Bump only
+### Bump
 
-Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump).
+Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
 
-CLI Arguments:
-- `--bump`, `-b` in short.
-- `--bump-prompt`, `-p` in short.
-- `--no-bump`, `--no-b` to disable. It seems useless.
 
 ```bash
 # Bump root's package.json version.
-# If project is detected as a monorepo, it would bump all version of other package.json in subdirectories.
-lvr -b
+# In a detected monorepo, it would bump those packages which are changed.
+lvr bump
 
-# In a detected monorepo, it would only bump the specific package.json's version in subdirectories.
-lvr -b=pkg-a pkg-b
+# In a detected monorepo, it would bump all packages.
+lvr bump --all
+
+# In a detected monorepo, `--pkg` could specify which packages to be bumped.
+lvr bump --pkg
 
 # Prompt the version rather than basing on Conventional Commits.
-lvr -p
-lvr -p=pkg-a pkg-b
+lvr bump --prompt
+lvr bump --prompt --all
+lvr bump --prompt --pkg
 ```
 
 > **Note**
