@@ -9,7 +9,7 @@
 
 ## Feature
 
-1. Bump and generate CHANGELOG for few specific packages within a monorepo.
+1. Bump specific packages within a monorepo, while placing only one CHANGELOG.md for the entire monorepo at the root.
 2. Generate CHANGELOG.md within a specific version range.
 3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
 
@@ -123,14 +123,15 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 > `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
 ```bash
-# Use `Release {v}` as commit message by default.
-# The `{v}` would be replaced by the `bumpVersion` from bump job.
-# In a monorepo, the `{v}` would reference to its last tag version.
+# Use `Release {r}` as commit message by default.
+# The `{r}` would be replaced by the bumped version from package.json.
+# In a monorepo, the `{r}` is likely `a@x.x.x,b@y.y.y` by default.
+# Customizable.
 lvr --commit="R: {v}"
 
-# Use `bumpVersion` by default.
-# In a monorepo, it would reference to its last tag version.
-# Customizable as below.
+# Use bumped version from package.json by default.
+# In a monorepo, it is likely `a@x.x.x,b@y.y.y` by default.
+# Customizable.
 lvr --tag=BatMan
 
 # Push current branch and new tag by default.
