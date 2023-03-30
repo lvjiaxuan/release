@@ -85,32 +85,28 @@ lvr bump --prompt --pkg
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 
-CLI Arguments:
-- `--changelog`, `-c` in short.
-- `--no-changelog`, `--no-c` to disable.
-
 ```bash
 # Generate CHANGELOG for all existing tags.
-lvr -c
+lvr changelog
 
 # Within a tag range.
-lvr -c=v1.0.1...v2.1.3
+lvr changelog --tag=v1.0.1...v2.1.3
 
 # For 2 last tag.
-lvr -c=2
+lvr changelog --tag==2
 
 # For a specific tag.
-lvr -c=v0.0.2
+lvr changelog --tag=v0.0.2
 
 # For last tag only
-lvr -c=last
+lvr changelog --tag=last
 ```
 
 #### About author
 
-To generate more rich info in the CHANGELOG.md as same as release note, I utilize the GitHub Rest API to search for a valid author name. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
+To generate valid author GitHub name in the CHANGELOG.md as same as release note, I have request the GitHub Rest API to search it. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
 
-To solve this, it could pass a GitHub PAT by `--token` when encountering this situation 😔.
+To solve this, I have to pass a GitHub PAT by `--token` when encountering this situation 😔.
 
 Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
 
