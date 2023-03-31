@@ -71,17 +71,19 @@ lvr bump --all
 # In a detected monorepo, `--pkg` could specify which packages to be bumped.
 lvr bump --pkg
 
-# Prompt the version rather than basing on Conventional Commits.
+# Prompt for version rather than basing on Conventional Commits.
 lvr bump --prompt
 lvr bump --prompt --all
 lvr bump --prompt --pkg
 ```
 
+Those `bump` options can be used without the `bump` command during a release. The following `changelog ` is the same.
+
 > **Note**
 > 
 > A monorepo is no need to specify a version prop in root's package.json.
 
-### Changelog only
+### Changelog
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 

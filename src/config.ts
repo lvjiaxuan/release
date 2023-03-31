@@ -3,80 +3,30 @@ import lodashMerge from 'lodash.merge'
 import { getGitHubRepo } from './git'
 import path from 'node:path'
 
-export type CliOptions = {
-  /**
-   * Dry run.
-   *
-   * @default false
-   */
-  dry?: boolean
+export type BumpOption = {
+  all?: boolean
+  pkg?: boolean
+  prompt?: boolean
+}
 
-  /**
-   * Create a release on Github Action.
-   */
-  release?: boolean
-
-  /**
-   * Bump root package.json version. If is a monorepo, it would synchronize root version to other package.json in subdirectories.
-   */
-  bump?: string[] | [false]
-
-  /**
-   * Prompt version rather than basing on git metadata.
-   */
-  bumpPrompt?: string[]
-
-  /**
-   * Generate changelog for tags.
-   */
-  changelog?: string | false
-
-  /**
-   * CHANGELOG.md contains more changes.
-   */
-  verboseChange?: boolean,
-
-  /**
-   * Add .github/workflows/lvr-release.yml.
-   *
-   * @default false
-   */
-  yml?: boolean
-
-  /**
-   * Use `Release {v}` as commit message by default.
-   * The `{v}` would be replaced by `bumpVersion`.
-   *
-   * @default "Release {v}"
-   */
-  commit?: string | false
-
-  /**
-   * Use `bumpResult.bumpVersion` by default.
-   * Customizable.
-   *
-   * @default `bumpResult.bumpVersion`
-   */
-  tag?: string | false
-
-  /**
-   * Push current branch and new tag.
-   *
-   * @default ''
-   */
-  push?: '' | 'tag' | 'branch' | false
-
-  /**
-   * **Optional**
-   * A GitHub PAT for fetching author info.
-   */
+export type ChangelogOption = {
+  tag?: string
+  verbose?: boolean
   token?: string
+}
+
+export type CliOption = {
+  yml?: boolean
+  commit?: string
+  tag?: string
+  push?: string
+  dry?: boolean
 }
 
 export type MarkdownOptions = {
   /**
    * **Optional**
-   * Resolved by `git config --get remote.origin.url'` automatically for more detailed changelog.
+   * Resolved by `git config --get remote.origin.url'` for generating a detailed CHANGELOG.md.
    */
   github?: string
 
@@ -108,13 +58,13 @@ const MarkdownOptionDefaults: MarkdownOptions = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
-const CliOptionDefaults: CliOptions = {
-  commit: 'Release {v}',
+const CliOptionDefaults: CliOption = {
+  commit: 'Release {r}',
   tag: '',
   push: '',
 }
 
-const resolveConfig = async <T extends CliOptions>(options: T) => {
+const resolveConfig = async <T extends BumpOption & ChangelogOption & CliOption>(options: T) => {
   const config = await loadConfig<T>({
     sources: [
       // load from `lv.release.xx`
