@@ -76,6 +76,9 @@ void yargs(hideBin(process.argv))
     string: true,
     defaultDescription: 'Push both branch and tag.',
     description: 'Either `branch` or `tag`.',
+  }).option('main-pkg', {
+    string: true,
+    description: 'Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.',
   })
   .recommendCommands()
   .help()

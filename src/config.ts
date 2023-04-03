@@ -21,6 +21,7 @@ export type CliOption = {
   tag?: string
   push?: string
   dry?: boolean
+  mainPkg?: string
 }
 
 export type MarkdownOptions = {

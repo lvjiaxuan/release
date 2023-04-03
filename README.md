@@ -153,7 +153,7 @@ lvr --push=tag
 lvr --main-pkg=abc
 ```
 
-Specify the main package to remove its package name like `x.x.x` rather than `abc@x.x.x`.
+Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.
 
 ### Send a GitHub Release on *GitHub Action*
 
