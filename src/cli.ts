@@ -12,8 +12,7 @@ void yargs(hideBin(process.argv))
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs satisfies Argv<BumpOption | ChangelogOption | CliOption>,
     args => console.log(args),
-  )
-  .command({
+  ).command({
     command: 'bump [options]',
     aliases: 'b',
     describe: 'Bump only.',
@@ -21,8 +20,7 @@ void yargs(hideBin(process.argv))
     handler(args) {
       // console.log(2, args)
     },
-  })
-  .command({
+  }).command({
     command: 'changelog [options]',
     aliases: 'c',
     describe: 'Generate CHANGELOG only.',
@@ -30,8 +28,7 @@ void yargs(hideBin(process.argv))
     handler(args) {
       // console.log(3, args)
     },
-  })
-  .option('all', {
+  }).option('all', {
     boolean: true,
     default: false,
     describe: 'Bump for all packages.',

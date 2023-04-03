@@ -1,15 +1,15 @@
-> :warning: It has some confusions in how to release a monorepo. For now, it doesn't make sense to bump the version for a few of specific package within a monorepo. However, I will figure it out at a later time.
+> :boom: Refactoring WIP.
 
 # lvr
 
-<p align=center>Bump and generate CHANGELOG on local.</p>
+<p align=center>Bump and generate CHANGELOG locally.</p>
 
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
 ## Feature
 
-1. Bump specific packages within a monorepo, while placing only one CHANGELOG.md for the entire monorepo at the root.
+1. Bump specific packages within a monorepo, while placing only one CHANGELOG.md which respects the entire monorepo at the root.
 2. Generate CHANGELOG.md within a specific version range.
 3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
 
@@ -19,9 +19,9 @@ In my release flow, there are some steps in order such as:
 1. perform some tests.
 2. Bump version.
 3. Generate CHANGELOG.md file.
-3. Commit / Tag.
-4. Push to origin.
-5. Trigger CI workflow that involves build/release/publish stuff which are depended on.
+4. Commit / Tag.
+5. Push to origin.
+6. Trigger CI workflow that involves tests / build / release / publish stuff which are depended on.
 
 More:
 1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
@@ -37,21 +37,21 @@ As mentioned above, I have put the bump job and CHANGELOG generation on the loca
 > First off: `npm i @antfu/ni -g`
 
 Quick trial.
-```bash
-# One script to Bump\CHANGELOG\commit\tag\push
-nix lvr
+```sh
+# One script to release, including Bump\CHANGELOG\commit\tag\push
+nlx lvr
 
 # Support the dry run to confirm what will be executed.
-nix lvr -d
+nlx lvr -d
 ```
 
 Install on global.
-```bash
+```sh
 pnpm i lvr -g
 ```
 
 More CLI options.
-```bash
+```sh
 lvr -h
 ```
 
@@ -60,7 +60,7 @@ lvr -h
 Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
 
 
-```bash
+```sh
 # Bump root's package.json version.
 # In a detected monorepo, it would bump those packages which are changed.
 lvr bump
@@ -68,7 +68,7 @@ lvr bump
 # In a detected monorepo, it would bump all packages.
 lvr bump --all
 
-# In a detected monorepo, `--pkg` could specify which packages to be bumped.
+# In a detected monorepo, `--pkg` prompts which packages to be bumped.
 lvr bump --pkg
 
 # Prompt for version rather than basing on Conventional Commits.
@@ -77,7 +77,7 @@ lvr bump --prompt --all
 lvr bump --prompt --pkg
 ```
 
-Those `bump` options can be used without the `bump` command during a release. The following `changelog ` is the same.
+**Those `bump` options can be used without the `bump` command during a release. The following `changelog ` is the same.**
 
 > **Note**
 > 
@@ -87,7 +87,7 @@ Those `bump` options can be used without the `bump` command during a release. Th
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
 
-```bash
+```sh
 # Generate CHANGELOG with all existing tags.
 lvr changelog
 
@@ -122,7 +122,7 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 
 > `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
-```bash
+```sh
 # Use `Release {r}` as commit message by default.
 # The `{r}` would be replaced by the bumped version from package.json.
 # In a monorepo, the `{r}` is likely `a@x.x.x,b@y.y.y` by default.
@@ -144,12 +144,23 @@ lvr --push=branch
 lvr --push=tag
 ```
 
-### Send a GitHub Release by *GitHub Action*
+> **Note**
+> It is not recommended to release more than one package at the same time in order to ensure a concise commit message and tag name.
+
+#### Set a main package for a monorepo
+
+```sh
+lvr --main-pkg=abc
+```
+
+Specify the main package to remove its package name like `x.x.x` rather than `abc@x.x.x`.
+
+### Send a GitHub Release on *GitHub Action*
 
 See [yml.ts](./src/options/yml.ts).
 
-```bash
-# Add .github/workflows/lvr-release.yml
+```sh
+# Add .github/workflows/lvr.yml
 lvr --yml
 ```
 
