@@ -1,16 +1,16 @@
 import conventionalRecommendedBump from 'conventional-recommended-bump'
-import fg from 'fast-glob'
 import semver from 'semver'
 import prompts from 'prompts'
-import pc from 'picocolors'
-import type { CliOptions } from './../config'
 import { promises as fsp } from 'node:fs'
+import path from 'node:path'
+import type { BumpOption, CliOption, MarkdownOption } from '..'
+import { cwd, getLastGitTag, getParsedCommits, isMonorepo, log, packages } from '..'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 
-const getBumpType = () => new Promise<BumpType>((resolve, reject) =>
+const resolveBumpType = () => new Promise<BumpType>((resolve, reject) =>
   conventionalRecommendedBump(
-    { preset: 'conventionalcommits' },
+    { preset: 'conventionalcommits', path: cwd },
     (error, recommendation) => {
       if (error) {
         reject(error)
@@ -19,94 +19,51 @@ const getBumpType = () => new Promise<BumpType>((resolve, reject) =>
       resolve(recommendation.releaseType!)
     }))
 
-const writePkgsVersion = (pkgPaths: string[], version: string) =>
-  Promise.all(pkgPaths.map(async pkgPath => {
-    const pkg = JSON.parse(await fsp.readFile(pkgPath, 'utf8')) as { version: string }
-    pkg.version = version
-    return fsp.writeFile(pkgPath, JSON.stringify(pkg, null, 2) + '\n', 'utf8')
-  }))
+const resolveChangedPackagesSinceLastTag = async (options: MarkdownOption) => {
+  const from = await getLastGitTag() ?? ''
+  const to = 'HEAD'
+  const commits = await getParsedCommits(from, to, Object.keys(options?.titles))
+  const changedFile = [
+    ...new Set(commits.reduce((preValue, value) => {
+      preValue.push(
+        ...value.body.trim()
+          .split('\n')
+          .filter(i => i !== '"' && Boolean(i))
+          .map(i => i.replace(/[AMD]\t/, '')),
+      )
+      return preValue
+    }, [] as string[])),
+  ]
 
-const resolveValidPackages = async (packages: string[]) => {
-  let packagesResolvePaths = await fg('**/package.json', {
-    ignore: [
-      '**/node_modules/**',
-      '**/dist/**',
-      '**/public/**',
-      '**/test/**',
-    ],
-    onlyFiles: true,
-  })
-
-  if (packages.length !== 0) {
-    packagesResolvePaths = packagesResolvePaths.filter(path => {
-
-      if (path === 'package.json') {
-        return true
-      }
-
-      const pkgIndex = packages.findIndex(pkg => path.includes(`/${ pkg }/package.json`))
-      if (pkgIndex > -1) {
-        packages.splice(pkgIndex, 1)
-        return true
-      }
-      return false
-    })
-  }
-
-  return {
-    packagesResolvePaths,
-    unResolvedPkgs: packages,
-  }
+  return packages.filter(pkg => changedFile.some(file => file.startsWith(pkg)))
 }
 
+export const bump = async(options: BumpOption & CliOption & MarkdownOption) => {
+  const bumpType = await resolveBumpType()
+  const bumpPackages = isMonorepo ? await resolveChangedPackagesSinceLastTag(options) : packages
 
-export const bump = async (options: CliOptions) => {
-  if (options.bump?.[0] === false) {
-    console.log(`\n${ pc.bold(pc.yellow('Skip')) } Bump.`)
-    return
-  }
+  const bumpVersionMap = new Map<string, string>()
+  const bumpJson = await Promise.all(bumpPackages.map(async pkg => {
+    const pkgJson = JSON.parse(await fsp.readFile(path.join(cwd, pkg), 'utf-8')) as { version: string }
+    const currentVersion = pkgJson.version ?? '0.0.0'
 
-  let packages = options.bump! as string[]
-  if (options.bumpPrompt) {
-    packages = options.bumpPrompt
-  }
+    let bumpVersion: string
+    if (bumpVersionMap.has(currentVersion)) {
+      bumpVersion = bumpVersionMap.get(currentVersion)!
+    } else {
+      bumpVersion = semver.inc(currentVersion, bumpType)!
+      bumpVersionMap.set(currentVersion, bumpVersion)
+    }
 
-  await fsp.stat('./package.json')
+    pkgJson.version = bumpVersion
+    return {
+      package: pkg,
+      jsonStr: JSON.stringify(pkgJson, null, 2),
+    }
+  }))
 
-  const { packagesResolvePaths, unResolvedPkgs } = await resolveValidPackages(packages)
-
-  const currentVersion = await (async () => {
-    const pkg = JSON.parse(await fsp.readFile('package.json', 'utf8').catch(() => '{}')) as { version: string } || { }
-    return pkg.version || '0.0.0'
-  })()
-
-  let bumpVersion: string
-  if (options.bumpPrompt) {
-    const res = await prompts({
-      type: 'select',
-      name: 'version',
-      message: `Select a version(current version is ${ currentVersion }).`,
-      choices: [ 'patch', 'minor', 'major' ].map(bumpType => {
-        const version = semver.inc(currentVersion, bumpType as BumpType)!
-        return {
-          title: `${ bumpType } - ${ version }`,
-          value: version,
-        }
-      }),
-    })
-    bumpVersion = res.version as string
-  } else {
-    bumpVersion = semver.inc(currentVersion, await getBumpType())!
-  }
-
+  console.log(bumpJson)
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
-    await writePkgsVersion(packagesResolvePaths, bumpVersion)
-  }
-
-  return {
-    currentVersion,
-    bumpVersion,
-    packagesResolvePaths,
-    unResolvedPkgs,
+    // await Promise.all(bumpJson.map(async item => await fsp.writeFile(path.join(cwd, item.package), item.jsonStr, 'utf-8')))
   }
 }

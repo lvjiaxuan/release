@@ -24,7 +24,7 @@ export type CliOption = {
   mainPkg?: string
 }
 
-export type MarkdownOptions = {
+export type MarkdownOption = {
   /**
    * **Optional**
    * Resolved by `git config --get remote.origin.url'` for generating a detailed CHANGELOG.md.
@@ -40,7 +40,7 @@ export type MarkdownOptions = {
   }
 }
 
-const MarkdownOptionDefaults: MarkdownOptions = {
+export const MarkdownOptionDefaults: MarkdownOption = {
   types: {
     feat: { title: '✨ Enhancements' },
     perf: { title: '⚡️ Performance' },
@@ -59,13 +59,15 @@ const MarkdownOptionDefaults: MarkdownOptions = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
+export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
+
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
   tag: '',
   push: '',
 }
 
-const resolveConfig = async <T extends BumpOption & ChangelogOption & CliOption>(options: T) => {
+export const resolveConfig = async <T extends AllOption>(options: T) => {
   const config = await loadConfig<T>({
     sources: [
       // load from `lv.release.xx`
@@ -95,7 +97,7 @@ const resolveConfig = async <T extends BumpOption & ChangelogOption & CliOption>
     merge: false,
   })
 
-  let mergeOptions: T & MarkdownOptions
+  let mergeOptions: T
 
   if (!config.sources.length) {
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
@@ -116,5 +118,3 @@ const resolveConfig = async <T extends BumpOption & ChangelogOption & CliOption>
 
   return mergeOptions
 }
-
-export default resolveConfig

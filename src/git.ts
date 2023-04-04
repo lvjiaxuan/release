@@ -38,7 +38,7 @@ export async function getGitHubRepo() {
   return ''
 }
 
-export const getOldGitTag = async () => {
+export const getFirstGitTag = async () => {
   const tags = await getTags()
   return tags[0]
 }

@@ -22,7 +22,7 @@
     "lint": "eslint .",
     "dev": "nr build --watch",
     "build": "tsup src/cli.ts --target=node16 --clean --format=cjs",
-    "test": "nix cross-env NODE_OPTIONS=--experimental-vm-modules jest",
+    "test": "nlx cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "link": "nr build && pnpm link --global",
     "prepublishOnly": "nr build",
     "lvr": "jiti src/cli.ts"
@@ -46,7 +46,7 @@
     "conventional-changelog-conventionalcommits": "^5.0.0",
     "conventional-recommended-bump": "^6.1.0",
     "dotenv": "^16.0.3",
-    "esbuild": "^0.17.14",
+    "esbuild": "^0.17.15",
     "esbuild-jest": "^0.5.0",
     "eslint": "^8.37.0",
     "execa": "^7.1.1",

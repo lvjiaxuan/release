@@ -1,8 +1,9 @@
 import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
-import yargs, { type Argv } from 'yargs'
-import main from './main'
-import type { BumpOption, ChangelogOption, CliOption } from './config'
+import yargs, { type Argv, type CommandModule } from 'yargs'
+import { log } from '.'
+import type { AllOption, BumpOption, ChangelogOption, CliOption } from './'
+import { bump, resolveConfig } from './'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
 void yargs(hideBin(process.argv))
@@ -10,15 +11,20 @@ void yargs(hideBin(process.argv))
   .usage(
     '$0 [options]',
     'Bump → CHANGELOG → Commit → Tag → Push',
-    yargs => yargs satisfies Argv<BumpOption | ChangelogOption | CliOption>,
-    args => console.log(args),
+    yargs => yargs satisfies Argv<Partial<AllOption>>,
+    args => {
+      log('Run release command.')
+      // ...
+    },
   ).command({
     command: 'bump [options]',
     aliases: 'b',
     describe: 'Bump only.',
     builder: y => y,
-    handler(args) {
-      // console.log(2, args)
+    handler: async args => {
+      log('Run bump command.')
+      // @ts-ignore
+      void bump(await resolveConfig(args))
     },
   }).command({
     command: 'changelog [options]',
@@ -26,6 +32,7 @@ void yargs(hideBin(process.argv))
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler(args) {
+      log('Run CHANGELOG command.')
       // console.log(3, args)
     },
   }).option('all', {
@@ -46,16 +53,16 @@ void yargs(hideBin(process.argv))
   }).option('tag', {
     string: true,
     describe: 'Specify which tags to be contained.',
-    group: 'changelog',
+    group: 'CHANGELOG',
   }).option('verbose', {
     boolean: true,
     default: false,
     describe: 'Contain the unparsed changes.',
-    group: 'changelog',
+    group: 'CHANGELOG',
   }).option('token', {
     string: true,
     description: 'A GitHub token for fetching author info.',
-    group: 'changelog',
+    group: 'CHANGELOG',
   }).option('dry', {
     alias: 'd',
     boolean: true,
@@ -75,7 +82,7 @@ void yargs(hideBin(process.argv))
   }).option('push', {
     string: true,
     defaultDescription: 'Push both branch and tag.',
-    description: 'Either `branch` or `tag`.',
+    description: 'branch | tag.',
   }).option('main-pkg', {
     string: true,
     description: 'Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.',
