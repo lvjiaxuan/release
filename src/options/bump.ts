@@ -10,16 +10,32 @@ import pc from 'picocolors'
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 type Option = BumpOption & CliOption & MarkdownOption
 
-const resolveBumpType = () => new Promise<BumpType>((resolve, reject) =>
-  conventionalRecommendedBump(
-    { preset: 'conventionalcommits' },
-    (error, recommendation) => {
-      if (error) {
-        reject(error)
-        return
-      }
-      resolve(recommendation.releaseType!)
-    }))
+const resolveBumpType = (options: Option) => new Promise<{ level: BumpType, preid?: string }>((resolve, reject) => {
+  let level
+  ;[ 'major', 'minor', 'patch' ].forEach(i => options[i as keyof Option] && (level = i))
+
+  let preid
+  ;[ 'prerelease', 'premajor', 'preminor', 'prepatch' ].forEach(i => {
+    if (Object.hasOwn(options, i)) {
+      level = i
+      preid = options[i as keyof Option]
+    }
+  })
+
+  if (!level) {
+    conventionalRecommendedBump(
+      { preset: 'conventionalcommits' },
+      (error, recommendation) => {
+        if (error) {
+          reject(error)
+          return
+        }
+        resolve({ level: recommendation.releaseType! })
+      })
+  } else {
+    resolve({ level, preid })
+  }
+})
 
 const resolveChangedPackagesSinceLastTag = async (options: Option) => {
   const from = await getLastGitTag() ?? ''
@@ -40,24 +56,26 @@ const resolveChangedPackagesSinceLastTag = async (options: Option) => {
   return packages.filter(pkg => changedFile.some(file => file.startsWith(pkg)))
 }
 
+const resolveBumpPackages = (options: Option) => {
+  if (isMonorepo && options.pkg) {
+    return prompts({
+      type: 'multiselect',
+      name: 'pkgs',
+      message: 'Pick packages to bump.',
+      choices: packages.map(i => ({ title: i, value: i })),
+      min: 1,
+    }).then(res => res.pkgs as string[])
+  } else if (!isMonorepo || options.all) {
+    return packages
+  }
+  return resolveChangedPackagesSinceLastTag(options)
+}
+
 export const bump = async(options: Option) => {
+
   const [ bumpType, changedPackages ] = await Promise.all([
-    resolveBumpType(),
-    (() => {
-      if (isMonorepo && options.pkg) {
-        return prompts({
-          type: 'multiselect',
-          name: 'pkgs',
-          message: 'Pick packages to bump.',
-          choices: packages.map(i => ({ title: i, value: i })),
-          min: 1,
-        }).then(res => res.pkgs as string[])
-      } else if (!isMonorepo || options.all) {
-        return packages
-      } else {
-        return resolveChangedPackagesSinceLastTag(options)
-      }
-    })(),
+    resolveBumpType(options),
+    resolveBumpPackages(options),
   ])
 
   const bumpVersionMap = new Map<string, string>()
@@ -69,7 +87,7 @@ export const bump = async(options: Option) => {
     if (bumpVersionMap.has(currentVersion)) {
       bumpVersion = bumpVersionMap.get(currentVersion)!
     } else {
-      bumpVersion = semver.inc(currentVersion, bumpType)!
+      bumpVersion = semver.inc(currentVersion, bumpType.level, bumpType.preid)!
       bumpVersionMap.set(currentVersion, bumpVersion)
     }
 
@@ -83,7 +101,7 @@ export const bump = async(options: Option) => {
   }))
 
   if (isMonorepo) {
-    console.log(`\nDetect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages:`)
+    console.log(`\nDetect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages as ${ pc.bold(`${ bumpType.level }${ bumpType.preid ? `=${ bumpType.preid }` : '' }`) }:`)
   }
 
   console.log(pkgsJson.map(i => `- ${ i.currentVersion } → ${ colorizeVersionDiff(i.currentVersion, i.bumpVersion) } (${ i.package })`).join('\n'))

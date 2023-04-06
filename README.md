@@ -9,8 +9,8 @@
 
 ## Feature
 
-1. Bump specific packages within a monorepo, while placing only one CHANGELOG.md which respects the entire monorepo at the root.
-2. Generate CHANGELOG.md within a specific version range.
+1. Bump the specified packages within a monorepo, while placing only one CHANGELOG.md which respects the entire monorepo at the root.
+2. Generate CHANGELOG.md within a specified version range.
 3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
 
 ## Say sth.
@@ -34,20 +34,18 @@ As mentioned above, I have put the bump job and CHANGELOG generation on the loca
 
 ## Usage
 
-> First off: `npm i @antfu/ni -g`
-
 Quick trial.
 ```sh
 # One script to release, including Bump\CHANGELOG\commit\tag\push
-nlx lvr
+npx lvr
 
 # Support the dry run to confirm what will be executed.
-nlx lvr -d
+npx lvr -d
 ```
 
 Install on global.
 ```sh
-pnpm i lvr -g
+npm i lvr -g
 ```
 
 More CLI options.
@@ -57,7 +55,7 @@ lvr -h
 
 ### Bump
 
-Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
+Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump) and [semver](https://github.com/npm/node-semver). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
 
 
 ```sh
@@ -71,17 +69,25 @@ lvr bump --all
 # In a detected monorepo, `--pkg` prompts which packages to be bumped.
 lvr bump --pkg
 
-# Prompt for version rather than basing on Conventional Commits.
-lvr bump --prompt
-lvr bump --prompt --all
-lvr bump --prompt --pkg
+# Bump by the specified semver increment level rather than depending on conventional-recommended-bump.
+lvr bump --major
+lvr bump --major --all
+lvr bump --major --pkg
 ```
+Semver increment level support:
+- `--major`: Bump as a semver-major version.
+- `--minor`: Bump as a semver-minor version.
+- `--patch`: Bump as a semver-patch version.
+- `--premajor`: Bump as a semver-premajor version, can set id with string.
+- `--preminor`: Bump as a semver-preminor version, can set id with string.
+- `--prepatch`: Bump as a semver-prepatch version, can set id with string.
+- `--prerelease`: Bump as a semver-prerelease version, can set id with string.
 
-**Those `bump` options can be used without the `bump` command during a release. The following `changelog ` is the same.**
+**Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` is the same.**
 
 > **Note**
 > 
-> In a monorepo, there is no need to specify *package.json#version*. However, if there is actually a version field present, "bump" will include this root package.json when bumping the version.
+> In a monorepo, maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
 
 ### Changelog
 
@@ -97,7 +103,7 @@ lvr changelog --tag=v1.0.1...v2.1.3
 # For 2 last tag.
 lvr changelog --tag==2
 
-# For a specific tag.
+# For a specified tag.
 lvr changelog --tag=v0.0.2
 
 # For last tag only

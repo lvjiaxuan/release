@@ -37,40 +37,58 @@ void yargs(hideBin(process.argv))
     },
   }).option('all', {
     boolean: true,
-    default: false,
     describe: 'Bump for all packages.',
-    group: 'bump',
+    group: 'Bump:',
   }).option('pkg', {
     boolean: true,
-    default: false,
-    describe: 'Bump for specific packages.',
-    group: 'bump',
-  }).option('prompt', {
+    describe: 'Bump for the specified packages by prompts.',
+    group: 'Bump:',
+  }).option('major', {
     boolean: true,
-    default: false,
-    describe: 'Prompt for the bump version.',
-    group: 'bump',
+    describe: 'Bump as a semver-major version.',
+    group: 'Bump:',
+  }).option('minor', {
+    boolean: true,
+    describe: 'Bump as a semver-minor version.',
+    group: 'Bump:',
+  }).option('patch', {
+    boolean: true,
+    describe: 'Bump as a semver-patch version.',
+    group: 'Bump:',
+  }).option('premajor', {
+    string: true,
+    describe: 'Bump as a semver-premajor version, can set id with string.',
+    group: 'Bump:',
+  }).option('preminor', {
+    string: true,
+    describe: 'Bump as a semver-preminor version, can set id with string.',
+    group: 'Bump:',
+  }).option('prepatch', {
+    string: true,
+    describe: 'Bump as a semver-prepatch version, can set id with string.',
+    group: 'Bump:',
+  }).option('prerelease', {
+    string: true,
+    describe: 'Bump as a semver-prerelease version, can set id with string.',
+    group: 'Bump:',
   }).option('tag', {
     string: true,
     describe: 'Specify which tags to be contained.',
-    group: 'CHANGELOG',
+    group: 'CHANGELOG:',
   }).option('verbose', {
     boolean: true,
-    default: false,
     describe: 'Contain the unparsed changes.',
-    group: 'CHANGELOG',
+    group: 'CHANGELOG:',
   }).option('token', {
     string: true,
     description: 'A GitHub token for fetching author info.',
-    group: 'CHANGELOG',
+    group: 'CHANGELOG:',
   }).option('dry', {
     alias: 'd',
     boolean: true,
-    default: false,
     description: 'Dry run.',
   }).option('yml', {
     boolean: true,
-    default: false,
     description: 'Add a workflow file at `.github/workflows/lvr.yml`.',
   }).option('commit', {
     string: true,

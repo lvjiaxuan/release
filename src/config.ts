@@ -7,6 +7,13 @@ export type BumpOption = {
   all?: boolean
   pkg?: boolean
   prompt?: boolean
+  major?: boolean
+  minor?: boolean
+  patch?: boolean
+  premajor?: boolean
+  preminor?: boolean
+  prepatch?: boolean
+  prerelease?: boolean
 }
 
 export type ChangelogOption = {

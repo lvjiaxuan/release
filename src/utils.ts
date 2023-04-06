@@ -19,7 +19,7 @@ export const packages = (() => {
   })
   if (_.includes('package.json')) {
     const pkgJson = JSON.parse(fs.readFileSync('package.json', 'utf-8')) as { version?: string }
-    if (pkgJson.version) {
+    if (!pkgJson.version) {
       return _.filter(i => i !== 'package.json')
     }
   }
