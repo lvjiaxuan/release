@@ -81,7 +81,7 @@ lvr bump --prompt --pkg
 
 > **Note**
 > 
-> A monorepo is no need to specify a version prop in root's package.json.
+> In a monorepo, there is no need to specify *package.json#version*. However, if there is actually a version field present, "bump" will include this root package.json when bumping the version.
 
 ### Changelog
 

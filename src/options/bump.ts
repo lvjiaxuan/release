@@ -41,12 +41,24 @@ const resolveChangedPackagesSinceLastTag = async (options: Option) => {
 }
 
 export const bump = async(options: Option) => {
-
   const [ bumpType, changedPackages ] = await Promise.all([
     resolveBumpType(),
-    !isMonorepo || options.all ? packages : resolveChangedPackagesSinceLastTag(options),
+    (() => {
+      if (isMonorepo && options.pkg) {
+        return prompts({
+          type: 'multiselect',
+          name: 'pkgs',
+          message: 'Pick packages to bump.',
+          choices: packages.map(i => ({ title: i, value: i })),
+          min: 1,
+        }).then(res => res.pkgs as string[])
+      } else if (!isMonorepo || options.all) {
+        return packages
+      } else {
+        return resolveChangedPackagesSinceLastTag(options)
+      }
+    })(),
   ])
-
 
   const bumpVersionMap = new Map<string, string>()
   const pkgsJson = await Promise.all(changedPackages.map(async pkg => {
