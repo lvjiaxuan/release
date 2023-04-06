@@ -1,20 +1,32 @@
 import pc from 'picocolors'
 import fg from 'fast-glob'
+import fs from 'node:fs'
 
 // export const log = (...args: string[]) => console.log(...args.map(i => `${ pc.cyan(i) }`))
 
 export const cwd = process.cwd()
 
-export const packages = fg.sync('**/package.json', {
-  ignore: [
-    '**/node_modules/**',
-    '**/dist/**',
-    '**/public/**',
-    '**/test/**',
-  ],
-  cwd,
-  onlyFiles: true,
-})
+export const packages = (() => {
+  const _ = fg.sync('**/package.json', {
+    ignore: [
+      '**/node_modules/**',
+      '**/dist/**',
+      '**/public/**',
+      '**/test/**',
+    ],
+    cwd,
+    onlyFiles: true,
+  })
+  if (_.includes('package.json')) {
+    const pkgJson = JSON.parse(fs.readFileSync('package.json', 'utf-8')) as { version?: string }
+    if (pkgJson.version) {
+      return _.filter(i => i !== 'package.json')
+    }
+  }
+
+  return _
+})()
+
 
 export const isMonorepo = packages.length > 1
 

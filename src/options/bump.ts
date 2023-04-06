@@ -4,7 +4,7 @@ import prompts from 'prompts'
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
 import type { BumpOption, CliOption, MarkdownOption } from '..'
-import { colorizeVersionDiff, cwd, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
+import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 import pc from 'picocolors'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
@@ -12,7 +12,7 @@ type Option = BumpOption & CliOption & MarkdownOption
 
 const resolveBumpType = () => new Promise<BumpType>((resolve, reject) =>
   conventionalRecommendedBump(
-    { preset: 'conventionalcommits', path: cwd },
+    { preset: 'conventionalcommits' },
     (error, recommendation) => {
       if (error) {
         reject(error)
@@ -62,7 +62,7 @@ export const bump = async(options: Option) => {
 
   const bumpVersionMap = new Map<string, string>()
   const pkgsJson = await Promise.all(changedPackages.map(async pkg => {
-    const pkgJson = JSON.parse(await fsp.readFile(path.join(cwd, pkg), 'utf-8')) as { version: string }
+    const pkgJson = JSON.parse(await fsp.readFile(pkg, 'utf-8')) as { version: string }
     const currentVersion = pkgJson.version ?? '0.0.0'
 
     let bumpVersion: string
@@ -89,6 +89,6 @@ export const bump = async(options: Option) => {
   console.log(pkgsJson.map(i => `- ${ i.currentVersion } → ${ colorizeVersionDiff(i.currentVersion, i.bumpVersion) } (${ i.package })`).join('\n'))
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
-    // await Promise.all(bumpJson.map(async item => await fsp.writeFile(path.join(cwd, item.package), item.jsonStr, 'utf-8')))
+    // await Promise.all(bumpJson.map(async item => await fsp.writeFile(item.package, item.jsonStr, 'utf-8')))
   }
 }

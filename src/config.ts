@@ -1,6 +1,6 @@
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
-import { getGitHubRepo } from './git'
+import { cwd, getGitHubRepo } from '.'
 import path from 'node:path'
 
 export type BumpOption = {
@@ -112,7 +112,7 @@ export const resolveConfig = async <T extends AllOption>(options: T) => {
 
   if (!mergeOptions.token) {
     const dotenv = await import('dotenv')
-    dotenv.config({ path: path.join(process.cwd(), '.env.local') })
+    dotenv.config({ path: path.join(cwd, '.env.local') })
     mergeOptions.token = process.env.GITHUB_TOKEN
   }
 
