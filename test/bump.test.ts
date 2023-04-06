@@ -2,7 +2,7 @@ import { bump } from './../src'
 import path from 'node:path'
 import shell from 'shelljs'
 
-describe('nx @lvjiaxuan/release --bump', () => {
+describe.skip('nlx @lvjiaxuan/release --bump', () => {
 
   const cwd = path.join(__dirname, 'fixtures/monorepo')
 

@@ -1,5 +1,5 @@
 import pc from 'picocolors'
-import type { CliOptions, MarkdownOptions } from './index'
+import type { CliOptions, MarkdownOption } from './index'
 import { addYml, bump, changelog, execCMD, execGitJobs, sendRelease } from './index'
 
 const isOnlyBump = (options: CliOptions) => {
@@ -18,7 +18,7 @@ const isOnlyChangelog = (options: CliOptions) => {
   return onlyChangelog && !releaseWithoutChangelog
 }
 
-export default async (options: CliOptions & MarkdownOptions) => {
+export default async (options: CliOptions & MarkdownOption) => {
   try {
     // @ts-ignore
     if (options.debug) {
@@ -53,7 +53,7 @@ export default async (options: CliOptions & MarkdownOptions) => {
       console.log('Bump only.')
       bumpResult = await bump(options)
     } else if (isOnlyChangelog(options)) {
-      // Changelog only. CliOptions & MarkdownOptions
+      // Changelog only. CliOptions & MarkdownOption
       console.log('Changelog only.')
       changelogResult = await changelog(options)
     } else {

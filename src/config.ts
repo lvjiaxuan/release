@@ -74,7 +74,7 @@ export const resolveConfig = async <T extends AllOption>(options: T) => {
       {
         files: 'lv.release',
         // default extensions
-        extensions: [ 'ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json', '' ],
+        extensions: [ 'ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json' ],
       },
       {
         files: 'lv.releaserc',

@@ -4,9 +4,11 @@ import prompts from 'prompts'
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
 import type { BumpOption, CliOption, MarkdownOption } from '..'
-import { cwd, getLastGitTag, getParsedCommits, isMonorepo, log, packages } from '..'
+import { colorizeVersionDiff, cwd, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
+import pc from 'picocolors'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
+type Option = BumpOption & CliOption & MarkdownOption
 
 const resolveBumpType = () => new Promise<BumpType>((resolve, reject) =>
   conventionalRecommendedBump(
@@ -19,7 +21,7 @@ const resolveBumpType = () => new Promise<BumpType>((resolve, reject) =>
       resolve(recommendation.releaseType!)
     }))
 
-const resolveChangedPackagesSinceLastTag = async (options: MarkdownOption) => {
+const resolveChangedPackagesSinceLastTag = async (options: Option) => {
   const from = await getLastGitTag() ?? ''
   const to = 'HEAD'
   const commits = await getParsedCommits(from, to, Object.keys(options?.titles))
@@ -38,12 +40,16 @@ const resolveChangedPackagesSinceLastTag = async (options: MarkdownOption) => {
   return packages.filter(pkg => changedFile.some(file => file.startsWith(pkg)))
 }
 
-export const bump = async(options: BumpOption & CliOption & MarkdownOption) => {
-  const bumpType = await resolveBumpType()
-  const bumpPackages = isMonorepo ? await resolveChangedPackagesSinceLastTag(options) : packages
+export const bump = async(options: Option) => {
+
+  const [ bumpType, changedPackages ] = await Promise.all([
+    resolveBumpType(),
+    !isMonorepo || options.all ? packages : resolveChangedPackagesSinceLastTag(options),
+  ])
+
 
   const bumpVersionMap = new Map<string, string>()
-  const bumpJson = await Promise.all(bumpPackages.map(async pkg => {
+  const pkgsJson = await Promise.all(changedPackages.map(async pkg => {
     const pkgJson = JSON.parse(await fsp.readFile(path.join(cwd, pkg), 'utf-8')) as { version: string }
     const currentVersion = pkgJson.version ?? '0.0.0'
 
@@ -58,11 +64,18 @@ export const bump = async(options: BumpOption & CliOption & MarkdownOption) => {
     pkgJson.version = bumpVersion
     return {
       package: pkg,
+      currentVersion,
+      bumpVersion: pkgJson.version,
       jsonStr: JSON.stringify(pkgJson, null, 2),
     }
   }))
 
-  console.log(bumpJson)
+  if (isMonorepo) {
+    console.log(`\nDetect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages:`)
+  }
+
+  console.log(pkgsJson.map(i => `- ${ i.currentVersion } → ${ colorizeVersionDiff(i.currentVersion, i.bumpVersion) } (${ i.package })`).join('\n'))
+
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
     // await Promise.all(bumpJson.map(async item => await fsp.writeFile(path.join(cwd, item.package), item.jsonStr, 'utf-8')))
   }

@@ -1,9 +1,9 @@
 import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv, type CommandModule } from 'yargs'
-import { log } from '.'
 import type { AllOption, BumpOption, ChangelogOption, CliOption } from './'
 import { bump, resolveConfig } from './'
+import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
 void yargs(hideBin(process.argv))
@@ -13,7 +13,7 @@ void yargs(hideBin(process.argv))
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs satisfies Argv<Partial<AllOption>>,
     args => {
-      log('Run release command.')
+      console.log(pc.cyan('Run release command.'))
       // ...
     },
   ).command({
@@ -22,7 +22,7 @@ void yargs(hideBin(process.argv))
     describe: 'Bump only.',
     builder: y => y,
     handler: async args => {
-      log('Run bump command.')
+      console.log(pc.cyan('Run bump command.'))
       // @ts-ignore
       void bump(await resolveConfig(args))
     },
@@ -32,7 +32,7 @@ void yargs(hideBin(process.argv))
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler(args) {
-      log('Run CHANGELOG command.')
+      console.log(pc.cyan('Run CHANGELOG command.'))
       // console.log(3, args)
     },
   }).option('all', {

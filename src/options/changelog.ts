@@ -1,7 +1,7 @@
 import pc from 'picocolors'
 import { promises as fsp } from 'fs'
 import { getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from './../git'
-import type { CliOptions, MarkdownOptions } from './../config'
+import type { CliOptions, MarkdownOption } from './../config'
 import { generateMarkdown } from './../markdown'
 import semver from 'semver'
 import { $fetch } from 'ohmyfetch'
@@ -9,7 +9,7 @@ import { notNullish } from '@antfu/utils'
 import type { AuthorInfo, Commit } from 'changelogithub'
 
 
-type ChangelogOptions = CliOptions & MarkdownOptions
+type ChangelogOptions = CliOptions & MarkdownOption
 
 const globalAuthorCache = new Map<string, AuthorInfo>()
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
