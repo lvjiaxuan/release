@@ -1,3 +1,3 @@
-describe.skip('git', () => {
+describe.skip('common', () => {
   // ...
 })

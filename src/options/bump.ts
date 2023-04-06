@@ -58,6 +58,7 @@ const resolveChangedPackagesSinceLastTag = async (options: Option) => {
 
 const resolveBumpPackages = (options: Option) => {
   if (isMonorepo && options.pkg) {
+    console.log()
     return prompts({
       type: 'multiselect',
       name: 'pkgs',

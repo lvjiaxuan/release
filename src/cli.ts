@@ -1,8 +1,8 @@
 import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
-import yargs, { type Argv, type CommandModule } from 'yargs'
-import type { AllOption, BumpOption, ChangelogOption, CliOption } from './'
-import { bump, resolveConfig } from './'
+import yargs, { type Argv } from 'yargs'
+import type { AllOption } from '.'
+import { bump, resolveConfig } from '.'
 import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
