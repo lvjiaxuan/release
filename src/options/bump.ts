@@ -1,10 +1,9 @@
+import { promises as fsp } from 'node:fs'
+import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
+import type { BumpOption, CliOption, MarkdownOption } from '..'
 import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
-import { promises as fsp } from 'node:fs'
-import path from 'node:path'
-import type { BumpOption, CliOption, MarkdownOption } from '..'
-import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 import pc from 'picocolors'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
@@ -73,6 +72,8 @@ const resolveBumpPackages = (options: Option) => {
 }
 
 export const bump = async(options: Option) => {
+  console.log()
+
   const [ bumpType, changedPackages ] = await Promise.all([
     resolveBumpType(options),
     resolveBumpPackages(options),
@@ -80,7 +81,7 @@ export const bump = async(options: Option) => {
 
   const bumpVersionMap = new Map<string, string>()
   const pkgsJson = await Promise.all(changedPackages.map(async pkg => {
-    const pkgJson = JSON.parse(await fsp.readFile(pkg, 'utf-8')) as { version: string }
+    const pkgJson = JSON.parse(await fsp.readFile(pkg, 'utf-8')) as { version: string; name: string }
     const currentVersion = pkgJson.version ?? '0.0.0'
 
     let bumpVersion: string
@@ -96,17 +97,26 @@ export const bump = async(options: Option) => {
       package: pkg,
       currentVersion,
       bumpVersion: pkgJson.version,
+      json: pkgJson,
       jsonStr: JSON.stringify(pkgJson, null, 2),
     }
   }))
 
   if (isMonorepo) {
-    console.log(`\nDetect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages as ${ pc.bold(`${ bumpType.level }${ bumpType.preid ? `=${ bumpType.preid }` : '' }`) }:`)
+    console.log(pc.green(`Detect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages as ${ pc.bold(`${ bumpType.level }${ bumpType.preid ? `=${ bumpType.preid }` : '' }`) }:`))
+  } else {
+    console.log(pc.green('Bump result:'))
   }
 
   console.log(pkgsJson.map(i => `- ${ i.currentVersion } → ${ colorizeVersionDiff(i.currentVersion, i.bumpVersion) } (${ i.package })`).join('\n'))
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
-    // await Promise.all(bumpJson.map(async item => await fsp.writeFile(item.package, item.jsonStr, 'utf-8')))
+    await Promise.all(pkgsJson.map(async item => await fsp.writeFile(item.package, item.jsonStr, 'utf-8')))
   }
+
+  if (!isMonorepo) {
+    return [ pkgsJson[0].bumpVersion ]
+  }
+
+  return pkgsJson.map(i => `${ options.mainPkg !== i.json.name ? i.json.name + '@' : '' }${ i.json.version }`)
 }

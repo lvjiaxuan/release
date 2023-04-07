@@ -2,7 +2,7 @@ import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import type { AllOption } from '.'
-import { bump, changelog, resolveConfig } from '.'
+import { bump, changelog, lvr, resolveConfig } from '.'
 import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
@@ -11,10 +11,13 @@ void yargs(hideBin(process.argv))
   .usage(
     '$0 [options]',
     'Bump → CHANGELOG → Commit → Tag → Push',
-    yargs => yargs satisfies Argv<Partial<AllOption>>,
-    args => {
-      console.log(pc.cyan('Run release command.'))
-      // ...
+    yargs => yargs as Argv<Partial<AllOption>>,
+    async args => {
+      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
+      // @ts-ignore
+      await lvr(await resolveConfig(args))
+      args.dry && console.log(pc.bgCyan('\nDry run'))
     },
   ).command({
     command: 'bump [options]',
@@ -22,9 +25,11 @@ void yargs(hideBin(process.argv))
     describe: 'Bump only.',
     builder: y => y,
     handler: async args => {
+      args.dry && console.log(pc.bgCyan('Dry run\n'))
       console.log(pc.cyan('Run bump command.'))
       // @ts-ignore
-      void bump(await resolveConfig(args))
+      await bump(await resolveConfig(args))
+      args.dry && console.log(pc.bgCyan('\nDry run'))
     },
   }).command({
     command: 'changelog [options]',
@@ -32,9 +37,11 @@ void yargs(hideBin(process.argv))
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler: async args => {
+      args.dry && console.log(pc.bgCyan('Dry run\n'))
       console.log(pc.cyan('Run CHANGELOG command.'))
       // @ts-ignore
-      void changelog(await resolveConfig(args))
+      await changelog(await resolveConfig(args))
+      args.dry && console.log(pc.bgCyan('\nDry run'))
     },
   }).option('all', {
     boolean: true,
@@ -97,11 +104,12 @@ void yargs(hideBin(process.argv))
     description: 'Please refer to README.md.',
   }) .option('tag', {
     string: true,
+    default: '',
     description: 'Please refer to README.md.',
   }).option('push', {
     string: true,
-    defaultDescription: 'Push both branch and tag.',
-    description: 'branch | tag.',
+    default: '',
+    description: 'Please refer to README.md.',
   }).option('main-pkg', {
     string: true,
     description: 'Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.',

@@ -106,7 +106,7 @@ lvr changelog --tag==2
 # For a specified tag.
 lvr changelog --tag=v0.0.2
 
-# It means that CHANGELOG.md would contain more changes which could not be parsed by conventional commits.
+# It means that CHANGELOG.md would contain more changes which were not be parsed by conventional commits.
 # Disable by default.
 lvr changelog --verbose
 ```
@@ -126,9 +126,9 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 > `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
 ```sh
-# Use `Release {r}` as commit message by default.
-# The `{r}` would be replaced by the bumped version from package.json.
-# In a monorepo, the `{r}` is likely `a@x.x.x,b@y.y.y` by default.
+# Use `Release {n}` as commit message by default.
+# The `{n}` would be replaced by the bumped version from package.json.
+# In a monorepo, the `{n}` is likely `a@x.x.x,b@y.y.y` by default.
 # Customizable.
 lvr --commit="R: {v}"
 
@@ -156,7 +156,7 @@ lvr --push=tag
 lvr --main-pkg=abc
 ```
 
-Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.
+In a monorepo, it can specify the package release format as `x.x.x`, rather than `abc@x.x.x`.
 
 ### Send a GitHub Release on *GitHub Action*
 
