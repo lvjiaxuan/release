@@ -73,7 +73,6 @@ const resolveBumpPackages = (options: Option) => {
 }
 
 export const bump = async(options: Option) => {
-
   const [ bumpType, changedPackages ] = await Promise.all([
     resolveBumpType(options),
     resolveBumpPackages(options),

@@ -2,7 +2,7 @@ import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import type { AllOption } from '.'
-import { bump, resolveConfig } from '.'
+import { bump, changelog, resolveConfig } from '.'
 import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
@@ -31,9 +31,10 @@ void yargs(hideBin(process.argv))
     aliases: 'c',
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
-    handler(args) {
+    handler: async args => {
       console.log(pc.cyan('Run CHANGELOG command.'))
-      // console.log(3, args)
+      // @ts-ignore
+      void changelog(await resolveConfig(args))
     },
   }).option('all', {
     boolean: true,

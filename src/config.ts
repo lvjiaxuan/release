@@ -20,6 +20,7 @@ export type ChangelogOption = {
   tag?: string
   verbose?: boolean
   token?: string
+  github?: string
 }
 
 export type CliOption = {
@@ -70,8 +71,8 @@ export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOptio
 
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
-  tag: '',
-  push: '',
+  // tag: '',
+  // push: '',
 }
 
 export const resolveConfig = async <T extends AllOption>(options: T) => {

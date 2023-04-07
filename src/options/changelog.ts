@@ -1,25 +1,64 @@
-import pc from 'picocolors'
-import { promises as fsp } from 'fs'
-import { getCurrentGitBranch, getLastGitTag, getParsedCommits, getTags } from './../git'
-import type { CliOptions, MarkdownOption } from './../config'
-import { generateMarkdown } from './../markdown'
-import semver from 'semver'
-import { $fetch } from 'ohmyfetch'
+import type { AllOption, ChangelogOption } from '..'
+import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
 import { notNullish } from '@antfu/utils'
+import { $fetch } from 'ohmyfetch'
 import type { AuthorInfo, Commit } from 'changelogithub'
+import fs from 'node:fs'
+import pc from 'picocolors'
+import semver from 'semver'
 
+const resolveFormToList = async (tags?: string[] | number) => {
+  const list: string[][] = []
+  const allTags = await getTags()
 
-type ChangelogOptions = CliOptions & MarkdownOption
+  if (!tags) {
+    tags = allTags
+    tags[0] && list.unshift([ '', tags[0] ])
 
-const globalAuthorCache = new Map<string, AuthorInfo>()
+  } else if (Array.isArray(tags)) {
+
+    // @ts-ignore
+    const head = allTags.findIndex(i => i === tags[0])
+    // @ts-ignore
+    const tail = allTags.findIndex(i => i === tags[tags.length - 1])
+
+    if (head > -1 && tail > -1) {
+      tags = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
+    } else {
+      return []
+    }
+  } else {
+    if (tags >= allTags.length) {
+      list.unshift([ '', allTags[0] ])
+    }
+
+    tags = allTags.slice(-tags - 1)
+  }
+
+  for (let i = 0, n = tags.length; i < n - 1; i++) {
+    list.push([ tags[i], tags[i + 1] ])
+  }
+  return list.reverse()
+}
+
+const verifyTags = async (tags: string[][], ignore?: string) => {
+  const existTags = await getTags()
+  const flatTags = tags.flat().filter(tag => tag && tag !== ignore)
+  return flatTags.every(tag => existTags.includes(tag))
+}
+
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
-const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) => {
+let skipFurtherFetch = false
+const globalAuthorCache = new Map<string, AuthorInfo>()
+const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => {
   if (globalAuthorCache.has(info.email)) {
     return globalAuthorCache.get(info.email)!
   }
 
-  if (info.login)
+  if (info.login || skipFurtherFetch) {
+    globalAuthorCache.set(info.email, info)
     return info
+  }
 
   const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
   options.token && (headers.authorization = `token ${ options.token }`)
@@ -28,8 +67,11 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
   try {
     const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers })
     info.login = data.items[0].login
+    skipFurtherFetch = false
   }
-  catch {}
+  catch {
+    skipFurtherFetch = true
+  }
 
   if (info.login) {
     globalAuthorCache.set(info.email, info)
@@ -40,17 +82,24 @@ const resolveAuthorInfo = async (options: ChangelogOptions, info: AuthorInfo) =>
     try {
       const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers })
       info.login = data.author.login
+      skipFurtherFetch = false
     }
-    catch {}
+    catch {
+      skipFurtherFetch = true
+    }
   }
   /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
+
+  if (skipFurtherFetch) {
+    console.log(pc.yellow('Failed to resolve author info, fallback to the origin data.'))
+  }
 
   globalAuthorCache.set(info.email, info)
   return info
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L82
-const resolveAuthors = async (commits: Commit[], options: ChangelogOptions) => {
+const resolveAuthors = async (commits: Commit[], options: ChangelogOption) => {
   const map = new Map<string, AuthorInfo>()
   commits.forEach(commit => commit.resolvedAuthors = commit.authors.map((a, idx) => {
     if (!a.email || !a.name)
@@ -96,106 +145,52 @@ const resolveAuthors = async (commits: Commit[], options: ChangelogOptions) => {
     })
 }
 
-const resolveFormToList = async (tags?: string[] | number) => {
-  const list: string[][] = []
-  const allTags = await getTags()
+export const changelog = async (options: AllOption, tagForHead?: string) => {
+  console.log()
 
-  if (!tags) {
-    tags = allTags
-    tags[0] && list.unshift([ '', tags[0] ])
-
-  } else if (Array.isArray(tags)) {
-
-    // @ts-ignore
-    const head = allTags.findIndex(i => i === tags[0])
-    // @ts-ignore
-    const tail = allTags.findIndex(i => i === tags[tags.length - 1])
-
-    if (head > -1 && tail > -1) {
-      tags = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
-    } else {
-      return []
-    }
-  } else {
-    if (tags >= allTags.length) {
-      list.unshift([ '', allTags[0] ])
-    }
-
-    tags = allTags.slice(-tags - 1)
-  }
-
-  for (let i = 0, n = tags.length; i < n - 1; i++) {
-    list.push([ tags[i], tags[i + 1] ])
-  }
-  return list.reverse()
-}
-
-const verifyTags = async (tags: string[][], ignore: string) => {
-  const existTags = await getTags()
-  const flatTags = tags.flat().filter(tag => tag && tag !== ignore)
-  return flatTags.every(tag => existTags.includes(tag))
-}
-
-
-export const changelog = async (options: ChangelogOptions, newTag?: string) => {
-  if (options.changelog === false) {
-    console.log(`\n${ pc.bold(pc.yellow('Skip')) } generate CHANGELOG.md.`)
-    return
-  }
-
-  let appendNewTag = true
   let fromToList: string[][] = []
-  if (options.changelog === '') {
-    // For all tags.
+  if (!Object.hasOwn(options, 'tag')) {
+    // All tags.
     fromToList = await resolveFormToList()
-  } else if (options.changelog!.includes('...')) {
-    // For a tag range.
-    appendNewTag = false
-    const from2to = options.changelog!.split('...') as [ string, string ]
+  } else if (options.tag!.includes('...')) {
+    // A tag range
+    const from2to = options.tag!.split('...') as [ string, string ]
     fromToList = await resolveFormToList(from2to)
-  } else if (Number.isInteger(-options.changelog!)) {
-    // For few last tags.
-    fromToList = await resolveFormToList(+options.changelog!)
-  } else if (options.changelog === 'last') {
-    // For the last tag.
-    const [ lastTag, beforeLastTag ] = await Promise.all([
-      getLastGitTag(),
-      getLastGitTag(-1),
-    ])
-    fromToList = [ [ beforeLastTag, lastTag ] ]
-  } else if (semver.valid(options.changelog)) {
-    // For a specified tag.
-    appendNewTag = false
+  } else if (Number.isInteger(-options.tag!)) {
+    // Few last tags.
+    fromToList = await resolveFormToList(+options.tag!)
+  } else if (semver.valid(options.tag)) {
+    // A specified tag.
     const tags = await getTags()
-    const idx = tags.findIndex(i => i === options.changelog)
-    fromToList = [ [ idx > -1 ? tags[idx - 1] : '', options.changelog! ] ]
+    const idx = tags.findIndex(i => i === options.tag)
+    fromToList = [ [ idx > -1 ? tags[idx - 1] : '', options.tag! ] ]
   }
 
-  let currentGitBranch = ''
-  if (appendNewTag && newTag) {
+  const titleMap: { [x: string]: string } = {}
+  let currentGitBranch: string | undefined
+  if (tagForHead) {
     currentGitBranch = await getCurrentGitBranch()
     fromToList.unshift([ fromToList?.[0]?.[1] ?? '', currentGitBranch ])
+    titleMap[currentGitBranch] = 'v' + tagForHead
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
-    console.log(`\n${ pc.bold(pc.yellow('Skip')) }. ${ pc.red('Illegal tags') } to generate CHANGELOG.`)
+    console.log(`\n${ pc.bold(pc.yellow('Skip CHANGELOG')) }. Found the ${ pc.red('illegal tags') } to generate CHANGELOG.`)
     return
   }
-
-  const titleMap = { [currentGitBranch]: `v${ newTag! }` }
 
   let md = '# Changelog\n\n'
   if (fromToList.length > 1) {
     md += `Tag ranges \`${ fromToList[fromToList.length - 1][1] }...${ titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1] }\` (${ fromToList.length }).`
   } else if (fromToList.length === 1) {
-    md += `Tag \`${ newTag! }\`.`
+    md += `Tag \`${ titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1] }\`.`
   }
 
   if (options.github) {
     md += ` [All GitHub Releases](https://github.com/${ options.github }/releases).`
   }
 
-  if (!options.verboseChange) {
+  if (!options.verbose) {
     delete options.types['__OTHER__']
   }
 
@@ -215,10 +210,9 @@ export const changelog = async (options: ChangelogOptions, newTag?: string) => {
   }
   /* eslint-enable no-await-in-loop */
 
+  console.log(`Generated CHANGELOG.md's content preview: ${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 300)) }`)
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
-    await fsp.writeFile('CHANGELOG.md', md, 'utf8')
+    fs.writeFileSync('CHANGELOG.md', md, 'utf-8')
   }
-
-  return { md }
 }

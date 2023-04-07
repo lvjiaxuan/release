@@ -106,9 +106,6 @@ lvr changelog --tag==2
 # For a specified tag.
 lvr changelog --tag=v0.0.2
 
-# For last tag only
-lvr changelog --tag=last
-
 # It means that CHANGELOG.md would contain more changes which could not be parsed by conventional commits.
 # Disable by default.
 lvr changelog --verbose
