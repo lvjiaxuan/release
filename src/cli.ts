@@ -111,8 +111,8 @@ void yargs(hideBin(process.argv))
     default: '',
     description: 'Please refer to README.md.',
   }).option('main-pkg', {
-    string: true,
-    description: 'Specify the package release format as `x.x.x`, rather than `abc@x.x.x`.',
+    boolean: true,
+    description: 'Specify the package release format as `x.x.x` instead of `abc@x.x.x`.',
   })
   .recommendCommands()
   .help()

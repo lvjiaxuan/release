@@ -128,12 +128,11 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 ```sh
 # Use `Release {n}` as commit message by default.
 # The `{n}` would be replaced by the bumped version from package.json.
-# In a monorepo, the `{n}` is likely `a@x.x.x,b@y.y.y` by default.
+# When multiple packages were released at same commit, the `human-id` library is used to generate words that serve as commit message and tag name.
 # Customizable.
-lvr --commit="R: {v}"
+lvr --commit="R: {n}"
 
 # Use bumped version from package.json by default.
-# In a monorepo, it is likely `a@x.x.x,b@y.y.y` by default.
 # Customizable.
 lvr --tag=BatMan
 
@@ -153,10 +152,10 @@ lvr --push=tag
 #### Set a main package for a monorepo
 
 ```sh
-lvr --main-pkg=abc
+lvr --main-pkg
 ```
 
-In a monorepo, it can specify the package release format as `x.x.x`, rather than `abc@x.x.x`.
+In a monorepo, releasing only one package, it can specify the package release format as `x.x.x` instead of `abc@x.x.x`.
 
 ### Send a GitHub Release on *GitHub Action*
 

@@ -5,6 +5,7 @@ import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
+import humanId from 'human-id'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 type Option = BumpOption & CliOption & MarkdownOption
@@ -105,7 +106,7 @@ export const bump = async(options: Option) => {
   if (isMonorepo) {
     console.log(pc.green(`Detect as a monorepo. Bump ${ pc.bold(options.all ? 'all' : 'changed') }(${ pkgsJson.length }) packages as ${ pc.bold(`${ bumpType.level }${ bumpType.preid ? `=${ bumpType.preid }` : '' }`) }:`))
   } else {
-    console.log(pc.green('Bump result:'))
+    console.log(pc.green('Bumped result:'))
   }
 
   console.log(pkgsJson.map(i => `- ${ i.currentVersion } → ${ colorizeVersionDiff(i.currentVersion, i.bumpVersion) } (${ i.package })`).join('\n'))
@@ -115,8 +116,12 @@ export const bump = async(options: Option) => {
   }
 
   if (!isMonorepo) {
-    return [ pkgsJson[0].bumpVersion ]
+    return 'v' + pkgsJson[0].bumpVersion
   }
 
-  return pkgsJson.map(i => `${ options.mainPkg !== i.json.name ? i.json.name + '@' : '' }${ i.json.version }`)
+  if (pkgsJson.length > 1) {
+    return humanId()
+  }
+
+  return options.mainPkg ? 'v' + pkgsJson[0].bumpVersion : pkgsJson[0].json.name + '@' + pkgsJson[0].json.version
 }
