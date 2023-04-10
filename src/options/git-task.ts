@@ -7,7 +7,7 @@ export const execGitJobs = async (options: Pick<CliOption, 'commit' | 'tag' | 'p
 
   console.log()
   if (typeof options.commit === 'string') {
-    options.commit = options.commit.replace('{n}', commitTagName)
+    options.commit = options.commit.replace('{r}', commitTagName)
     console.log(pc.green('git add .'))
     !dry && await execCMD('git', [ 'add', '.' ])
     console.log(pc.green(`git commit -m "${ options.commit }"`))

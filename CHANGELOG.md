@@ -1,9 +1,32 @@
 # Changelog
 
-Tag ranges `v0.1.0...v0.3.1` (14). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.0.0` (15). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.0.0 <sub>(2023-04-10)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...main)
+
+### &nbsp;&nbsp;&nbsp;💥 Breaking Changes
+
+- bump. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(b2f0d)</samp>](https://github.com/lvjiaxuan/release/commit/b2f0d61)
+- changelog/git. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(872ee)</samp>](https://github.com/lvjiaxuan/release/commit/872ee2c)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- add `--main-pkg` &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ed9e9)</samp>](https://github.com/lvjiaxuan/release/commit/ed9e93d)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- dirname of changed file. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ff01f)</samp>](https://github.com/lvjiaxuan/release/commit/ff01f41)
+- humanid takes no `v` prefix &nbsp;-&nbsp; by @lvjiaxuan [<samp>(56bbc)</samp>](https://github.com/lvjiaxuan/release/commit/56bbc1c)
+
+### &nbsp;&nbsp;&nbsp;📝 Documentation
+
+- update for monorepo stuff &nbsp;-&nbsp; by @lvjiaxuan [<samp>(d8cee)</samp>](https://github.com/lvjiaxuan/release/commit/d8cee7f)
+- update &nbsp;-&nbsp; by @lvjiaxuan [<samp>(c1089)</samp>](https://github.com/lvjiaxuan/release/commit/c108910)
+- full roadmap &nbsp;-&nbsp; by @lvjiaxuan [<samp>(07671)</samp>](https://github.com/lvjiaxuan/release/commit/076716f)
 
 ## v0.3.1 <sub>(2023-03-27)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.0...main)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.0...v0.3.1)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
