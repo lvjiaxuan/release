@@ -6,6 +6,7 @@ import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
 import humanId from 'human-id'
+import path from 'node:path'
 
 type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 type Option = BumpOption & CliOption & MarkdownOption
@@ -53,7 +54,7 @@ const resolveChangedPackagesSinceLastTag = async (options: Option) => {
     }, [] as string[])),
   ]
 
-  return packages.filter(pkg => changedFile.some(file => file.startsWith(pkg)))
+  return packages.filter(pkg => changedFile.some(file => file.startsWith(path.dirname(pkg))))
 }
 
 const resolveBumpPackages = (options: Option) => {
