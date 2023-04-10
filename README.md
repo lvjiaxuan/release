@@ -155,7 +155,7 @@ lvr --push=tag
 lvr --main-pkg
 ```
 
-In a monorepo, releasing only one package, it can specify the package release format as `x.x.x` instead of `abc@x.x.x`.
+In a monorepo, when releasing only one package, it specifies the package release format as `x.x.x` instead of `abc@x.x.x`.
 
 ### Send a GitHub Release on *GitHub Action*
 

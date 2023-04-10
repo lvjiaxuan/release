@@ -171,7 +171,7 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
   if (tagForHead) {
     currentGitBranch = await getCurrentGitBranch()
     fromToList.unshift([ fromToList?.[0]?.[1] ?? '', currentGitBranch ])
-    titleMap[currentGitBranch] = 'v' + tagForHead
+    titleMap[currentGitBranch] = (semver.valid(tagForHead) ? 'v' : '') + tagForHead
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
