@@ -1,17 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 import { $fetch } from 'ohmyfetch'
-import p from 'picocolors'
 import { promises as fsp } from 'node:fs'
+import { cwd } from '..'
+import p from 'picocolors'
 import path from 'node:path'
 
-const resolveTagSection = async () => {
+export const resolveTagSection = (content: string) => {
   try {
-    const CHANGELOG_PATH = path.join(process.cwd(), 'CHANGELOG.md')
-
-    await fsp.stat(CHANGELOG_PATH)
-
-    const content = await fsp.readFile(CHANGELOG_PATH, { encoding: 'utf-8' })
-    const match = content.match(/(?<notes>(?<=## [A-Za-z]+<\/sub>)[\s\S]+?(?=## v))/)
+    const match = content.match(/(?<notes>(?<=## (\d+\.\d+\.\d+|[A-Za-z]+).+<\/sub>)[\s\S]+?(?=## \w))/)
     const notes = match?.groups?.notes.trim()
     if (notes) {
       return notes
@@ -51,8 +47,12 @@ export const sendRelease = async () => {
   }
   catch {}
 
+  const CHANGELOG_PATH = path.join(cwd, 'CHANGELOG.md')
+  await fsp.stat(CHANGELOG_PATH)
+  const changelogContent = await fsp.readFile(CHANGELOG_PATH, { encoding: 'utf-8' })
+
   const body = {
-    body: await resolveTagSection(),
+    body: resolveTagSection(changelogContent),
     name: tag,
     tag_name: tag,
   }
