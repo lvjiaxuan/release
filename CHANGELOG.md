@@ -3,7 +3,7 @@
 Tag ranges `v0.1.0...v1.0.0` (15). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
 ## v1.0.0 <sub>(2023-04-10)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...main)
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...v1.0.0)
 
 ### &nbsp;&nbsp;&nbsp;💥 Breaking Changes
 
