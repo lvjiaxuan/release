@@ -11,7 +11,7 @@ const resolveTagSection = async () => {
     await fsp.stat(CHANGELOG_PATH)
 
     const content = await fsp.readFile(CHANGELOG_PATH, { encoding: 'utf-8' })
-    const match = content.match(/(?<notes>(?<=## v\d+\.\d+\.\d+.+<\/sub>)[\s\S]+?(?=## v))/)
+    const match = content.match(/(?<notes>(?<=## [A-Za-z]+<\/sub>)[\s\S]+?(?=## v))/)
     const notes = match?.groups?.notes.trim()
     if (notes) {
       return notes
