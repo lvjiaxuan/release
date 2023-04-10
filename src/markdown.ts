@@ -128,14 +128,16 @@ export async function generateMarkdown(options: MarkdownOption & {
 }) {
   const { parsedCommits: commits, from, to } = options
 
+  const tagName = options.titleMap[to] ? options.titleMap[to] : to
+
   const lines: string[] = [
     '',
     '',
-    `## ${ options.titleMap[to] ? options.titleMap[to] : to } <sub>(${ await getCommitFormatTime(to) })</sub>`,
+    `## ${ tagName } <sub>(${ await getCommitFormatTime(to) })</sub>`,
   ]
 
   if (options.github) {
-    lines.push(`[Compare changes](https://github.com/${ options.github }/compare/${ from }...${ to })`)
+    lines.push(`[Compare changes](https://github.com/${ options.github }/compare/${ from }...${ tagName })`)
   }
 
   const [ breaking, changes ] = partition(commits, c => c.isBreaking)
