@@ -75,13 +75,13 @@ const resolveBumpPackages = (options: Option) => {
 export const bump = async(options: Option) => {
   console.log()
 
-  const [ bumpType, changedPackages ] = await Promise.all([
+  const [ bumpType, bumpPackages ] = await Promise.all([
     resolveBumpType(options),
     resolveBumpPackages(options),
   ])
 
   const bumpVersionMap = new Map<string, string>()
-  const pkgsJson = await Promise.all(changedPackages.map(async pkg => {
+  const pkgsJson = await Promise.all(bumpPackages.map(async pkg => {
     const pkgJson = JSON.parse(await fsp.readFile(pkg, 'utf-8')) as { version: string; name: string }
     const currentVersion = pkgJson.version ?? '0.0.0'
 
