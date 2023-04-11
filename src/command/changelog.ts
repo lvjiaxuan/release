@@ -210,7 +210,7 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
   }
   /* eslint-enable no-await-in-loop */
 
-  console.log(`${ pc.green('Generated ./CHANGELOG.md\'s content preview:') } ${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 300)) }`)
+  console.log(`${ pc.green('Generated ./CHANGELOG.md\'s content preview:') } ${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)) }`)
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
     fs.writeFileSync('CHANGELOG.md', md, 'utf-8')
