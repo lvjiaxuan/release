@@ -7,7 +7,7 @@ export const addYml = async (isDry?: boolean) => {
 on:
   push:
     tags:
-      - 'v*'
+      - '*'
 
 jobs:
   release:
