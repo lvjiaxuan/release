@@ -1,5 +1,5 @@
-import type { CliOption } from '..'
-import { execCMD } from '..'
+import type { CliOption } from '.'
+import { execCMD } from '.'
 import pc from 'picocolors'
 
 export const execGitJobs = async (options: Pick<CliOption, 'commit' | 'tag' | 'push' | 'dry'>, commitTagName: string) => {
