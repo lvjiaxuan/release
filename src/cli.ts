@@ -2,7 +2,7 @@ import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import type { AllOption } from '.'
-import { addYml, bump, changelog, lvr, resolveConfig } from '.'
+import { addYml, bump, changelog, lvr, resolveConfig, sendRelease } from '.'
 import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
@@ -52,6 +52,11 @@ void yargs(hideBin(process.argv))
       await addYml(args.dry as boolean)
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
+  }).command({
+    command: 'release',
+    describe: 'Create a new release on CI environment.',
+    builder: y => y,
+    handler: async () => await sendRelease(),
   }).option('all', {
     boolean: true,
     describe: 'Bump for all packages.',
@@ -104,9 +109,6 @@ void yargs(hideBin(process.argv))
     alias: 'd',
     boolean: true,
     description: 'Dry run.',
-  }).option('yml', {
-    boolean: true,
-    description: 'Add a workflow file at `.github/workflows/lvr.yml`.',
   }).option('commit', {
     string: true,
     defaultDescription: 'Release {r}',
