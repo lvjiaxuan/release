@@ -1,5 +1,3 @@
-> :boom: Refactoring WIP.
-
 # lvr
 
 <p align=center>Bump and generate CHANGELOG locally.</p>
@@ -162,8 +160,8 @@ In a monorepo, when releasing only one package, it specifies the package release
 See [yml.ts](./src/options/yml.ts).
 
 ```sh
-# Add .github/workflows/lvr.yml
-lvr --yml
+# Add a workflow file at `.github/workflows/lvr.yml`.
+lvr yml
 ```
 
 ## Configuration

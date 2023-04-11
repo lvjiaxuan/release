@@ -2,7 +2,7 @@ import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import type { AllOption } from '.'
-import { bump, changelog, lvr, resolveConfig } from '.'
+import { addYml, bump, changelog, lvr, resolveConfig } from '.'
 import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
@@ -41,6 +41,15 @@ void yargs(hideBin(process.argv))
       console.log(pc.cyan('Run CHANGELOG command.'))
       // @ts-ignore
       await changelog(await resolveConfig(args))
+      args.dry && console.log(pc.bgCyan('\nDry run'))
+    },
+  }).command({
+    command: 'yml',
+    describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
+    builder: y => y,
+    handler: async args => {
+      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      await addYml(args.dry as boolean)
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
   }).option('all', {
