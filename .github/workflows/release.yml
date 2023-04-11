@@ -31,7 +31,7 @@ jobs:
         run: |
           nci
           nr build
-          nr lvr --release
+          nr lvr release
           pnpm publish --access public --no-git-checks
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

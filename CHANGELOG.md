@@ -2,8 +2,8 @@
 
 Tag ranges `v0.1.0...v1.0.0` (15). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
-## v1.0.0 <sub>(2023-04-10)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...main)
+## v1.0.0 <sub>(2023-04-11)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...v1.0.0)
 
 ### &nbsp;&nbsp;&nbsp;💥 Breaking Changes
 
@@ -13,6 +13,8 @@ Tag ranges `v0.1.0...v1.0.0` (15). [All GitHub Releases](https://github.com/lvji
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
 - add `--main-pkg` &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ed9e9)</samp>](https://github.com/lvjiaxuan/release/commit/ed9e93d)
+- yml command &nbsp;-&nbsp; by @lvjiaxuan [<samp>(f0894)</samp>](https://github.com/lvjiaxuan/release/commit/f089421)
+- release command &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1436e)</samp>](https://github.com/lvjiaxuan/release/commit/1436e33)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
