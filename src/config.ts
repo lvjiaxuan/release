@@ -70,7 +70,7 @@ export const MarkdownOptionDefaults: MarkdownOption = {
 export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
 
 const CliOptionDefaults: CliOption = {
-  commit: 'Release {n}',
+  commit: 'Release {r}',
   // tag: '',
   // push: '',
 }

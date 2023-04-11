@@ -124,11 +124,11 @@ Enable `--commit` `--tag` `--push` by default when enable bump and changelog mea
 > `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
 ```sh
-# Use `Release {n}` as commit message by default.
-# The `{n}` would be replaced by the bumped version from package.json.
+# Use `Release {r}` as commit message by default.
+# The `{r}` would be replaced by the bumped version from package.json.
 # When multiple packages were released at same commit, the `human-id` library is used to generate words that serve as commit message and tag name.
 # Customizable.
-lvr --commit="R: {n}"
+lvr --commit="R: {r}"
 
 # Use bumped version from package.json by default.
 # Customizable.
@@ -157,7 +157,7 @@ In a monorepo, when releasing only one package, it specifies the package release
 
 ### Send a GitHub Release on *GitHub Action*
 
-See [yml.ts](./src/options/yml.ts).
+See [yml.ts](./src/command/yml.ts). And modify on your own.
 
 ```sh
 # Add a workflow file at `.github/workflows/lvr.yml`.
