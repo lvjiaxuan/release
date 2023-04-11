@@ -1,6 +1,9 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.0.0` (15). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.0.1-alpha.0` (16). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.0.1-alpha.0 <sub>(2023-04-11)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.0.0...v1.0.1-alpha.0)
 
 ## v1.0.0 <sub>(2023-04-11)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v0.3.1...v1.0.0)

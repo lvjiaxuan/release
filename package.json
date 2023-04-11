@@ -1,7 +1,7 @@
 {
   "name": "lvr",
   "type": "commonjs",
-  "version": "1.0.0",
+  "version": "1.0.1-alpha.0",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
@@ -14,7 +14,11 @@
   "bin": {
     "lvr": "./bin/cli.mjs"
   },
-  "keywords": ["bump", "changelog", "release"],
+  "keywords": [
+    "bump",
+    "changelog",
+    "release"
+  ],
   "files": [
     "bin",
     "dist"
