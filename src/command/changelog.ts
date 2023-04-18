@@ -147,6 +147,7 @@ const resolveAuthors = async (commits: Commit[], options: ChangelogOption) => {
 
 export const changelog = async (options: AllOption, tagForHead?: string) => {
   console.log()
+  console.log(`${ pc.green('Generated ./CHANGELOG.md\'s content preview:') }`)
 
   let fromToList: string[][] = []
   if (!Object.hasOwn(options, 'tag')) {
@@ -210,7 +211,7 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
   }
   /* eslint-enable no-await-in-loop */
 
-  console.log(`${ pc.green('Generated ./CHANGELOG.md\'s content preview:') } ${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)) }`)
+  console.log(`${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)) }`)
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
     fs.writeFileSync('CHANGELOG.md', md, 'utf-8')
