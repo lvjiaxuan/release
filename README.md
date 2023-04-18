@@ -1,8 +1,8 @@
 # lvr
 
-<p align=center>Bump and generate CHANGELOG locally.</p>
+<p align=center>Bump and generate CHANGELOG on local.</p>
 
-![actions](https://github.com/lvjiaxuan/release/actions/workflows/release.yml/badge.svg)
+![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
 ## Feature
@@ -14,7 +14,7 @@
 ## Say sth.
 
 In my release flow, there are some steps in order such as:
-1. perform some tests.
+1. Execute some tests.
 2. Bump version.
 3. Generate CHANGELOG.md file.
 4. Commit / Tag.
@@ -23,10 +23,10 @@ In my release flow, there are some steps in order such as:
 
 More:
 1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
-2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), while in CI env is more efficient.
-3. Perform the heavy jobs like compile / build on CI is more efficient.
+2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), only a `git push`, while in CI env is more efficient.
+3. Execute the heavy jobs like compile / build on CI is more efficient.
 
-As mentioned above, I have put the bump job and CHANGELOG generation on the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG. Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
+As mentioned above, I have put the bump job and CHANGELOG generation on the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md . Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
 
 > The testing job should be performed at the very beginning. Until now, I haven't found a better way to deal with it.
 
