@@ -5,9 +5,10 @@ import { cwd } from '..'
 import p from 'picocolors'
 import path from 'node:path'
 
-export const resolveTagSection = (content: string) => {
+export const resolveChangelogSection = (content: string) => {
   try {
-    const match = content.match(/(?<notes>(?<=## (\d+\.\d+\.\d+|[A-Za-z]+).+<\/sub>)[\s\S]+?(?=## \w))/)
+    content += '## v'
+    const match = content.match(/(?<notes>(?<=## (v\d+\.\d+\.\d+|[A-Za-z]+).+<\/sub>)[\s\S]+?(?=## \w))/)
     const notes = match?.groups?.notes.trim()
     if (notes) {
       return notes
@@ -17,7 +18,7 @@ export const resolveTagSection = (content: string) => {
     throw error as Error
   }
 
-  throw new Error('Can not resolve release notes on CHANGELOG.md.')
+  throw new Error('Failed to resolve release notes on CHANGELOG.md .')
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L7
@@ -52,7 +53,7 @@ export const sendRelease = async () => {
   const changelogContent = await fsp.readFile(CHANGELOG_PATH, { encoding: 'utf-8' })
 
   const body = {
-    body: resolveTagSection(changelogContent),
+    body: resolveChangelogSection(changelogContent),
     name: tag,
     tag_name: tag,
   }
