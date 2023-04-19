@@ -7,7 +7,7 @@ export const addYml = async (isDry?: boolean) => {
 on:
   push:
     tags:
-      - '*'
+      - v*
 
 jobs:
   release:
@@ -17,9 +17,9 @@ jobs:
 
       - uses: actions/setup-node@v3
         with:
-          node-version: 16.x
+          node-version: 18
 
-      - run: npx lvr --release
+      - run: npx lvr release
         env:
           GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}`
 
