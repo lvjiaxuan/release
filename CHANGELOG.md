@@ -1,6 +1,23 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.0.1-alpha.0` (16). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.1.0` (17). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.1.0 <sub>(2023-04-19)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.0.1-alpha.0...v1.1.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- move log position &nbsp;-&nbsp; by @lvjiaxuan [<samp>(5e696)</samp>](https://github.com/lvjiaxuan/release/commit/5e6968b)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- update yml content &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1f3d6)</samp>](https://github.com/lvjiaxuan/release/commit/1f3d6d5)
+- yml content &nbsp;-&nbsp; by @lvjiaxuan [<samp>(a82b9)</samp>](https://github.com/lvjiaxuan/release/commit/a82b98e)
+- regex for resolve changelog section &nbsp;-&nbsp; by @lvjiaxuan [<samp>(b1f77)</samp>](https://github.com/lvjiaxuan/release/commit/b1f779f)
+
+### &nbsp;&nbsp;&nbsp;📝 Documentation
+
+- update &nbsp;-&nbsp; by @lvjiaxuan [<samp>(41dae)</samp>](https://github.com/lvjiaxuan/release/commit/41daecc)
 
 ## v1.0.1-alpha.0 <sub>(2023-04-11)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.0.0...v1.0.1-alpha.0)
