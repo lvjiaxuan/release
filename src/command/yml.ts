@@ -21,7 +21,7 @@ jobs:
 
       - run: npx lvr release
         env:
-          GITHUB_TOKEN: \${{secrets.GITHUB_TOKEN}}`
+          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`
 
 
   if (isDry) {
@@ -33,5 +33,5 @@ jobs:
   await fsp.mkdir('.github/workflows/', { recursive: true })
   await fsp.writeFile('.github/workflows/lvr.yml', yml, { encoding: 'utf-8' })
 
-  console.log(pc.green('Added .github/workflows/lvr-release.yml.'))
+  console.log(pc.green('Added .github/workflows/lvr.yml.'))
 }
