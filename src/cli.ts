@@ -128,6 +128,5 @@ void yargs(hideBin(process.argv))
   .recommendCommands()
   .help()
   .alias('h', 'help')
-  .version(version)
-  .alias('v', 'version')
+  .version('v', `Show version - \`${ version }\``, version)
   .argv

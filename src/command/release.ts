@@ -58,7 +58,7 @@ export const sendRelease = async () => {
     tag_name: tag,
   }
 
-  console.log(p.cyan(method === 'POST' ? 'Creating release notes...' : 'Updating release notes...'))
+  console.log(p.cyan(method === 'POST' ? 'Creating a release...' : 'Updating the release notes...'))
 
   const res = await $fetch(url, {
     method,
