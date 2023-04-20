@@ -16,8 +16,17 @@ jobs:
       - uses: actions/checkout@v3
 
       - uses: actions/setup-node@v3
+        env:
+          NODE_AUTH_TOKEN: \${{ secrets.NPM_AUTH_TOKEN }}
         with:
           node-version: 18
+          registry-url: https://registry.npmjs.org
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - run: pnpm i @antfu/ni -g
 
       - run: npx lvr release
         env:
