@@ -5,6 +5,8 @@
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
+English | [简体中文](./README.zh_CN.md)
+
 ## Feature
 
 1. Bump the specified packages within a monorepo, while placing only one CHANGELOG.md which respects the entire monorepo at the root.
@@ -84,7 +86,7 @@ Semver increment level support:
 **Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` is the same.**
 
 > **Note**
-> 
+>
 > In a monorepo, maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
 
 ### Changelog
