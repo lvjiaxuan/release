@@ -22,16 +22,8 @@ jobs:
         with:
           version: 8
 
-      - name: Setup
-        run: |
-          pnpm config set auto-install-peers=true
-          pnpm i -g @antfu/ni
+      - run: pnpm i -g @antfu/ni
 
-      - name: Create a release and Publish to npmjs
-        run: |
-          nci
-          nr build
-          nr lvr release
-          pnpm publish --access public --no-git-checks
+      - run: nlx lvr release & (nci && nr build && pnpm publish --no-git-checks)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
