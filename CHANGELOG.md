@@ -1,14 +1,21 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.2.0` (18). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.2.1` (19). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.2.1 <sub>(2023-05-06)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.2.0...v1.2.1)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- update yml &nbsp;-&nbsp; by @lvjiaxuan [<samp>(d0be1)</samp>](https://github.com/lvjiaxuan/release/commit/d0be1e9)
 
 ## v1.2.0 <sub>(2023-05-06)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.1.0...v1.2.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
-- show version on `-v` desc. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(643e6)</samp>](https://github.com/lvjiaxuan/release/commit/643e6fc)
-- add version on every command beginning &nbsp;-&nbsp; by @lvjiaxuan [<samp>(fb798)</samp>](https://github.com/lvjiaxuan/release/commit/fb79889)
+- show version on -v desc. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(643e6)</samp>](https://github.com/lvjiaxuan/release/commit/643e6fc)
+- add version on command beginning &nbsp;-&nbsp; by @lvjiaxuan [<samp>(fb798)</samp>](https://github.com/lvjiaxuan/release/commit/fb79889)
 - update yml file. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(842dd)</samp>](https://github.com/lvjiaxuan/release/commit/842ddab)
 
 ## v1.1.0 <sub>(2023-04-19)</sub>
