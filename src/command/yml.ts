@@ -2,7 +2,7 @@ import { promises as fsp } from 'node:fs'
 import pc from 'picocolors'
 
 export const addYml = async (isDry?: boolean) => {
-  const yml = `name: Release
+  const yml = `name: Release and Publish
 
 on:
   push:
@@ -10,27 +10,27 @@ on:
       - v*
 
 jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
+  release_publish:
+  runs-on: ubuntu-latest
+  steps:
+    - uses: actions/checkout@v3
 
-      - uses: actions/setup-node@v3
-        env:
-          NODE_AUTH_TOKEN: \${{ secrets.NPM_AUTH_TOKEN }}
-        with:
-          node-version: 18
-          registry-url: https://registry.npmjs.org
+    - uses: actions/setup-node@v3
+      env:
+        NODE_AUTH_TOKEN: \${{ secrets.NPM_AUTH_TOKEN }}
+      with:
+        node-version: 18
+        registry-url: https://registry.npmjs.org
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
+    - uses: pnpm/action-setup@v2
+      with:
+        version: 8
 
-      - run: pnpm i @antfu/ni -g
+    - run: pnpm i -g @antfu/ni
 
-      - run: npx lvr release
-        env:
-          GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`
+    - run: nlx lvr release & (nci && pnpm publish --no-git-checks)
+      env:
+        GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`
 
 
   if (isDry) {

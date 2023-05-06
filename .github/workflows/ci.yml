@@ -24,6 +24,6 @@ jobs:
 
       - run: pnpm i -g @antfu/ni
 
-      - run: nlx lvr release & (nci && nr build && pnpm publish --no-git-checks)
+      - run: nlx lvr release & (nci && pnpm publish --no-git-checks)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
