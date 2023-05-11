@@ -115,7 +115,7 @@ To generate valid author GitHub name in the CHANGELOG.md as same as release note
 
 To solve this, I have to pass a GitHub PAT by `--token` when encountering this situation 😔.
 
-Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional environment variables from the `.env.local` which should be included in the `.gitignore` .
+Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional `GITHUB_TOKEN` environment variable from the `.env.local` which should be included in the `.gitignore` .
 
 ### Commit / Tag / Push
 
