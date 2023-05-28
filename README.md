@@ -87,6 +87,14 @@ Semver increment level support:
 > 
 > In a monorepo, maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
 
+#### Set a main package for a monorepo
+
+```sh
+lvr --pkg --main-pkg
+```
+
+In a monorepo, when releasing only one package, it specifies the package release format as `vx.x.x` instead of `abc@x.x.x`.
+
 ### Changelog
 
 Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [unjs/changelogen](https://github.com/unjs/changelogen).
@@ -146,14 +154,6 @@ lvr --push=tag
 
 > **Note**
 > It is not recommended to release more than one package at the same time in order to ensure a concise commit message and tag name.
-
-#### Set a main package for a monorepo
-
-```sh
-lvr --main-pkg
-```
-
-In a monorepo, when releasing only one package, it specifies the package release format as `x.x.x` instead of `abc@x.x.x`.
 
 ### Send a GitHub Release on *GitHub Action*
 
