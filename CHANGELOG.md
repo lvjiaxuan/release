@@ -1,6 +1,13 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.2.1` (19). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.2.2` (20). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.2.2 <sub>(2023-08-01)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.2.1...v1.2.2)
+
+### &nbsp;&nbsp;&nbsp;📝 Documentation
+
+- update &nbsp;-&nbsp; by @lvjiaxuan [<samp>(57c45)</samp>](https://github.com/lvjiaxuan/release/commit/57c458b)
 
 ## v1.2.1 <sub>(2023-05-06)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.2.0...v1.2.1)
