@@ -33,7 +33,7 @@
     "lvr": "jiti src/cli.ts"
   },
   "peerDependencies": {
-    "conventional-changelog-conventionalcommits": "^5.0.0"
+    "conventional-changelog-conventionalcommits": "^7.0.1"
   },
   "devDependencies": {
     "@antfu/utils": "^0.7.6",
