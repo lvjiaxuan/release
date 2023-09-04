@@ -28,7 +28,7 @@
     "dev": "nr build --watch",
     "build": "tsup src/cli.ts --target=node16 --clean --format=cjs",
     "test": "nlx cross-env NODE_OPTIONS=--experimental-vm-modules jest",
-    "link": "nr build && pnpm link --global",
+    "link": "pnpm link --global",
     "prepublishOnly": "nr build",
     "lvr": "jiti src/cli.ts"
   },
@@ -41,7 +41,7 @@
     "@types/conventional-recommended-bump": "^6.1.0",
     "@types/jest": "^29.5.4",
     "@types/lodash.merge": "^4.6.7",
-    "@types/node": "^20.5.7",
+    "@types/node": "^20.5.9",
     "@types/prompts": "^2.4.4",
     "@types/semver": "^7.5.1",
     "@types/yargs": "^17.0.24",

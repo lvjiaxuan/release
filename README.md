@@ -5,10 +5,10 @@
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg)
 [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
-## Feature
+## Features
 
-1. Bump the specified packages within a monorepo, while placing only one CHANGELOG.md which respects the entire monorepo at the root.
-2. Generate CHANGELOG.md within a specified version range.
+1. Bump the specified packages within a monorepo, while placing only one `CHANGELOG.md` which respects the entire monorepo at the root.
+2. Generate `CHANGELOG.md` within a specified version range.
 3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
 
 ## Say sth.

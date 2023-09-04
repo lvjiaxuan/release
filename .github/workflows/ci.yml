@@ -23,7 +23,7 @@ jobs:
           version: 8
 
       - run: |
-          npm i -g @antfu/ni
+          pnpm i @antfu/ni -g
           ni
 
       - run: nr lvr release && pnpm publish --no-git-checks
