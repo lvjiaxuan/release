@@ -64,12 +64,6 @@ void yargs(hideBin(process.argv))
       console.log(`lvr version ${ version }\n`)
       await sendRelease()
     },
-  }).command({
-    command: 'test',
-    handler: async () => {
-      console.log(`lvr test ${ version }\n`)
-      await Promise.reject('xx test')
-    },
   }).option('all', {
     boolean: true,
     describe: 'Bump for all packages.',
