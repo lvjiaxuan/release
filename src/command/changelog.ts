@@ -4,6 +4,7 @@ import { notNullish } from '@antfu/utils'
 import { $fetch } from 'ohmyfetch'
 import type { AuthorInfo, Commit } from 'changelogithub'
 import fs from 'node:fs'
+import path from 'node:path'
 import pc from 'picocolors'
 import semver from 'semver'
 
@@ -221,7 +222,7 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
   console.log(`${ pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)) }`)
 
   if (process.env.NODE_ENV !== 'test' && !options.dry) {
-    fs.writeFileSync('CHANGELOG.md', md, 'utf-8')
+    fs.writeFileSync(path.resolve(options.cwd, 'CHANGELOG.md'), md, 'utf-8')
   }
 
   return md

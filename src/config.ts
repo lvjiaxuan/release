@@ -1,7 +1,9 @@
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
-import { cwd, getGitHubRepo } from '.'
+import { getGitHubRepo } from '.'
 import path from 'node:path'
+
+const cwd = process.cwd()
 
 export type BumpOption = {
   all?: boolean
@@ -30,6 +32,7 @@ export type CliOption = {
   push?: string
   dry?: boolean
   mainPkg?: boolean
+  cwd: string
 }
 
 export type MarkdownOption = {
@@ -67,13 +70,16 @@ export const MarkdownOptionDefaults: MarkdownOption = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
-export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
 
+console.log('??', cwd)
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
+  cwd,
   // tag: '',
   // push: '',
 }
+
+export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
 
 export const resolveConfig = async <T extends AllOption>(options: T) => {
   const config = await loadConfig<T>({
@@ -120,7 +126,7 @@ export const resolveConfig = async <T extends AllOption>(options: T) => {
 
   if (!mergeOptions.token) {
     const dotenv = await import('dotenv')
-    dotenv.config({ path: path.join(cwd, '.env.local') })
+    dotenv.config({ path: path.resolve(cwd, '.env.local') })
     mergeOptions.token = process.env.GITHUB_TOKEN
   }
 

@@ -4,7 +4,7 @@ import fs from 'node:fs'
 
 // export const log = (...args: string[]) => console.log(...args.map(i => `${ pc.cyan(i) }`))
 
-export const cwd = process.cwd()
+// export const cwd = process.cwd()
 
 export const packages = (() => {
   const _ = fg.sync('**/package.json', {

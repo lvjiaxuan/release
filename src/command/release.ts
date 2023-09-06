@@ -1,9 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 import { $fetch } from 'ohmyfetch'
 import { promises as fsp } from 'node:fs'
-import { cwd } from '..'
 import p from 'picocolors'
 import path from 'node:path'
+
+const cwd = process.cwd()
 
 export const resolveChangelogSection = (content: string) => {
   try {
@@ -48,7 +49,7 @@ export const sendRelease = async () => {
   }
   catch {}
 
-  const CHANGELOG_PATH = path.join(cwd, 'CHANGELOG.md')
+  const CHANGELOG_PATH = path.resolve(cwd, 'CHANGELOG.md')
   await fsp.stat(CHANGELOG_PATH)
   const changelogContent = await fsp.readFile(CHANGELOG_PATH, { encoding: 'utf-8' })
 
