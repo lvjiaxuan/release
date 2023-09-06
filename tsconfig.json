@@ -1,5 +1,5 @@
 {
-  "include": ["./**/*.ts", "jest.config.mjs"],
+  "include": ["./**/*.ts", "./**/*.d.ts", "jest.config.mjs"],
   "compilerOptions": {
     /* Visit https://aka.ms/tsconfig to read more about this file */
 

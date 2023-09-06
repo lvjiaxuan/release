@@ -158,11 +158,11 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
     // All tags.
     fromToList = await resolveFormToList()
   } else if (options.tag!.includes('...')) {
-    // A tag range
+    // A tag range.
     const from2to = options.tag!.split('...') as [ string, string ]
     fromToList = await resolveFormToList(from2to)
   } else if (Number.isInteger(-options.tag!)) {
-    // Few last tags.
+    // Few last few tags.
     fromToList = await resolveFormToList(+options.tag!)
   } else if (semver.valid(options.tag)) {
     // A specified tag.
@@ -175,8 +175,11 @@ export const changelog = async (options: AllOption, tagForHead?: string) => {
   let currentGitBranch: string | undefined
   if (tagForHead) {
     currentGitBranch = await getCurrentGitBranch()
-    fromToList.unshift([ fromToList?.[0]?.[1] ?? '', currentGitBranch ])
-    titleMap[currentGitBranch] = tagForHead
+    const lastestTag = fromToList?.[0]?.[1]
+    if (lastestTag !== currentGitBranch) {
+      fromToList.unshift([ fromToList?.[0]?.[1] ?? '', currentGitBranch ])
+      titleMap[currentGitBranch] = tagForHead
+    }
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {

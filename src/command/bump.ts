@@ -1,17 +1,16 @@
 import { promises as fsp } from 'node:fs'
 import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 import type { BumpOption, CliOption, MarkdownOption } from '..'
-import conventionalRecommendedBump from 'conventional-recommended-bump'
+import conventionalRecommendedBump, { type ReleaseType } from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
 import humanId from 'human-id'
 import path from 'node:path'
 
-type BumpType = conventionalRecommendedBump.Callback.Recommendation.ReleaseType
 type Option = BumpOption & CliOption & MarkdownOption
 
-const resolveBumpType = (options: Option) => new Promise<{ level: BumpType, preid?: string }>((resolve, reject) => {
+const resolveBumpType = (options: Option) => new Promise<{ level: ReleaseType, preid?: string }>((resolve, reject) => {
   let level
   ;[ 'major', 'minor', 'patch' ].forEach(i => options[i as keyof Option] && (level = i))
 
@@ -25,13 +24,13 @@ const resolveBumpType = (options: Option) => new Promise<{ level: BumpType, prei
 
   if (!level) {
     conventionalRecommendedBump(
-      { preset: 'conventionalcommits' },
+      { preset: { name: 'conventionalcommits' } },
       (error, recommendation) => {
         if (error) {
           reject(error)
           return
         }
-        resolve({ level: recommendation.releaseType! })
+        resolve({ level: recommendation.releaseType })
       })
   } else {
     resolve({ level, preid })
