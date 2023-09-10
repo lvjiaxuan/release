@@ -71,7 +71,6 @@ export const MarkdownOptionDefaults: MarkdownOption = {
 }
 
 
-console.log('??', cwd)
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
   cwd,

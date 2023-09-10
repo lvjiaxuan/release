@@ -4,8 +4,6 @@ import fs from 'node:fs'
 
 // export const log = (...args: string[]) => console.log(...args.map(i => `${ pc.cyan(i) }`))
 
-// export const cwd = process.cwd()
-
 export const packages = (() => {
   const _ = fg.sync('**/package.json', {
     ignore: [
@@ -14,7 +12,7 @@ export const packages = (() => {
       '**/public/**',
       '**/test/**',
     ],
-    cwd,
+    cwd: process.cwd(),
     onlyFiles: true,
   })
   if (_.includes('package.json')) {
