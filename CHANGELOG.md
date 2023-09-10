@@ -1,6 +1,18 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.3.0` (21). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.4.0` (22). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.4.0 <sub>(2023-09-10)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.3.0...v1.4.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- support cwd option &nbsp;-&nbsp; by @lvjiaxuan [<samp>(6283d)</samp>](https://github.com/lvjiaxuan/release/commit/6283dd1)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- maintain changelog when no commits &nbsp;-&nbsp; by @lvjiaxuan [<samp>(a0add)</samp>](https://github.com/lvjiaxuan/release/commit/a0addfd)
+- try more commits &nbsp;-&nbsp; by @lvjiaxuan [<samp>(f06cd)</samp>](https://github.com/lvjiaxuan/release/commit/f06cd55)
 
 ## v1.3.0 <sub>(2023-08-01)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.2.2...v1.3.0)
