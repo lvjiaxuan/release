@@ -49,15 +49,13 @@ const verifyTags = async (tags: string[][], ignore?: string) => {
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
-let skipFurtherFetch = false
-let skipMessage = ''
 const globalAuthorCache = new Map<string, AuthorInfo>()
 const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => {
   if (globalAuthorCache.has(info.email)) {
     return globalAuthorCache.get(info.email)!
   }
 
-  if (info.login || skipFurtherFetch) {
+  if (info.login) {
     globalAuthorCache.set(info.email, info)
     return info
   }
@@ -69,34 +67,25 @@ const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => 
   try {
     const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers })
     info.login = data.items[0].login
-    skipFurtherFetch = false
   }
-  catch (e: any) {
-    skipFurtherFetch = true
-    skipMessage = e.message
+  catch {
   }
 
-  if (info.login) {
-    globalAuthorCache.set(info.email, info)
-    return info
-  }
-
-  if (info.commits.length && options.github) {
-    try {
-      const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ info.commits[0] }`, { headers })
-      info.login = data.author.login
-      skipFurtherFetch = false
-    }
-    catch (e: any) {
-      skipFurtherFetch = true
-      skipMessage = e.message
+  if (!info.login && info.commits.length && options.github) {
+    for await (const commit of info.commits) {
+      try {
+        const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ commit }`, { headers })
+        info.login = data.author.login
+        break
+      } catch {
+        continue
+      }
     }
   }
   /* eslint-enable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
 
-  if (skipFurtherFetch) {
-    console.log(pc.red(skipMessage))
-    console.log(pc.yellow('Failed to resolve author info, fallback to the origin data.'))
+  if (!info.login) {
+    console.log(pc.yellow(`Failed to resolve the ${ info.name } author info, fallback to the origin data.`))
   }
 
   globalAuthorCache.set(info.email, info)
