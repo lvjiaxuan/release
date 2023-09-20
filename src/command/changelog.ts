@@ -61,14 +61,17 @@ const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => 
   }
 
   const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
-  options.token && (headers.authorization = `token ${ options.token }`)
+  options.token && (headers.authorization = `${ options.token }`)
+
 
   /* eslint-disable @typescript-eslint/no-unsafe-assignment, require-atomic-updates, @typescript-eslint/no-unsafe-member-access */
+  let errorDetail
   try {
     const data = await $fetch(`https://api.github.com/search/users?q=${ encodeURIComponent(info.email) }`, { headers })
     info.login = data.items[0].login
   }
-  catch {
+  catch (e: any) {
+    errorDetail = e
   }
 
   if (!info.login && info.commits.length && options.github) {
@@ -77,7 +80,8 @@ const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => 
         const data = await $fetch(`https://api.github.com/repos/${ options.github }/commits/${ commit }`, { headers })
         info.login = data.author.login
         break
-      } catch {
+      } catch (e: any) {
+        errorDetail = e
         continue
       }
     }
@@ -86,6 +90,7 @@ const resolveAuthorInfo = async (options: ChangelogOption, info: AuthorInfo) => 
 
   if (!info.login) {
     console.log(pc.yellow(`Failed to resolve the ${ info.name } author info, fallback to the origin data.`))
+    console.error(errorDetail)
   }
 
   globalAuthorCache.set(info.email, info)
