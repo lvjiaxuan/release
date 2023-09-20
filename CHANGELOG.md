@@ -1,6 +1,13 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.4.0` (22). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.5.0` (23). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.5.0 <sub>(2023-09-20)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.4.0...v1.5.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- remove the `token` prefix &nbsp;-&nbsp; by @lvjiaxuan [<samp>(b6b5c)</samp>](https://github.com/lvjiaxuan/release/commit/b6b5cf9)
 
 ## v1.4.0 <sub>(2023-09-10)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.3.0...v1.4.0)
