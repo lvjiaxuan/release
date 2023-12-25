@@ -1,11 +1,11 @@
+import path from 'node:path'
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import { getGitHubRepo } from '.'
-import path from 'node:path'
 
 const cwd = process.cwd()
 
-export type BumpOption = {
+export interface BumpOption {
   all?: boolean
   pkg?: boolean
   prompt?: boolean
@@ -18,14 +18,14 @@ export type BumpOption = {
   prerelease?: boolean
 }
 
-export type ChangelogOption = {
+export interface ChangelogOption {
   tag?: string
   verbose?: boolean
   token?: string
   github?: string
 }
 
-export type CliOption = {
+export interface CliOption {
   yml?: boolean
   commit?: string
   tag?: string
@@ -35,7 +35,7 @@ export type CliOption = {
   cwd: string
 }
 
-export type MarkdownOption = {
+export interface MarkdownOption {
   /**
    * **Optional**
    * Resolved by `git config --get remote.origin.url'` for generating a detailed CHANGELOG.md.
@@ -70,7 +70,6 @@ export const MarkdownOptionDefaults: MarkdownOption = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
-
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
   cwd,
@@ -80,26 +79,26 @@ const CliOptionDefaults: CliOption = {
 
 export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
 
-export const resolveConfig = async <T extends AllOption>(options: T) => {
+export async function resolveConfig<T extends AllOption>(options: T) {
   const config = await loadConfig<T>({
     sources: [
       // load from `lv.release.xx`
       {
         files: 'lv.release',
         // default extensions
-        extensions: [ 'ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json' ],
+        extensions: ['ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json'],
       },
       {
         files: 'lv.releaserc',
         // default extensions
-        extensions: [ '' ],
+        extensions: [''],
       },
       // load `lv.release` field in `package.json` if no above config files found
       {
         files: 'package.json',
         extensions: [],
         /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
-        // @ts-ignore
+        // @ts-expect-error
         rewrite: config => config.lv?.release,
         /* eslint-enable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
       },
@@ -114,14 +113,14 @@ export const resolveConfig = async <T extends AllOption>(options: T) => {
 
   if (!config.sources.length) {
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
-  } else {
-    console.log(`Config file found: ${ config.sources[0] } \n`, config.config)
+  }
+  else {
+    console.log(`Config file found: ${config.sources[0]} \n`, config.config)
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
   }
 
-  if (!mergeOptions.github){
+  if (!mergeOptions.github)
     mergeOptions.github = await getGitHubRepo()
-  }
 
   if (!mergeOptions.token) {
     const dotenv = await import('dotenv')

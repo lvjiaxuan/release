@@ -1,7 +1,6 @@
 import { resolveChangelogSection } from '../src'
 
 describe.skip('`resolveChangelogSection` test cases', () => {
-
   it('single changelog', () => {
     const res = resolveChangelogSection(`# Changelog
 
@@ -24,7 +23,6 @@ describe.skip('`resolveChangelogSection` test cases', () => {
   })
 
   it('test resolveChangelogSection with vx.x.x', () => {
-
     const res = resolveChangelogSection(`# Changelog
 
 Tag ranges \`v0.0.2...ColdRocketsPost\` (52). [All GitHub Releases](https://github.com/lvjiaxuan/eslint-config/releases).
@@ -52,9 +50,7 @@ Tag ranges \`v0.0.2...ColdRocketsPost\` (52). [All GitHub Releases](https://gith
 `)
   })
 
-
   it('test resolveChangelogSection with human-id', () => {
-
     const res = resolveChangelogSection(`# Changelog
 
 Tag ranges \`v0.0.2...v0.12.1\` (52). [All GitHub Releases](https://github.com/lvjiaxuan/eslint-config/releases).
@@ -82,9 +78,7 @@ Tag ranges \`v0.0.2...v0.12.1\` (52). [All GitHub Releases](https://github.com/l
 `)
   })
 
-
   it('test resolveChangelogSection with pre-id', () => {
-
     const res = resolveChangelogSection(`# Changelog
 
 Tag ranges \`v0.0.2...v0.11.11-beta.1\` (52). [All GitHub Releases](https://github.com/lvjiaxuan/eslint-config/releases).

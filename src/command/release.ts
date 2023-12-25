@@ -1,21 +1,20 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
-import { $fetch } from 'ohmyfetch'
 import { promises as fsp } from 'node:fs'
-import p from 'picocolors'
 import path from 'node:path'
+import { $fetch } from 'ohmyfetch'
+import p from 'picocolors'
 
 const cwd = process.cwd()
 
-export const resolveChangelogSection = (content: string) => {
+export function resolveChangelogSection(content: string) {
   try {
     content += '## v'
     const match = content.match(/(?<notes>(?<=## (v\d+\.\d+\.\d+|[A-Za-z]+).+<\/sub>)[\s\S]+?(?=## \w))/)
     const notes = match?.groups?.notes.trim()
-    if (notes) {
+    if (notes)
       return notes
-    }
-
-  } catch (error) {
+  }
+  catch (error) {
     throw error as Error
   }
 
@@ -23,7 +22,7 @@ export const resolveChangelogSection = (content: string) => {
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L7
-export const sendRelease = async () => {
+export async function sendRelease() {
   const { CI, GITHUB_REPOSITORY: repository, GITHUB_REF_NAME: tag, GITHUB_TOKEN: token } = process.env
 
   if (CI !== 'true') {
@@ -36,12 +35,12 @@ export const sendRelease = async () => {
     return
   }
 
-  const headers = { accept: 'application/vnd.github+json', authorization: `token ${ token }` }
-  let url = `https://api.github.com/repos/${ repository }/releases`
+  const headers = { accept: 'application/vnd.github+json', authorization: `token ${token}` }
+  let url = `https://api.github.com/repos/${repository}/releases`
   let method = 'POST'
 
   try {
-    const exists = await $fetch(`https://api.github.com/repos/${ repository }/releases/tags/${ tag }`, { headers })
+    const exists = await $fetch(`https://api.github.com/repos/${repository}/releases/tags/${tag}`, { headers })
     if (exists.url) {
       url = exists.url
       method = 'PATCH'
@@ -67,6 +66,6 @@ export const sendRelease = async () => {
     headers,
   })
 
-  console.log(p.green(`Released on ${ res.html_url }`))
+  console.log(p.green(`Released on ${res.html_url}`))
 }
 /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */

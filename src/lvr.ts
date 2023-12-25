@@ -1,7 +1,7 @@
 import type { AllOption } from '.'
 import { bump, changelog, execGitJobs } from '.'
 
-export const lvr = async (options: AllOption) => {
+export async function lvr(options: AllOption) {
   const commitTagName = await bump(options)
 
   await changelog(options, commitTagName)

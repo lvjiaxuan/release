@@ -1,6 +1,6 @@
+import fs from 'node:fs'
 import pc from 'picocolors'
 import fg from 'fast-glob'
-import fs from 'node:fs'
 
 // export const log = (...args: string[]) => console.log(...args.map(i => `${ pc.cyan(i) }`))
 
@@ -17,18 +17,16 @@ export const packages = (() => {
   })
   if (_.includes('package.json')) {
     const pkgJson = JSON.parse(fs.readFileSync('package.json', 'utf-8')) as { version?: string }
-    if (!pkgJson.version) {
+    if (!pkgJson.version)
       return _.filter(i => i !== 'package.json')
-    }
   }
 
   return _
 })()
 
-
 export const isMonorepo = packages.length > 1
 
-export const colorizeVersionDiff = (from: string, to: string, hightlightRange = true) => {
+export function colorizeVersionDiff(from: string, to: string, hightlightRange = true) {
   let leadingWildcard = ''
   let fromLeadingWildcard = ''
 
@@ -66,7 +64,7 @@ export const colorizeVersionDiff = (from: string, to: string, hightlightRange = 
     : 'yellow'
 
   return pc[leadingColor](leadingWildcard)
-        + partsToColor.slice(0, i).join('.')
-        + middot
-        + pc[color](partsToColor.slice(i).join('.')).trim()
+    + partsToColor.slice(0, i).join('.')
+    + middot
+    + pc[color](partsToColor.slice(i).join('.')).trim()
 }

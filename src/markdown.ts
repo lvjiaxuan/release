@@ -4,10 +4,9 @@ import { partition } from '@antfu/utils'
 import type { MarkdownOption } from './index'
 import { getCommitFormatTime } from './index'
 
-
 function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
   for (const item of items) {
-    // @ts-ignore
+    // @ts-expect-error
     const v = item[key] as string
     groups[v] = groups[v] || []
     groups[v].push(item)
@@ -30,31 +29,30 @@ function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
     return array.join(finalGlue)
 
   // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  return `${ array.slice(0, -1).join(glue) }${ finalGlue }${ array.slice(-1) }`
+  return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`
 }
 
 function formatReferences(references: Reference[], github: string | undefined, type: 'issues' | 'hash'): string {
   const refs = references
-    .filter(i => {
+    .filter((i) => {
       if (type === 'issues')
         return i.type === 'issue' || i.type === 'pull-request'
       return i.type === 'hash'
     })
-    .map(ref => {
+    .map((ref) => {
       if (!github)
         return ref.value
       if (ref.type === 'pull-request' || ref.type === 'issue')
-        return `[#${ ref.value.slice(1) }](https://github.com/${ github }/issues/${ ref.value.slice(1) })`
-      return `[<samp>(${ ref.value.slice(0, 5) })</samp>](https://github.com/${ github }/commit/${ ref.value })`
+        return `[#${ref.value.slice(1)}](https://github.com/${github}/issues/${ref.value.slice(1)})`
+      return `[<samp>(${ref.value.slice(0, 5)})</samp>](https://github.com/${github}/commit/${ref.value})`
     })
 
   const referencesString = join(refs).trim()
 
   if (type === 'issues')
-    return referencesString && `in ${ referencesString }`
+    return referencesString && `in ${referencesString}`
   return referencesString
 }
-
 
 function formatLine(commit: Commit, options: MarkdownOption) {
   const prRefs = formatReferences(commit.references, options.github, 'issues')
@@ -63,23 +61,21 @@ function formatLine(commit: Commit, options: MarkdownOption) {
   let authors = join([
     ...new Set(
       commit.resolvedAuthors
-        ? commit.resolvedAuthors.map(i => i.login ? `@${ i.login }` : `**${ i.name }**`)
-        : commit.authors?.map(i => `**${ i.name }**`),
+        ? commit.resolvedAuthors.map(i => i.login ? `@${i.login}` : `**${i.name}**`)
+        : commit.authors?.map(i => `**${i.name}**`),
     ),
   ])?.trim()
 
-  if (authors) {
-    authors = `by ${ authors }`
-  }
+  if (authors)
+    authors = `by ${authors}`
 
-  let refs = [ authors, prRefs, hashRefs ].filter(i => i.trim()).join(' ')
+  let refs = [authors, prRefs, hashRefs].filter(i => i.trim()).join(' ')
 
   if (refs)
-    refs = `&nbsp;-&nbsp; ${ refs }`
+    refs = `&nbsp;-&nbsp; ${refs}`
 
-  return [ commit.description, refs ].filter(i => i.trim()).join(' ')
+  return [commit.description, refs].filter(i => i.trim()).join(' ')
 }
-
 
 function formatSection(commits: Commit[], sectionName: string, options: MarkdownOption) {
   if (!commits.length)
@@ -87,7 +83,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
 
   const lines: string[] = [
     '',
-    `### &nbsp;&nbsp;&nbsp;${ sectionName.trim() }`,
+    `### &nbsp;&nbsp;&nbsp;${sectionName.trim()}`,
     '',
   ]
 
@@ -95,25 +91,25 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
   let useScopeGroup = true
 
   // group scopes only when one of the scope have multiple commits
-  if (!Object.entries(scopes).some(([ k, v ]) => k && v.length > 1))
+  if (!Object.entries(scopes).some(([k, v]) => k && v.length > 1))
     useScopeGroup = false
 
-  Object.keys(scopes).sort().forEach(scope => {
+  Object.keys(scopes).sort().forEach((scope) => {
     let padding = ''
     let prefix = ''
-    const scopeText = `**${ scope }**`
+    const scopeText = `**${scope}**`
     if (scope && useScopeGroup) {
-      lines.push(`- ${ scopeText }:`)
+      lines.push(`- ${scopeText}:`)
       padding = '  '
     }
     else if (scope) {
-      prefix = `${ scopeText }: `
+      prefix = `${scopeText}: `
     }
 
     lines.push(
       ...scopes[scope]
         .reverse()
-        .map(commit => `${ padding }- ${ prefix }${ formatLine(commit, options) }`),
+        .map(commit => `${padding}- ${prefix}${formatLine(commit, options)}`),
     )
   })
 
@@ -123,7 +119,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
 export async function generateMarkdown(options: MarkdownOption & {
   parsedCommits: Commit[]
   from: string
-  to: string,
+  to: string
   titleMap: { [x: string]: string }
 }) {
   const { parsedCommits: commits, from, to } = options
@@ -133,14 +129,13 @@ export async function generateMarkdown(options: MarkdownOption & {
   const lines: string[] = [
     '',
     '',
-    `## ${ tagName } <sub>(${ await getCommitFormatTime(to) })</sub>`,
+    `## ${tagName} <sub>(${await getCommitFormatTime(to)})</sub>`,
   ]
 
-  if (options.github) {
-    lines.push(`[Compare changes](https://github.com/${ options.github }/compare/${ from }...${ tagName })`)
-  }
+  if (options.github)
+    lines.push(`[Compare changes](https://github.com/${options.github}/compare/${from}...${tagName})`)
 
-  const [ breaking, changes ] = partition(commits, c => c.isBreaking)
+  const [breaking, changes] = partition(commits, c => c.isBreaking)
 
   lines.push(
     ...formatSection(breaking, options.titles.breakingChanges, options),

@@ -1,7 +1,7 @@
 import { promises as fsp } from 'node:fs'
 import pc from 'picocolors'
 
-export const addYml = async (isDry?: boolean) => {
+export async function addYml(isDry?: boolean) {
   const yml = `name: Release and Publish
 
 on:
@@ -32,12 +32,10 @@ jobs:
       env:
         GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`
 
-
   if (isDry) {
     console.log(yml)
     return
   }
-
 
   await fsp.mkdir('.github/workflows/', { recursive: true })
   await fsp.writeFile('.github/workflows/lvr.yml', yml, { encoding: 'utf-8' })

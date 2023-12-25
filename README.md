@@ -55,7 +55,6 @@ lvr -h
 
 Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump) and [semver](https://github.com/npm/node-semver). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
 
-
 ```sh
 # Bump root's package.json version.
 # In a detected monorepo, it would bump those packages which are changed.
@@ -84,7 +83,7 @@ Semver increment level support:
 **Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` is the same.**
 
 > **Note**
-> 
+>
 > In a monorepo, maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
 
 #### Set a main package for a monorepo

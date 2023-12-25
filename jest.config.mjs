@@ -176,7 +176,8 @@ export default {
   // A map from regular expressions to paths to transformers
   transform: {
     '\\.[jt]sx?$': [
-      'esbuild-jest', {
+      'esbuild-jest',
+      {
         sourcemap: true,
         loaders: {
           '.spec.js': 'jsx',

@@ -1,9 +1,9 @@
-import { version } from '../package.json'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
+import pc from 'picocolors'
+import { version } from '../package.json'
 import type { AllOption } from '.'
 import { addYml, bump, changelog, lvr, resolveConfig, sendRelease } from '.'
-import pc from 'picocolors'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
 void yargs(hideBin(process.argv))
@@ -12,11 +12,11 @@ void yargs(hideBin(process.argv))
     '$0 [options]',
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs as Argv<Partial<AllOption>>,
-    async args => {
+    async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${ version }\n`)
+      console.log(`lvr version ${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
-      // @ts-ignore
+      // @ts-expect-error
       await lvr(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -25,11 +25,11 @@ void yargs(hideBin(process.argv))
     aliases: 'b',
     describe: 'Bump only.',
     builder: y => y,
-    handler: async args => {
+    handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${ version }\n`)
+      console.log(`lvr version ${version}\n`)
       console.log(pc.cyan('Run bump command.'))
-      // @ts-ignore
+      // @ts-expect-error
       await bump(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -38,11 +38,11 @@ void yargs(hideBin(process.argv))
     aliases: 'c',
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
-    handler: async args => {
+    handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${ version }\n`)
+      console.log(`lvr version ${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
-      // @ts-ignore
+      // @ts-expect-error
       await changelog(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -50,9 +50,9 @@ void yargs(hideBin(process.argv))
     command: 'yml',
     describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
     builder: y => y,
-    handler: async args => {
+    handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${ version }\n`)
+      console.log(`lvr version ${version}\n`)
       await addYml(args.dry as boolean)
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -61,7 +61,7 @@ void yargs(hideBin(process.argv))
     describe: 'Create a new release on CI environment.',
     builder: y => y,
     handler: async () => {
-      console.log(`lvr version ${ version }\n`)
+      console.log(`lvr version ${version}\n`)
       await sendRelease()
     },
   }).option('all', {
@@ -120,7 +120,7 @@ void yargs(hideBin(process.argv))
     string: true,
     defaultDescription: 'Release {r}',
     description: 'Please refer to README.md.',
-  }) .option('tag', {
+  }).option('tag', {
     string: true,
     default: '',
     description: 'Please refer to README.md.',
@@ -135,5 +135,5 @@ void yargs(hideBin(process.argv))
   .recommendCommands()
   .help()
   .alias('h', 'help')
-  .version('v', `Show version - \`${ version }\``, version)
+  .version('v', `Show version - \`${version}\``, version)
   .argv
