@@ -178,7 +178,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
 
   console.log(123, fromToList)
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
-    console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))}. Found the ${pc.red('illegal tags')} to generate CHANGELOG.`)
+    console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))}. Found the ${pc.red('non-existent tags')} to generate CHANGELOG.`)
     return
   }
 

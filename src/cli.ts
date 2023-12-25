@@ -14,7 +14,7 @@ void yargs(hideBin(process.argv))
     yargs => yargs as Argv<Partial<AllOption>>,
     async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${version}\n`)
+      console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       // @ts-expect-error
       await lvr(await resolveConfig(args))
@@ -27,7 +27,7 @@ void yargs(hideBin(process.argv))
     builder: y => y,
     handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${version}\n`)
+      console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run bump command.'))
       // @ts-expect-error
       await bump(await resolveConfig(args))
@@ -40,7 +40,7 @@ void yargs(hideBin(process.argv))
     builder: y => y,
     handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${version}\n`)
+      console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
       // @ts-expect-error
       await changelog(await resolveConfig(args))
@@ -52,7 +52,7 @@ void yargs(hideBin(process.argv))
     builder: y => y,
     handler: async (args) => {
       args.dry && console.log(pc.bgCyan('Dry run\n'))
-      console.log(`lvr version ${version}\n`)
+      console.log(`lvr@${version}\n`)
       await addYml(args.dry as boolean)
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -61,7 +61,7 @@ void yargs(hideBin(process.argv))
     describe: 'Create a new release on CI environment.',
     builder: y => y,
     handler: async () => {
-      console.log(`lvr version ${version}\n`)
+      console.log(`lvr@${version}\n`)
       await sendRelease()
     },
   }).option('all', {
