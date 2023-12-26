@@ -1,44 +1,31 @@
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
-import conventionalRecommendedBump, { type ReleaseType } from 'conventional-recommended-bump'
+import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
 import humanId from 'human-id'
-import type { BumpOption, CliOption, MarkdownOption } from '..'
+import type { BumpOption, CliOption, MarkdownOption, ReleaseType } from '..'
 import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 
 type Option = BumpOption & CliOption & MarkdownOption
 
-function resolveBumpType(options: Option) {
-  return new Promise<{ level: ReleaseType, preid?: string }>((resolve, reject) => {
-    let level
-  ;['major', 'minor', 'patch'].forEach(i => options[i as keyof Option] && (level = i))
+async function resolveBumpType(options: Option) {
+  let releaseType: ReleaseType = 'patch'
+  ;(['major', 'minor', 'patch'] as const).forEach(i => Object.hasOwn(options, i) && (releaseType = i))
 
-    let preid
-  ;['prerelease', 'premajor', 'preminor', 'prepatch'].forEach((i) => {
-      if (Object.hasOwn(options, i)) {
-        level = i
-        preid = options[i as keyof Option]
-      }
-    })
-
-    if (!level) {
-      conventionalRecommendedBump(
-        { preset: { name: 'conventionalcommits' } },
-        (error, recommendation) => {
-          if (error) {
-            reject(error)
-            return
-          }
-          resolve({ level: recommendation.releaseType })
-        },
-      )
-    }
-    else {
-      resolve({ level, preid })
+  let preid: string = ''
+  ;(['prerelease', 'premajor', 'preminor', 'prepatch'] as const).forEach((i) => {
+    if (Object.hasOwn(options, i)) {
+      releaseType = i
+      preid = options[i]!
     }
   })
+
+  if (releaseType === 'patch')
+    return await conventionalRecommendedBump({ preset: 'conventionalcommits' })
+  else
+    return { releaseType, preid }
 }
 
 async function resolveChangedPackagesSinceLastTag(options: Option) {
@@ -95,7 +82,7 @@ export async function bump(options: Option) {
       bumpVersion = bumpVersionMap.get(currentVersion)!
     }
     else {
-      bumpVersion = semver.inc(currentVersion, bumpType.level, bumpType.preid)!
+      bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, bumpType.preid)!
       bumpVersionMap.set(currentVersion, bumpVersion)
     }
 

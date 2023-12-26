@@ -13,7 +13,7 @@ void yargs(hideBin(process.argv))
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs as Argv<Partial<AllOption>>,
     async (args) => {
-      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       // @ts-expect-error
@@ -26,7 +26,7 @@ void yargs(hideBin(process.argv))
     describe: 'Bump only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run bump command.'))
       // @ts-expect-error
@@ -39,7 +39,7 @@ void yargs(hideBin(process.argv))
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
       // @ts-expect-error
@@ -51,7 +51,7 @@ void yargs(hideBin(process.argv))
     describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan('Dry run\n'))
+      args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       await addYml(args.dry as boolean)
       args.dry && console.log(pc.bgCyan('\nDry run'))

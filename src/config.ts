@@ -12,10 +12,10 @@ export interface BumpOption {
   major?: boolean
   minor?: boolean
   patch?: boolean
-  premajor?: boolean
-  preminor?: boolean
-  prepatch?: boolean
-  prerelease?: boolean
+  premajor?: string
+  preminor?: string
+  prepatch?: string
+  prerelease?: string
 }
 
 export interface ChangelogOption {

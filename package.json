@@ -33,9 +33,10 @@
     "lvr": "jiti src/cli.ts"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.4.6",
+    "@antfu/eslint-config": "^2.6.0",
     "@antfu/utils": "^0.7.7",
     "@lvjiaxuan/eslint-plugin": "^0.20.0",
+    "@types/conventional-recommended-bump": "^9.0.3",
     "@types/jest": "^29.5.11",
     "@types/lodash.merge": "^4.6.9",
     "@types/node": "^20.10.5",
