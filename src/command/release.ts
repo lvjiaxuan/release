@@ -14,11 +14,12 @@ export function resolveChangelogSection(content: string) {
     if (notes)
       return notes
   }
-  catch (error) {
-    throw error as Error
+  catch {
   }
 
-  throw new Error('Failed to resolve release notes on CHANGELOG.md .')
+  console.log(p.yellow('Failed to resolve release notes on CHANGELOG.md. Callback to "".'))
+
+  return ''
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L7

@@ -33,6 +33,7 @@ export interface CliOption {
   dry?: boolean
   mainPkg?: boolean
   cwd: string
+  debug: boolean
 }
 
 export interface MarkdownOption {
