@@ -1,4 +1,5 @@
 import fs from 'node:fs'
+import process from 'node:process'
 import pc from 'picocolors'
 import fg from 'fast-glob'
 

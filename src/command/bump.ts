@@ -1,5 +1,6 @@
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
+import process from 'node:process'
 import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
@@ -82,7 +83,8 @@ export async function bump(options: Option) {
       bumpVersion = bumpVersionMap.get(currentVersion)!
     }
     else {
-      bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, bumpType.preid)!
+      const preid = 'preid' in bumpType ? bumpType.preid : undefined
+      bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, preid)!
       bumpVersionMap.set(currentVersion, bumpVersion)
     }
 
@@ -97,7 +99,7 @@ export async function bump(options: Option) {
   }))
 
   if (isMonorepo)
-    console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages as ${pc.bold(`${bumpType.level}${bumpType.preid ? `=${bumpType.preid}` : ''}`)}:`))
+    console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages as ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}:`))
   else
     console.log(pc.green('Bumped result:'))
 

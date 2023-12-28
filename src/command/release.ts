@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
-import { $fetch } from 'ohmyfetch'
+import process from 'node:process'
+import { ofetch } from 'ofetch'
 import p from 'picocolors'
 
 const cwd = process.cwd()
@@ -40,14 +40,16 @@ export async function sendRelease() {
   let url = `https://api.github.com/repos/${repository}/releases`
   let method = 'POST'
 
+  /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
   try {
-    const exists = await $fetch(`https://api.github.com/repos/${repository}/releases/tags/${tag}`, { headers })
+    const exists = await ofetch(`https://api.github.com/repos/${repository}/releases/tags/${tag}`, { headers })
     if (exists.url) {
       url = exists.url
       method = 'PATCH'
     }
   }
   catch {}
+  /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
 
   const CHANGELOG_PATH = path.resolve(cwd, 'CHANGELOG.md')
   await fsp.stat(CHANGELOG_PATH)
@@ -61,12 +63,13 @@ export async function sendRelease() {
 
   console.log(p.cyan(method === 'POST' ? 'Creating a release...' : 'Updating the release notes...'))
 
-  const res = await $fetch(url, {
+  /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
+  const res = await ofetch(url, {
     method,
     body: JSON.stringify(body),
     headers,
   })
 
   console.log(p.green(`Released on ${res.html_url}`))
+  /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
 }
-/* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/restrict-template-expressions */

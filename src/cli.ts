@@ -1,22 +1,22 @@
+import process from 'node:process'
 import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import pc from 'picocolors'
 import { version } from '../package.json'
-import type { AllOption } from '.'
 import { addYml, bump, changelog, lvr, resolveConfig, sendRelease } from '.'
+import type { AllOption } from '.'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
-void yargs(hideBin(process.argv))
+void (yargs(hideBin(process.argv)) as Argv<AllOption>)
   .scriptName('lvr')
   .usage(
     '$0 [options]',
     'Bump → CHANGELOG → Commit → Tag → Push',
-    yargs => yargs as Argv<Partial<AllOption>>,
+    yargs => yargs,
     async (args) => {
       args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
-      // @ts-expect-error
       await lvr(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -29,7 +29,6 @@ void yargs(hideBin(process.argv))
       args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run bump command.'))
-      // @ts-expect-error
       await bump(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },
@@ -42,7 +41,6 @@ void yargs(hideBin(process.argv))
       args.dry && console.log(pc.bgCyan(' Dry run \n'))
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
-      // @ts-expect-error
       await changelog(await resolveConfig(args))
       args.dry && console.log(pc.bgCyan('\nDry run'))
     },

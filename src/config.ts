@@ -1,4 +1,5 @@
 import path from 'node:path'
+import process from 'node:process'
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import { getGitHubRepo } from '.'
@@ -33,7 +34,7 @@ export interface CliOption {
   dry?: boolean
   mainPkg?: boolean
   cwd: string
-  debug: boolean
+  debug?: boolean
 }
 
 export interface MarkdownOption {
@@ -98,10 +99,8 @@ export async function resolveConfig<T extends AllOption>(options: T) {
       {
         files: 'package.json',
         extensions: [],
-        /* eslint-disable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
-        // @ts-expect-error
-        rewrite: config => config.lv?.release,
-        /* eslint-enable @typescript-eslint/no-unsafe-return, @typescript-eslint/no-unsafe-member-access */
+        // eslint-disable-next-line ts/no-unsafe-member-access
+        rewrite: config => (config as any).lv?.release as T,
       },
       // ...
     ],

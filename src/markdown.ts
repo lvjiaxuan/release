@@ -4,17 +4,17 @@ import { partition } from '@antfu/utils'
 import type { MarkdownOption } from './index'
 import { getCommitFormatTime } from './index'
 
-function groupBy<T>(items: T[], key: string, groups: Record<string, T[]> = {}) {
+function groupBy<T>(items: T[], key: keyof T, groups?: Record<string, T[]>) {
+  groups ??= Object.create(null)
   for (const item of items) {
-    // @ts-expect-error
     const v = item[key] as string
-    groups[v] = groups[v] || []
-    groups[v].push(item)
+    groups![v] ??= []
+    groups![v].push(item)
   }
-  return groups
+  return groups!
 }
 
-function capitalize(str: string) {
+function _capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
@@ -28,8 +28,7 @@ function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
   if (array.length === 2)
     return array.join(finalGlue)
 
-  // eslint-disable-next-line @typescript-eslint/restrict-template-expressions
-  return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1)}`
+  return `${array.slice(0, -1).join(glue)}${finalGlue}${array.slice(-1).toString()}`
 }
 
 function formatReferences(references: Reference[], github: string | undefined, type: 'issues' | 'hash'): string {
@@ -87,7 +86,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
     '',
   ]
 
-  const scopes = groupBy(commits, 'scope')
+  const scopes = groupBy(commits, 'scope')!
   let useScopeGroup = true
 
   // group scopes only when one of the scope have multiple commits

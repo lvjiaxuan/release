@@ -1,7 +1,8 @@
 import fs from 'node:fs'
 import path from 'node:path'
+import process from 'node:process'
 import { notNullish } from '@antfu/utils'
-import { $fetch } from 'ohmyfetch'
+import { ofetch } from 'ofetch'
 import type { AuthorInfo, Commit } from 'changelogithub'
 import pc from 'picocolors'
 import semver from 'semver'
@@ -17,10 +18,9 @@ async function resolveFormToList(tags?: string[] | number) {
     tags[0] && list.unshift(['', tags[0]])
   }
   else if (Array.isArray(tags)) {
-    // @ts-expect-error
-    const head = allTags.findIndex(i => i === tags[0])
-    // @ts-expect-error
-    const tail = allTags.findIndex(i => i === tags[tags.length - 1])
+    const typeTags = tags
+    const head = allTags.findIndex(i => i === typeTags[0])
+    const tail = allTags.findIndex(i => i === typeTags[typeTags.length - 1])
 
     if (head > -1 && tail > -1)
       tags = allTags.filter((_, idx) => head - 1 <= idx && idx <= tail)
@@ -60,10 +60,10 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
   const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
   options.token && (headers.authorization = `${options.token}`)
 
-  /* eslint-disable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+  /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
   let errorDetail
   try {
-    const data = await $fetch(`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
+    const data = await ofetch (`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
     info.login = data.items[0].login
   }
   catch (e: any) {
@@ -73,7 +73,7 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
   if (!info.login && info.commits.length && options.github) {
     for await (const commit of info.commits) {
       try {
-        const data = await $fetch(`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
+        const data = await ofetch (`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
         info.login = data.author.login
         break
       }
@@ -83,7 +83,7 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
       }
     }
   }
-  /* eslint-enable @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access */
+  /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
 
   if (!info.login) {
     console.log(pc.yellow(`Failed to resolve the ${info.name} author info, fallback to the origin data.`))
