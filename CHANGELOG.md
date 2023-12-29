@@ -1,6 +1,13 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.5.0` (23). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.6.0` (24). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.6.0 <sub>(2023-12-28)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.5.0...v1.6.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- allow a failed changelog resolving &nbsp;-&nbsp; by @lvjiaxuan [<samp>(f2db3)</samp>](https://github.com/lvjiaxuan/release/commit/f2db398)
 
 ## v1.5.0 <sub>(2023-09-20)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.4.0...v1.5.0)
