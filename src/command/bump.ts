@@ -5,7 +5,7 @@ import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
-import humanId from 'human-id'
+import { humanId } from 'human-id'
 import type { BumpOption, CliOption, MarkdownOption, ReleaseType } from '..'
 import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 
