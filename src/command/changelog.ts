@@ -9,13 +9,13 @@ import semver from 'semver'
 import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
 import type { AllOption, ChangelogOption } from '..'
 
-async function resolveFormToList(tags?: string[] | number) {
+async function resolveFormToList({ tags, from }: { tags?: string[] | number, from?: string } = { from: '' }) {
   const list: string[][] = []
   const allTags = await getTags()
 
   if (!tags) {
     tags = allTags
-    tags[0] && list.unshift(['', tags[0]])
+    list.unshift([from ?? '', tags[0] ?? from ?? ''])
   }
   else if (Array.isArray(tags)) {
     const typeTags = tags
@@ -152,18 +152,18 @@ export async function changelog(options: AllOption, tagForHead?: string) {
   console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
 
   let fromToList: string[][] = []
-  if (!Object.hasOwn(options, 'tag')) {
+  if (options.tag === '') {
     // All tags.
-    fromToList = await resolveFormToList()
+    fromToList = await resolveFormToList({ from: options.from })
   }
   else if (options.tag!.includes('...')) {
     // A tag range.
     const from2to = options.tag!.split('...') as [ string, string ]
-    fromToList = await resolveFormToList(from2to)
+    fromToList = await resolveFormToList({ tags: from2to })
   }
   else if (Number.isInteger(-options.tag!)) {
     // Few last few tags.
-    fromToList = await resolveFormToList(+options.tag!)
+    fromToList = await resolveFormToList({ tags: +options.tag! })
   }
   else if (semver.valid(options.tag)) {
     // A specified tag.
@@ -183,6 +183,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     }
   }
 
+  console.log({ fromToList, currentGitBranch, titleMap })
   if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
     console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))}. Found the ${pc.red('non-existent tags')} to generate CHANGELOG.`)
     return

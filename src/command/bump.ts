@@ -23,10 +23,18 @@ async function resolveBumpType(options: Option) {
     }
   })
 
-  if (releaseType === 'patch')
-    return await conventionalRecommendedBump({ preset: 'conventionalcommits' })
-  else
-    return { releaseType, preid }
+  if (releaseType === 'patch') {
+    return await conventionalRecommendedBump({
+      preset: 'conventionalcommits',
+      // @ts-expect-error missing
+      gitRawCommitsOpts: options.from
+        ? {
+            from: options.from,
+          }
+        : {},
+    })
+  }
+  else { return { releaseType, preid } }
 }
 
 async function resolveChangedPackagesSinceLastTag(options: Option) {

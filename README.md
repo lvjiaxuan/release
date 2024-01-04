@@ -167,4 +167,4 @@ lvr yml
 
 See [src/config.ts](./src/config.ts).
 
-Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd which has highest priority. You can use either `lv.release.json`, `lv.release.{ts,js,mjs,cjs}`, `.lv.releaserc` or use the `lv.release` field in package.json.
+Configuration is loaded by [antfu/unconfig](https://github.com/antfu/unconfig) from cwd which has highest priority. You can use either `lvr.json`, `lvr.{ts,js,mjs,cjs}`, `.lvrrc` or use the `lvr` field in package.json.

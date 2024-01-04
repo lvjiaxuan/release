@@ -14,11 +14,11 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs,
     async (args) => {
-      args.dry && console.log(pc.bgCyan(' Dry run \n'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       await lvr(await resolveConfig(args))
-      args.dry && console.log(pc.bgCyan('\nDry run'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
     },
   ).command({
     command: 'bump [options]',
@@ -26,11 +26,11 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     describe: 'Bump only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan(' Dry run \n'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run bump command.'))
       await bump(await resolveConfig(args))
-      args.dry && console.log(pc.bgCyan('\nDry run'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
     },
   }).command({
     command: 'changelog [options]',
@@ -38,21 +38,21 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan(' Dry run \n'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
       await changelog(await resolveConfig(args))
-      args.dry && console.log(pc.bgCyan('\nDry run'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
     },
   }).command({
     command: 'yml',
     describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(pc.bgCyan(' Dry run \n'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
       console.log(`lvr@${version}\n`)
       await addYml(args.dry as boolean)
-      args.dry && console.log(pc.bgCyan('\nDry run'))
+      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
     },
   }).command({
     command: 'release',
@@ -98,10 +98,6 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     string: true,
     describe: 'Bump as a semver-prerelease version, can set id with string.',
     group: 'Bump:',
-  }).option('tag', {
-    string: true,
-    describe: 'Specify which tags to be contained.',
-    group: 'CHANGELOG:',
   }).option('verbose', {
     boolean: true,
     describe: 'Contain the unparsed changes.',

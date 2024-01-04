@@ -35,6 +35,7 @@ export interface CliOption {
   mainPkg?: boolean
   cwd: string
   debug?: boolean
+  from?: string
 }
 
 export interface MarkdownOption {
@@ -84,23 +85,23 @@ export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOptio
 export async function resolveConfig<T extends AllOption>(options: T) {
   const config = await loadConfig<T>({
     sources: [
-      // load from `lv.release.xx`
+      // load from `lvr.xx`
       {
-        files: 'lv.release',
+        files: 'lvr',
         // default extensions
         extensions: ['ts', 'mts', 'cts', 'js', 'mjs', 'cjs', 'json'],
       },
       {
-        files: 'lv.releaserc',
+        files: '.lvrrc',
         // default extensions
         extensions: [''],
       },
-      // load `lv.release` field in `package.json` if no above config files found
+      // load `.lvrrc` field in `package.json` if no above config files found
       {
         files: 'package.json',
         extensions: [],
         // eslint-disable-next-line ts/no-unsafe-member-access
-        rewrite: config => (config as any).lv?.release as T,
+        rewrite: config => (config as any).lvr as T,
       },
       // ...
     ],
