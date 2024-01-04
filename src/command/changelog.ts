@@ -142,7 +142,14 @@ async function resolveAuthors(commits: Commit[], options: ChangelogOption) {
 
 export async function changelog(options: AllOption, tagForHead?: string) {
   console.log()
-  console.log(`${pc.green('Generated ./CHANGELOG.md\'s content preview:')}`)
+
+  // @ts-expect-error false if `--no-changelog`
+  if (options?.changelog === false) {
+    console.log(pc.yellow('no changelog.'))
+    return
+  }
+
+  console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
 
   let fromToList: string[][] = []
   if (!Object.hasOwn(options, 'tag')) {
