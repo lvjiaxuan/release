@@ -1,8 +1,15 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.6.0` (24). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.6.1` (25). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
-## v1.6.0 <sub>(2023-12-28)</sub>
+## v1.6.1 <sub>(2024-01-04)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.6.0...v1.6.1)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- bin typo &nbsp;-&nbsp; by @lvjiaxuan [<samp>(d4476)</samp>](https://github.com/lvjiaxuan/release/commit/d447695)
+
+## v1.6.0 <sub>(2023-12-29)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.5.0...v1.6.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
