@@ -7,26 +7,26 @@ import prompts from 'prompts'
 import pc from 'picocolors'
 import { humanId } from 'human-id'
 import type { BumpOption, CliOption, MarkdownOption, ReleaseType } from '..'
-import { colorizeVersionDiff, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
+import { getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 
 type Option = BumpOption & CliOption & MarkdownOption
 
-async function resolveBumpType(options: Option) {
-  let releaseType: ReleaseType = 'patch'
+async function resolveBumpType(options: Option): Promise<conventionalRecommendedBump.Recommendation & { preid?: string }> {
+  let releaseType: ReleaseType | false = false
   ;(['major', 'minor', 'patch'] as const).forEach(i => Object.hasOwn(options, i) && (releaseType = i))
 
   let preid: string = ''
   ;(['prerelease', 'premajor', 'preminor', 'prepatch'] as const).forEach((i) => {
     if (Object.hasOwn(options, i)) {
       releaseType = i
-      preid = options[i]!
+      preid = options[i] ?? ''
     }
   })
 
-  if (releaseType === 'patch') {
+  if (!releaseType) {
     return await conventionalRecommendedBump({
       preset: 'conventionalcommits',
-      // @ts-expect-error missing
+      // @ts-expect-error missing gitRawCommitsOpts type
       gitRawCommitsOpts: options.from
         ? {
             from: options.from,
@@ -34,7 +34,8 @@ async function resolveBumpType(options: Option) {
         : {},
     })
   }
-  else { return { releaseType, preid } }
+
+  return { releaseType, preid, reason: 'specified' }
 }
 
 async function resolveChangedPackagesSinceLastTag(options: Option) {
@@ -91,7 +92,7 @@ export async function bump(options: Option) {
       bumpVersion = bumpVersionMap.get(currentVersion)!
     }
     else {
-      const preid = 'preid' in bumpType ? bumpType.preid : undefined
+      const preid = bumpType.preid
       bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, preid)!
       bumpVersionMap.set(currentVersion, bumpVersion)
     }
@@ -107,20 +108,25 @@ export async function bump(options: Option) {
   }))
 
   if (isMonorepo)
-    console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages as ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}:`))
+    console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages to ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}, ${bumpType.reason}:`))
   else
     console.log(pc.green('Bumped result:'))
 
-  console.log(pkgsJson.map(i => `- ${i.currentVersion} → ${colorizeVersionDiff(i.currentVersion, i.bumpVersion)} (${i.package})`).join('\n'))
+  console.log(pkgsJson.map(i => `* ${i.currentVersion} → ${i.bumpVersion} ${i.package}`).join('\n'))
 
   if (process.env.NODE_ENV !== 'test' && !options.dry)
     await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item.package), item.jsonStr, 'utf-8')))
 
+  let commitTagName: string
+
   if (!isMonorepo)
-    return `v${pkgsJson[0].bumpVersion}`
+    commitTagName = `v${pkgsJson[0].bumpVersion}`
+  else if (pkgsJson.length > 1)
+    commitTagName = humanId()
+  else
+    commitTagName = options.mainPkg ? `v${pkgsJson[0].bumpVersion}` : `${pkgsJson[0].json.name}@${pkgsJson[0].json.version}`
 
-  if (pkgsJson.length > 1)
-    return humanId()
+  console.log(pc.green(`\nCommit tag name: ${commitTagName}`))
 
-  return options.mainPkg ? `v${pkgsJson[0].bumpVersion}` : `${pkgsJson[0].json.name}@${pkgsJson[0].json.version}`
+  return commitTagName
 }

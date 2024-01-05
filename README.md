@@ -1,52 +1,35 @@
 # lvr
 
-<p align=center>Bump and generate CHANGELOG on local.</p>
+![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg) [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
-![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg)
-[![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
+Do the releasing flows such as:
+1. Bump version, support monorepo in a strategy.
+2. Generate `CHANGELOG.md` based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
+3. Commit / Tag / Push.
+4. Create a release and publish on GitHub Action might be more efficient.
 
 ## Features
 
-1. Bump the specified packages within a monorepo, while placing only one `CHANGELOG.md` which respects the entire monorepo at the root.
-2. Generate `CHANGELOG.md` within a specified version range.
-3. Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) by default.
-
-## Say sth.
-
-In my release flow, there are some steps in order such as:
-1. Execute some tests.
-2. Bump version.
-3. Generate CHANGELOG.md file.
-4. Commit / Tag.
-5. Push to origin.
-6. Trigger CI workflow that involves tests / build / release / publish stuff which are depended on.
-
-More:
-1. I want to only an one script to finish releasing, rather than such as an additional `git pull` manually.
-2. I don't want to network fetching locally(like GitHub Rest API / npm publish, .etc), only a `git push`, while in CI env is more efficient.
-3. Execute the heavy jobs like compile / build on CI is more efficient.
-
-As mentioned above, I have put the bump job and CHANGELOG generation on the local environment, eliminating the need for an additional `git pull`. This tool also supports for the release to be sent along with the notes from the previously generated CHANGELOG.md . Moreover, let's take advantage of CI workflow as much as possible to do other heavy job.
-
-> The testing job should be performed at the very beginning. Until now, I haven't found a better way to deal with it.
+1. One script usage, so it might be opinionated, which is not very customizable.
+2. processing...
 
 ## Usage
 
-Quick trial.
 ```sh
-# One script to release, including Bump\CHANGELOG\commit\tag\push
+# One script to release, including Bump \ CHANGELOG \ commit \ tag \ push
 npx lvr
 
 # Support the dry run to confirm what will be executed.
+npx lvr --dry
 npx lvr -d
 ```
 
-Install on global.
+Install globally.
 ```sh
 npm i lvr -g
 ```
 
-More CLI options.
+Check more CLI options.
 ```sh
 lvr -h
 ```
@@ -66,33 +49,33 @@ lvr bump --all
 # In a detected monorepo, `--pkg` prompts which packages to be bumped.
 lvr bump --pkg
 
-# Bump by the specified semver increment level rather than depending on conventional-recommended-bump.
+# Bump to the specified semver increment level rather than depending on conventional-recommended-bump.
 lvr bump --major
 lvr bump --major --all
 lvr bump --major --pkg
 ```
 Semver increment level support:
-- `--major`: Bump as a semver-major version.
-- `--minor`: Bump as a semver-minor version.
-- `--patch`: Bump as a semver-patch version.
-- `--premajor`: Bump as a semver-premajor version, can set id with string.
-- `--preminor`: Bump as a semver-preminor version, can set id with string.
-- `--prepatch`: Bump as a semver-prepatch version, can set id with string.
-- `--prerelease`: Bump as a semver-prerelease version, can set id with string.
+- `--major`: bump as a semver-major version.
+- `--minor`: bump as a semver-minor version.
+- `--patch`: bump as a semver-patch version.
+- `--premajor`: bump as a semver-premajor version, can set id with string.
+- `--preminor`: bump as a semver-preminor version, can set id with string.
+- `--prepatch`: bump as a semver-prepatch version, can set id with string.
+- `--prerelease`: bump as a semver-prerelease version, can set id with string.
 
-**Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` is the same.**
+**Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` command is the same.**
 
 > **Note**
 >
-> In a monorepo, maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
+> In a monorepo, the root pkg maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
 
 #### Set a main package for a monorepo
 
 ```sh
-lvr --pkg --main-pkg
+lvr --main-pkg
 ```
 
-In a monorepo, when releasing only one package, it specifies the package release format as `vx.x.x` instead of `abc@x.x.x`.
+In a monorepo, when releasing only one package, it specifies the tag name as `vx.x.x` instead of `abc@x.x.x`.
 
 ### Changelog
 

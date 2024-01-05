@@ -14,11 +14,11 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs,
     async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       await lvr(await resolveConfig(args))
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
     },
   ).command({
     command: 'bump [options]',
@@ -26,11 +26,11 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     describe: 'Bump only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run bump command.'))
       await bump(await resolveConfig(args))
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
     },
   }).command({
     command: 'changelog [options]',
@@ -38,21 +38,21 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Run CHANGELOG command.'))
       await changelog(await resolveConfig(args))
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
     },
   }).command({
     command: 'yml',
     describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
       await addYml(args.dry as boolean)
-      args.dry && console.log(`${pc.bgCyan(' Dry run')}\n`)
+      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
     },
   }).command({
     command: 'release',
@@ -65,47 +65,47 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
   }).option('all', {
     boolean: true,
     describe: 'Bump for all packages.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('pkg', {
     boolean: true,
     describe: 'Bump for the specified packages by prompts.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('major', {
     boolean: true,
     describe: 'Bump as a semver-major version.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('minor', {
     boolean: true,
     describe: 'Bump as a semver-minor version.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('patch', {
     boolean: true,
     describe: 'Bump as a semver-patch version.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('premajor', {
     string: true,
     describe: 'Bump as a semver-premajor version, can set id with string.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('preminor', {
     string: true,
     describe: 'Bump as a semver-preminor version, can set id with string.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('prepatch', {
     string: true,
     describe: 'Bump as a semver-prepatch version, can set id with string.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('prerelease', {
     string: true,
     describe: 'Bump as a semver-prerelease version, can set id with string.',
-    group: 'Bump:',
+    group: 'Bump',
   }).option('verbose', {
     boolean: true,
     describe: 'Contain the unparsed changes.',
-    group: 'CHANGELOG:',
+    group: 'CHANGELOG',
   }).option('token', {
     string: true,
     description: 'A GitHub token for fetching author info.',
-    group: 'CHANGELOG:',
+    group: 'CHANGELOG',
   }).option('dry', {
     alias: 'd',
     boolean: true,
@@ -124,7 +124,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     description: 'Please refer to README.md.',
   }).option('main-pkg', {
     boolean: true,
-    description: 'Specify the package release format as `x.x.x` instead of `abc@x.x.x`.',
+    description: 'Specify the package release format as `vx.x.x` instead of `abc@x.x.x`.',
   })
   .recommendCommands()
   .help()
