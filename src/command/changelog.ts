@@ -6,6 +6,7 @@ import { ofetch } from 'ofetch'
 import type { AuthorInfo, Commit } from 'changelogithub'
 import pc from 'picocolors'
 import semver from 'semver'
+import cliProgress from 'cli-progress'
 import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
 import type { AllOption, ChangelogOption } from '..'
 
@@ -15,7 +16,7 @@ async function resolveFormToList({ tags, from }: { tags?: string[] | number, fro
 
   if (!tags) {
     tags = allTags
-    list.unshift([from ?? '', tags[0] ?? from ?? ''])
+    tags[0] && list.unshift([from ?? '', tags[0]])
   }
   else if (Array.isArray(tags)) {
     const typeTags = tags
@@ -40,9 +41,9 @@ async function resolveFormToList({ tags, from }: { tags?: string[] | number, fro
   return list.reverse()
 }
 
-async function verifyTags(tags: string[][], ignore?: string) {
+async function verifyTags(tags: string[][], ignores?: (string | void)[]) {
   const existTags = await getTags()
-  const flatTags = tags.flat().filter(tag => tag && tag !== ignore)
+  const flatTags = tags.flat().filter(tag => tag && !ignores?.includes(tag))
   return flatTags.every(tag => existTags.includes(tag))
 }
 
@@ -61,7 +62,7 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
   options.token && (headers.authorization = `${options.token}`)
 
   /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
-  let errorDetail
+  let errorDetail: Error | null = null
   try {
     const data = await ofetch (`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
     info.login = data.items[0].login
@@ -86,8 +87,8 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
   /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
 
   if (!info.login) {
-    console.log(pc.yellow(`Failed to resolve the ${info.name} author info, fallback to the origin data.`))
-    console.error(errorDetail)
+    console.log(pc.yellow(`Failed to resolve the [${info.name}] author info, fallback to the origin data.`))
+    console.error(errorDetail?.message)
   }
 
   globalAuthorCache.set(info.email, info)
@@ -145,11 +146,30 @@ export async function changelog(options: AllOption, tagForHead?: string) {
 
   // @ts-expect-error false if `--no-changelog`
   if (options?.changelog === false) {
-    console.log(pc.yellow('no changelog.'))
+    console.log(pc.yellow('No changelog.'))
     return
   }
 
+  // const processBar = new cliProgress.SingleBar({
+  //   // format: pc.green(`Generating |${pc.cyan('{bar}')}| {percentage}% || {value}/{total} Chunks || Speed: {speed}`),
+  //   format: pc.green(`Generating |${pc.cyan('{bar}')}|`),
+  //   barCompleteChar: '\u2588',
+  //   barIncompleteChar: '\u2591',
+  //   hideCursor: true,
+  // })
+
   console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
+
+  // b1.start(200, 0, {
+  //   speed: 'xx',
+  // })
+
+  // // update values
+  // b1.increment()
+  // b1.update(20)
+
+  // // stop the bar
+  // b1.stop()
 
   let fromToList: string[][] = []
   if (options.tag === '') {
@@ -183,9 +203,8 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     }
   }
 
-  console.log({ fromToList, currentGitBranch, titleMap })
-  if (!fromToList.length || !await verifyTags(fromToList, currentGitBranch)) {
-    console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))}. Found the ${pc.red('non-existent tags')} to generate CHANGELOG.`)
+  if (!fromToList.length || !await verifyTags(fromToList, [currentGitBranch, options.from])) {
+    console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))} for the ${pc.red('non-existent tags')}.`)
     return
   }
 
@@ -204,6 +223,9 @@ export async function changelog(options: AllOption, tagForHead?: string) {
   for (const [from, to] of fromToList) {
     const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
 
+    console.log([from, to], parsedCommits.length);
+    
+
     await resolveAuthors(parsedCommits, options)
 
     md += await generateMarkdown({
@@ -215,7 +237,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     })
   }
 
-  console.log(`${pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800))}`)
+  console.log(pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)))
 
   if (process.env.NODE_ENV !== 'test' && !options.dry)
     fs.writeFileSync(path.resolve(options.cwd, 'CHANGELOG.md'), md, 'utf-8')
