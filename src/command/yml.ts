@@ -21,7 +21,7 @@ jobs:
     uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
     with:
       install: true
-      run_script: pnpm -r publish --access public
+      run_script: pnpm -r publish --access public --no-git-checks
     secrets: inherit
 
   cnpm_sync:
