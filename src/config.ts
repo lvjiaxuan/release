@@ -4,56 +4,9 @@ import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import pc from 'picocolors'
 import { getGitHubRepo } from '.'
+import type { BumpOption, ChangelogOption, CliOption, MarkdownOption } from '.'
 
 const cwd = process.cwd()
-
-export interface BumpOption {
-  all?: boolean
-  pkg?: boolean
-  prompt?: boolean
-  major?: boolean
-  minor?: boolean
-  patch?: boolean
-  premajor?: string
-  preminor?: string
-  prepatch?: string
-  prerelease?: string
-}
-
-export interface ChangelogOption {
-  tag?: string
-  verbose?: boolean
-  token?: string
-  github?: string
-}
-
-export interface CliOption {
-  yml?: boolean
-  commit?: string
-  tag?: string
-  push?: string
-  dry?: boolean
-  mainPkg?: boolean
-  cwd: string
-  debug?: boolean
-  from?: string
-}
-
-export interface MarkdownOption {
-  /**
-   * **Optional**
-   * Resolved by `git config --get remote.origin.url'` for generating a detailed CHANGELOG.md.
-   */
-  github?: string
-
-  types: Record<string, {
-    title: string
-  }>
-
-  titles: {
-    breakingChanges: string
-  }
-}
 
 export const MarkdownOptionDefaults: MarkdownOption = {
   types: {
@@ -77,8 +30,6 @@ export const MarkdownOptionDefaults: MarkdownOption = {
 const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
   cwd,
-  // tag: '',
-  // push: '',
 }
 
 export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption

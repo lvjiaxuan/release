@@ -76,6 +76,7 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
       try {
         const data = await ofetch (`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
         info.login = data.author.login
+        globalAuthorsError.delete(info.name ?? info.email)
         break
       }
       catch (e: any) {
@@ -185,7 +186,7 @@ async function generate({ fromToList, titleMap, options }: {
   }
 
   console.log(pc.green('\nContent preview:'))
-  console.log(pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 300)))
+  console.log(pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 400)))
 
   return md
 }

@@ -1,6 +1,6 @@
 import { resolveChangelogSection } from '../src'
 
-describe.skip('`resolveChangelogSection` test cases', () => {
+describe('`resolveChangelogSection` test cases', () => {
   it('single changelog', () => {
     const res = resolveChangelogSection(`# Changelog
 
