@@ -82,17 +82,32 @@ export async function bump(options: Option) {
     resolveBumpPackages(options),
   ])
 
+  const preid = bumpType.preid
+
+  const rootBumpVersion = await (async () => {
+    if (bumpPackages.includes('package.json') && options.all) {
+      const pkgJson = JSON.parse(await fsp.readFile(path.resolve(options.cwd, 'package.json'), 'utf-8')) as { version?: string, name: string }
+      if (pkgJson.version)
+        return semver.inc(pkgJson.version, bumpType.releaseType as ReleaseType, preid)!
+    }
+  })()
+
   const bumpVersionMap = new Map<string, string>()
   const pkgsJson = await Promise.all(bumpPackages.map(async (pkg) => {
-    const pkgJson = JSON.parse(await fsp.readFile(path.resolve(options.cwd, pkg), 'utf-8')) as { version: string, name: string }
-    const currentVersion = pkgJson.version ?? '0.0.0'
+    const pkgJson = JSON.parse(await fsp.readFile(path.resolve(options.cwd, pkg), 'utf-8')) as { version?: string, name: string }
+    const currentVersion = pkgJson.version
+
+    if (!currentVersion)
+      return
 
     let bumpVersion: string
-    if (bumpVersionMap.has(currentVersion)) {
+    if (rootBumpVersion) {
+      bumpVersion = rootBumpVersion
+    }
+    else if (bumpVersionMap.has(currentVersion)) {
       bumpVersion = bumpVersionMap.get(currentVersion)!
     }
     else {
-      const preid = bumpType.preid
       bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, preid)!
       bumpVersionMap.set(currentVersion, bumpVersion)
     }
@@ -105,26 +120,28 @@ export async function bump(options: Option) {
       json: pkgJson,
       jsonStr: JSON.stringify(pkgJson, null, 2),
     }
-  }))
+  }).filter(Boolean))
 
   if (isMonorepo)
     console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages to ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}, ${bumpType.reason}:`))
   else
-    console.log(pc.green('Bumped result:'))
+    console.log(pc.green('Bump result:'))
 
-  console.log(pkgsJson.map(i => `* ${i.currentVersion} → ${i.bumpVersion} ${i.package}`).join('\n'))
+  console.log(pkgsJson.map(i => `* ${i!.currentVersion} → ${i!.bumpVersion} ${i!.package}`).join('\n'))
 
   if (process.env.NODE_ENV !== 'test' && !options.dry)
-    await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item.package), item.jsonStr, 'utf-8')))
+    await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item!.package), item!.jsonStr, 'utf-8')))
 
   let commitTagName: string
 
-  if (!isMonorepo)
-    commitTagName = `v${pkgsJson[0].bumpVersion}`
+  if (rootBumpVersion)
+    commitTagName = `v${ rootBumpVersion }`
+  else if (!isMonorepo)
+    commitTagName = `v${pkgsJson[0]!.bumpVersion}`
   else if (pkgsJson.length > 1)
     commitTagName = humanId()
   else
-    commitTagName = options.mainPkg ? `v${pkgsJson[0].bumpVersion}` : `${pkgsJson[0].json.name}@${pkgsJson[0].json.version}`
+    commitTagName = options.mainPkg ? `v${pkgsJson[0]!.bumpVersion}` : `${pkgsJson[0]!.json.name}@${pkgsJson[0]!.json.version}`
 
   console.log(pc.green(`\nCommit tag name: ${commitTagName}`))
 
