@@ -2,6 +2,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
+import pc from 'picocolors'
 import { getGitHubRepo } from '.'
 
 const cwd = process.cwd()
@@ -100,8 +101,7 @@ export async function resolveConfig<T extends AllOption>(options: T) {
       {
         files: 'package.json',
         extensions: [],
-        // eslint-disable-next-line ts/no-unsafe-member-access
-        rewrite: config => (config as any).lvr as T,
+        rewrite: config => (config as { lvr: T }).lvr,
       },
       // ...
     ],
@@ -116,7 +116,7 @@ export async function resolveConfig<T extends AllOption>(options: T) {
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
   }
   else {
-    console.log(`Config file found: ${config.sources[0]} \n`, config.config)
+    console.log(pc.green(`\nConfig file found: ${config.sources[0]}:\n`), pc.gray(JSON.stringify(config.config, null, 2)))
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
   }
 

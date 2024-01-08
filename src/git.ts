@@ -71,7 +71,7 @@ export async function getParsedCommits(from: string, to: string, types: string[]
 
   const rawCommits = await getGitDiff(from, to)
 
-  const parsedCommits = rawCommits.reduce((preValue, commit) => {
+  return rawCommits.reduce((preValue, commit) => {
     const match = commit.message.match(ConventionalCommitRegex)
 
     const type = types.includes(match?.groups?.type as string) ? match?.groups!.type as string : '__OTHER__'
@@ -113,6 +113,4 @@ export async function getParsedCommits(from: string, to: string, types: string[]
     })
     return preValue
   }, [] as GitCommit[])
-
-  return parsedCommits
 }

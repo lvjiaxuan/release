@@ -158,7 +158,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
   //   hideCursor: true,
   // })
 
-  console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
+  // console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
 
   // b1.start(200, 0, {
   //   speed: 'xx',
@@ -204,7 +204,8 @@ export async function changelog(options: AllOption, tagForHead?: string) {
   }
 
   if (!fromToList.length || !await verifyTags(fromToList, [currentGitBranch, options.from])) {
-    console.log(`\n${pc.bold(pc.yellow('Skip CHANGELOG'))} for the ${pc.red('non-existent tags')}.`)
+    console.log(`\n${pc.bold(pc.yellow('Skip generate CHANGELOG.md'))} for the invalid tags:`)
+    console.log(`[${pc.gray(fromToList.toString())}]`)
     return
   }
 
@@ -222,9 +223,6 @@ export async function changelog(options: AllOption, tagForHead?: string) {
 
   for (const [from, to] of fromToList) {
     const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
-
-    console.log([from, to], parsedCommits.length);
-    
 
     await resolveAuthors(parsedCommits, options)
 
