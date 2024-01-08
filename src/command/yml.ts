@@ -4,33 +4,38 @@ import pc from 'picocolors'
 export async function addYml(isDry?: boolean) {
   const yml = `name: Release and Publish
 
-on:
+  on:
   push:
     tags:
-      - v*
+      - 'v*'
 
 jobs:
-  release_publish:
-  runs-on: ubuntu-latest
-  steps:
-    - uses: actions/checkout@v3
+  release:
+    permissions:
+      contents: write
+      id-token: write
+    uses: lvjiaxuan/github-action-templates/.github/workflows/lvr-release.yml@main
+    secrets: inherit
 
-    - uses: actions/setup-node@v3
-      env:
-        NODE_AUTH_TOKEN: \${{ secrets.NPM_AUTH_TOKEN }}
-      with:
-        node-version: 18
-        registry-url: https://registry.npmjs.org
+  publish:
+    uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
+    with:
+      install: true
+      run_script: pnpm -r publish --access public
+    secrets: inherit
 
-    - uses: pnpm/action-setup@v2
-      with:
-        version: 8
+  cnpm_sync:
+    needs: publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
 
-    - run: pnpm i -g @antfu/ni
+      - run: npm install -g cnpm
 
-    - run: nlx lvr release & (nci && pnpm publish --no-git-checks)
-      env:
-        GITHUB_TOKEN: \${{ secrets.GITHUB_TOKEN }}`
+      - run: cnpm sync @lvjiaxuan/eslint-config --sync-publish
+`
 
   if (isDry) {
     console.log(yml)
