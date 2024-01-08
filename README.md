@@ -3,24 +3,23 @@
 ![actions](https://github.com/lvjiaxuan/release/actions/workflows/ci.yml/badge.svg) [![npm](https://img.shields.io/npm/v/lvr)](https://www.npmjs.com/package/lvr)
 
 Do the releasing flows such as:
-1. Bump version, support monorepo in a strategy.
+1. Bump version in different strategy. Support monorepo.
 2. Generate `CHANGELOG.md` based on [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/).
 3. Commit / Tag / Push.
 4. Create a release and publish on GitHub Action might be more efficient.
 
 ## Features
 
-1. One script usage, so it might be opinionated, which is not very customizable.
-2. processing...
+1. One script usage, may be opinionated, meaning it is not very customizable.
+2. Generate a tag range changelog.
 
 ## Usage
 
 ```sh
-# One script to release, including Bump \ CHANGELOG \ commit \ tag \ push
 npx lvr
 
 # Support the dry run to confirm what will be executed.
-npx lvr --dry
+# npx lvr --dry
 npx lvr -d
 ```
 
@@ -39,20 +38,28 @@ lvr -h
 Powered by [conventional-recommended-bump](https://github.com/conventional-changelog/conventional-changelog/tree/master/packages/conventional-recommended-bump) and [semver](https://github.com/npm/node-semver). Using [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) preset by default.
 
 ```sh
-# Bump root's package.json version.
-# In a detected monorepo, it would bump those packages which are changed.
-lvr bump
+# If a monorepo, it would bump those changed packages by default.
+# lvr bump
+lvr b
+```
 
-# In a detected monorepo, it would bump all packages.
-lvr bump --all
+#### options
 
-# In a detected monorepo, `--pkg` prompts which packages to be bumped.
-lvr bump --pkg
+```sh
+# In a detected monorepo, it would bump all packages whether they are changed.
+lvr b --all
+```
 
-# Bump to the specified semver increment level rather than depending on conventional-recommended-bump.
-lvr bump --major
-lvr bump --major --all
-lvr bump --major --pkg
+```sh
+# In a detected monorepo, `--pkg` helps to prompt which packages should be bumped.
+lvr b --pkg
+```
+
+```sh
+# Bump to the specified semver increment level rather than depending on `conventional-recommended-bump`.
+lvr b --major
+lvr b --major --all
+lvr b --major --pkg
 ```
 Semver increment level support:
 - `--major`: bump as a semver-major version.
@@ -63,19 +70,10 @@ Semver increment level support:
 - `--prepatch`: bump as a semver-prepatch version, can set id with string.
 - `--prerelease`: bump as a semver-prerelease version, can set id with string.
 
-**Absolutely, these `bump` options can be used without the `bump` command during a release. The following `changelog` command is the same.**
-
-> **Note**
->
-> In a monorepo, the root pkg maybe no need to specify *package.json#version*. However, if there is actually a version field present, "bump" would calculate this root package.json when bumping the version.
-
-#### Set a main package for a monorepo
-
 ```sh
-lvr --main-pkg
+# In a detected monorepo, when releasing only one package, it specifies the tag name as `vx.x.x` instead of `abc@x.x.x`.
+lvr b --main-pkg
 ```
-
-In a monorepo, when releasing only one package, it specifies the tag name as `vx.x.x` instead of `abc@x.x.x`.
 
 ### Changelog
 
@@ -83,44 +81,56 @@ Powered by [antfu/changelogithub](https://github.com/antfu/changelogithub) and [
 
 ```sh
 # Generate CHANGELOG with all existing tags.
-lvr changelog
+# lvr changelog
+lvr c
+```
 
-# Within a tag range.
+#### options
+
+```sh
+# generate within a tag range.
 lvr changelog --tag=v1.0.1...v2.1.3
 
-# For 2 last tag.
+# to last 2 tag.
 lvr changelog --tag==2
 
-# For a specified tag.
+# to a specified tag.
 lvr changelog --tag=v0.0.2
+```
 
-# It means that CHANGELOG.md would contain more changes which were not be parsed by conventional commits.
+```sh
+# It means that CHANGELOG.md would contain more changes that were not be parsed by `conventional commits`.
 # Disable by default.
 lvr changelog --verbose
 ```
 
 #### About author
 
-To generate valid author GitHub name in the CHANGELOG.md as same as release note, I have request the GitHub Rest API to search it. However, it is advised that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for IP.
+To be able to generate the format of `@authorName` for the interaction in the GitHub's release note, I need to fetch the GitHub Rest API. However, it occurred to me that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for an IP.
 
-To solve this, I have to pass a GitHub PAT by `--token` when encountering this situation 😔.
+So we have to pass a [GitHub PAT](https://github.com/settings/tokens?type=beta) by `--token` when encountering this situation 😔.
 
-Alternatively, you can use [dotenv](https://github.com/motdotla/dotenv) to load additional `GITHUB_TOKEN` environment variable from the `.env.local` which should be included in the `.gitignore` .
+Alternatively, we can also create a `.env.local` file which should be included in the `.gitignore` .
+```env
+GITHUB_TOKEN = your-github-pat
+```
 
 ### Commit / Tag / Push
 
-Enable `--commit` `--tag` `--push` by default when enable bump and changelog meanwhile. (opt-out by `--no-push`, etc.)
+Enable `--commit` `--tag` `--push` when execute the `lvr` script without other command. (opt-out like `--no-push`, etc.)
 
 > `--no-changelog` is considered to enable these git jobs in the same way, while `--no-bump` makes no sense to the further step.
 
 ```sh
 # Use `Release {r}` as commit message by default.
-# The `{r}` would be replaced by the bumped version from package.json.
+# The `{r}` placeholder would be replaced by the committed tag name from bumped result.
 # When multiple packages were released at same commit, the `human-id` library is used to generate words that serve as commit message and tag name.
 # Customizable.
 lvr --commit="R: {r}"
+```
 
-# Use bumped version from package.json by default.
+```sh
+# Use the committed tag name from bumped result from package.json by default.
 # Customizable.
 lvr --tag=BatMan
 
