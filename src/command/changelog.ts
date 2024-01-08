@@ -48,13 +48,14 @@ async function verifyTags(tags: string[][], ignores?: (string | void)[]) {
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
-const globalAuthorCache = new Map<string, AuthorInfo>()
+const globalAuthorsCache = new Map<string, AuthorInfo>()
+const globalAuthorsError = new Map<string, any>()
 async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
-  if (globalAuthorCache.has(info.email))
-    return globalAuthorCache.get(info.email)!
+  if (globalAuthorsCache.has(info.email))
+    return globalAuthorsCache.get(info.email)!
 
   if (info.login) {
-    globalAuthorCache.set(info.email, info)
+    globalAuthorsCache.set(info.email, info)
     return info
   }
 
@@ -62,13 +63,12 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
   options.token && (headers.authorization = `${options.token}`)
 
   /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
-  let errorDetail: Error | null = null
   try {
     const data = await ofetch (`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
     info.login = data.items[0].login
   }
   catch (e: any) {
-    errorDetail = e
+    globalAuthorsError.set(info.name ?? info.email, e)
   }
 
   if (!info.login && info.commits.length && options.github) {
@@ -79,24 +79,19 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
         break
       }
       catch (e: any) {
-        errorDetail = e
+        globalAuthorsError.set(info.name ?? info.email, e)
         continue
       }
     }
   }
   /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
 
-  if (!info.login) {
-    console.log(pc.yellow(`Failed to resolve the [${info.name}] author info, fallback to the origin data.`))
-    console.error(errorDetail?.message)
-  }
-
-  globalAuthorCache.set(info.email, info)
+  globalAuthorsCache.set(info.email, info)
   return info
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L82
-async function resolveAuthors(commits: Commit[], options: ChangelogOption) {
+async function resolveCommitAuthors(commits: Commit[], options: ChangelogOption) {
   const map = new Map<string, AuthorInfo>()
   commits.forEach(commit => commit.resolvedAuthors = commit.authors.map((a, idx) => {
     if (!a.email || !a.name)
@@ -114,8 +109,8 @@ async function resolveAuthors(commits: Commit[], options: ChangelogOption) {
     if (idx === 0)
       info.commits.push(commit.shortHash)
 
-    if (globalAuthorCache.has(info.email))
-      info.login = globalAuthorCache.get(info.email)!.login
+    if (globalAuthorsCache.has(info.email))
+      info.login = globalAuthorsCache.get(info.email)!.login
 
     return info
   }).filter(notNullish))
@@ -141,6 +136,60 @@ async function resolveAuthors(commits: Commit[], options: ChangelogOption) {
     })
 }
 
+async function generate({ fromToList, titleMap, options }: {
+  fromToList: string[][]
+  titleMap: { [x: string]: string }
+  options: AllOption
+}) {
+  let md = '# Changelog\n\n'
+  if (fromToList.length > 1)
+    md += `Tag ranges \`${fromToList[fromToList.length - 1][1]}...${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\` (${fromToList.length}).`
+  else if (fromToList.length === 1)
+    md += `Tag \`${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\`.`
+
+  if (options.github)
+    md += ` [All GitHub Releases](https://github.com/${options.github}/releases).`
+
+  if (!options.verbose)
+    delete options.types.__OTHER__
+
+  const processBar = new cliProgress.SingleBar({
+    format: pc.green(`Generating CHANGELOG.md |${pc.cyan('{bar}')}| {value}/{total}`),
+    barCompleteChar: '\u2588',
+    barIncompleteChar: '\u2591',
+    hideCursor: true,
+  })
+
+  processBar.start(fromToList.length, 0)
+
+  for (const [from, to] of fromToList) {
+    const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
+
+    await resolveCommitAuthors(parsedCommits, options)
+
+    md += await generateMarkdown({
+      ...options,
+      parsedCommits,
+      from,
+      to,
+      titleMap,
+    })
+
+    processBar.increment()
+  }
+
+  if (globalAuthorsError.size) {
+    console.log(pc.yellow('\nFail to resolved these follow authors and fallback to origin name:'))
+    for (const [name, error] of globalAuthorsError.entries())
+      console.log(pc.gray(name), pc.gray((error as Error).message))
+  }
+
+  console.log(pc.green('\nContent preview:'))
+  console.log(pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 300)))
+
+  return md
+}
+
 export async function changelog(options: AllOption, tagForHead?: string) {
   console.log()
 
@@ -149,27 +198,6 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     console.log(pc.yellow('No changelog.'))
     return
   }
-
-  // const processBar = new cliProgress.SingleBar({
-  //   // format: pc.green(`Generating |${pc.cyan('{bar}')}| {percentage}% || {value}/{total} Chunks || Speed: {speed}`),
-  //   format: pc.green(`Generating |${pc.cyan('{bar}')}|`),
-  //   barCompleteChar: '\u2588',
-  //   barIncompleteChar: '\u2591',
-  //   hideCursor: true,
-  // })
-
-  // console.log(pc.green('Generated ./CHANGELOG.md\'s content preview:'))
-
-  // b1.start(200, 0, {
-  //   speed: 'xx',
-  // })
-
-  // // update values
-  // b1.increment()
-  // b1.update(20)
-
-  // // stop the bar
-  // b1.stop()
 
   let fromToList: string[][] = []
   if (options.tag === '') {
@@ -196,8 +224,8 @@ export async function changelog(options: AllOption, tagForHead?: string) {
   let currentGitBranch: string | undefined
   if (tagForHead) {
     currentGitBranch = await getCurrentGitBranch()
-    const lastestTag = fromToList?.[0]?.[1]
-    if (lastestTag !== currentGitBranch) {
+    const lastTag = fromToList?.[0]?.[1]
+    if (lastTag !== currentGitBranch) {
       fromToList.unshift([fromToList?.[0]?.[1] ?? '', currentGitBranch])
       titleMap[currentGitBranch] = tagForHead
     }
@@ -209,33 +237,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     return
   }
 
-  let md = '# Changelog\n\n'
-  if (fromToList.length > 1)
-    md += `Tag ranges \`${fromToList[fromToList.length - 1][1]}...${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\` (${fromToList.length}).`
-  else if (fromToList.length === 1)
-    md += `Tag \`${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\`.`
-
-  if (options.github)
-    md += ` [All GitHub Releases](https://github.com/${options.github}/releases).`
-
-  if (!options.verbose)
-    delete options.types.__OTHER__
-
-  for (const [from, to] of fromToList) {
-    const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
-
-    await resolveAuthors(parsedCommits, options)
-
-    md += await generateMarkdown({
-      ...options,
-      parsedCommits,
-      from,
-      to,
-      titleMap,
-    })
-  }
-
-  console.log(pc.gray(md.replaceAll(/\n|\r/g, '').slice(0, 800)))
+  const md = await generate({ fromToList, titleMap, options })
 
   if (process.env.NODE_ENV !== 'test' && !options.dry)
     fs.writeFileSync(path.resolve(options.cwd, 'CHANGELOG.md'), md, 'utf-8')

@@ -116,7 +116,7 @@ export async function resolveConfig<T extends AllOption>(options: T) {
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
   }
   else {
-    console.log(pc.green(`\nConfig file found: ${config.sources[0]}:\n`), pc.gray(JSON.stringify(config.config, null, 2)))
+    console.log(pc.green(`\nConfig file found: ${config.sources[0]}:\n`), pc.gray(JSON.stringify(config.config)))
     mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
   }
 

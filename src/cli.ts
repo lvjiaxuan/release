@@ -19,6 +19,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       await lvr(await resolveConfig(args))
       args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      process.exit(0)
     },
   ).command({
     command: 'bump [options]',
@@ -31,6 +32,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
       console.log(pc.cyan('Run bump command.'))
       await bump(await resolveConfig(args))
       args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      process.exit(0)
     },
   }).command({
     command: 'changelog [options]',
@@ -43,6 +45,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
       console.log(pc.cyan('Run CHANGELOG command.'))
       await changelog(await resolveConfig(args))
       args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      process.exit(0)
     },
   }).command({
     command: 'yml',
@@ -53,6 +56,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
       console.log(`lvr@${version}\n`)
       await addYml(args.dry as boolean)
       args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      process.exit(0)
     },
   }).command({
     command: 'release',
