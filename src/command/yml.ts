@@ -7,13 +7,14 @@ export async function addYml(isDry?: boolean) {
 on:
   push:
     tags:
-      - 'v*'
+      - v*
 
 jobs:
   release:
-    # https://docs.github.com/zh/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
+      # Allow to create a release.
       contents: write
+      # Fetch an OpenID Connect token.
       id-token: write
     uses: lvjiaxuan/github-action-templates/.github/workflows/lvr-release.yml@main
     secrets: inherit
