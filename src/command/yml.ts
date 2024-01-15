@@ -4,13 +4,14 @@ import pc from 'picocolors'
 export async function addYml(isDry?: boolean) {
   const yml = `name: Release and Publish
 
-  on:
+on:
   push:
     tags:
       - 'v*'
 
 jobs:
   release:
+    # https://docs.github.com/zh/actions/using-workflows/workflow-syntax-for-github-actions#permissions
     permissions:
       contents: write
       id-token: write
