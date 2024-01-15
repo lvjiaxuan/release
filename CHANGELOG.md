@@ -1,8 +1,15 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.7.0` (28). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.7.1` (29). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
-## v1.7.0 <sub>(2024-01-08)</sub>
+## v1.7.1 <sub>(2024-01-15)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.0...v1.7.1)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- yml typo. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(5a126)</samp>](https://github.com/lvjiaxuan/release/commit/5a12635)
+
+## v1.7.0 <sub>(2024-01-09)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.6.3...v1.7.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
