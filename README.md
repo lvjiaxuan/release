@@ -156,6 +156,10 @@ See [yml.ts](./src/command/yml.ts). And modify on your own.
 lvr yml
 ```
 
+### Publish on CI
+
+See [publish.ts](./src/command/publish.ts).
+
 ## Configuration
 
 See [src/config.ts](./src/config.ts).

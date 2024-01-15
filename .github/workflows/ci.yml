@@ -15,4 +15,6 @@ jobs:
 
   publish:
     uses: lvjiaxuan/github-action-templates/.github/workflows/publish.yml@main
+    with:
+      sync_cnpm: true
     secrets: inherit

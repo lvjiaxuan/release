@@ -49,3 +49,14 @@ export interface MarkdownOption {
     breakingChanges: string
   }
 }
+
+export interface PublishOption {
+  syncCnpm?: boolean
+
+  /**
+   * @see https://pnpm.io/cli/publish#--recursive--r
+   *
+   * Publish all packages from the workspace.
+   */
+  recursive?: boolean
+}

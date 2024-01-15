@@ -3,8 +3,8 @@ import { hideBin } from 'yargs/helpers'
 import yargs, { type Argv } from 'yargs'
 import pc from 'picocolors'
 import { version } from '../package.json'
-import { addYml, bump, changelog, lvr, resolveConfig, sendRelease } from '.'
-import type { AllOption } from '.'
+import { addYml, bump, changelog, lvr, publish, resolveConfig, sendRelease } from '.'
+import type { AllOption, PublishOption } from '.'
 
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
 void (yargs(hideBin(process.argv)) as Argv<AllOption>)
@@ -65,6 +65,14 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     handler: async () => {
       console.log(`lvr@${version}\n`)
       await sendRelease()
+    },
+  }).command({
+    command: 'publish',
+    describe: 'Publish on CI environment.',
+    builder: y => y,
+    handler: async (args) => {
+      console.log(`lvr@${version}\n`)
+      await publish(args as PublishOption)
     },
   }).option('all', {
     boolean: true,
