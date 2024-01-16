@@ -9,7 +9,8 @@ const cwd = process.cwd()
 export async function publish(options: PublishOption) {
   const $$ = $({ stdout: process.stdout })
 
-  await $$`pnpm publish ${options.recursive ? '-r' : ''} --no-git-checks --report-summary`
+  const publishArgs = [options.recursive ? '-r' : '', '--no-git-checks', '--report-summary'].filter(Boolean)
+  await $$`pnpm publish ${publishArgs}`
 
   if (options.syncCnpm) {
     const summaryStr = await fs.readFile(path.join(cwd, 'pnpm-publish-summary.json'))
