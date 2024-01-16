@@ -69,7 +69,13 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
   }).command({
     command: 'publish',
     describe: 'Publish on CI environment.',
-    builder: y => y,
+    builder: y => y.option('recursive', {
+      alias: 'r',
+      boolean: true,
+      describe: 'Publish all packages from the workspace.',
+    }).option('sync-cnpm', {
+      boolean: true,
+    }),
     handler: async (args) => {
       console.log(`lvr@${version}\n`)
       await publish(args as PublishOption)

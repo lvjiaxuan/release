@@ -14,7 +14,9 @@ jobs:
     secrets: inherit
 
   publish:
-    uses: lvjiaxuan/github-action-templates/.github/workflows/publish.yml@main
+    # uses: lvjiaxuan/github-action-templates/.github/workflows/publish.yml@main
+    uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
     with:
-      sync_cnpm: true
+      install: true
+      run_script: nr lvr publish --sync-cnpm
     secrets: inherit
