@@ -10,11 +10,13 @@ jobs:
     permissions:
       contents: write
       id-token: write
-    uses: lvjiaxuan/github-action-templates/.github/workflows/lvr-release.yml@main
+    uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
+    with:
+      install: true
+      run_script: nr lvr release
     secrets: inherit
 
   publish:
-    # uses: lvjiaxuan/github-action-templates/.github/workflows/publish.yml@main
     uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
     with:
       install: true
