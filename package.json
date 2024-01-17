@@ -86,5 +86,8 @@
     "release": {
       "commit": "Release: {r}"
     }
+  },
+  "publishConfig": {
+    "registry": "https://registry.npmjs.org"
   }
 }

@@ -7,40 +7,13 @@ import type { PublishOption } from '..'
 
 const cwd = process.cwd()
 
-const publishSummaryPath = path.join(cwd, 'pnpm-publish-summary.json')
-
-async function tryReadFile(retryTimes = 3, interval = 100) {
-  let countTimes = 0
-
-  async function main() {
-    try {
-      countTimes++
-      return (await fs.readFile(publishSummaryPath)).toString()
-    }
-    catch (err: any) {
-      // eslint-disable-next-line ts/no-unsafe-member-access
-      if (err.code === 'ENOENT' && countTimes < retryTimes) {
-        await new Promise(r => setTimeout(r, interval))
-        return main()
-      }
-
-      setFailed(`Fail to read \`pnpm-publish-summary.json\` with ${err}.`)
-    }
-
-    return '{publishedPackages:[]}'
-  }
-
-  return main()
-}
-
 export async function publish(options: PublishOption) {
-  const $$ = $({ stdout: process.stdout })
+  const $$ = $({ stdio: 'inherit' })
 
-  const publishArgs = [options.recursive ? '-r' : '', '--no-git-checks', '--report-summary'].filter(Boolean)
-  await $$`pnpm publish ${publishArgs}`
+  await $$`pnpm publish -r --report-summary --no-git-checks`
 
   if (options.syncCnpm) {
-    const summaryStr = await tryReadFile()
+    const summaryStr = await fs.readFile(path.join(cwd, 'pnpm-publish-summary.json'))
     const summaryJson = JSON.parse(summaryStr.toString()) as {
       publishedPackages: {
         name: string
