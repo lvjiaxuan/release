@@ -69,11 +69,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
   }).command({
     command: 'publish',
     describe: 'Publish on CI environment.',
-    builder: y => y.option('recursive', {
-      alias: 'r',
-      boolean: true,
-      describe: 'Publish all packages from the workspace.',
-    }).option('sync-cnpm', {
+    builder: y => y.option('sync-cnpm', {
       boolean: true,
     }),
     handler: async (args) => {
