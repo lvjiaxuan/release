@@ -30,11 +30,13 @@
     "test": "nlx cross-env NODE_OPTIONS=--experimental-vm-modules jest",
     "link": "pnpm link --global",
     "prepublishOnly": "nr build",
-    "lvr": "jiti src/cli.ts"
+    "lvr": "jiti src/cli.ts",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "cli-progress": "^3.12.0",
-    "conventional-changelog-conventionalcommits": "^7.0.2"
+    "conventional-changelog-conventionalcommits": "^7.0.2",
+    "ofetch": "^1.3.3"
   },
   "devDependencies": {
     "@actions/core": "^1.10.1",
@@ -46,7 +48,7 @@
     "@types/conventional-recommended-bump": "^9.0.3",
     "@types/jest": "^29.5.11",
     "@types/lodash.merge": "^4.6.9",
-    "@types/node": "^20.11.3",
+    "@types/node": "^20.11.4",
     "@types/prompts": "^2.4.9",
     "@types/semver": "^7.5.6",
     "@types/yargs": "^17.0.32",
@@ -67,10 +69,20 @@
     "prompts": "^2.4.2",
     "semver": "^7.5.4",
     "shelljs": "^0.8.5",
+    "simple-git-hooks": "^2.9.0",
     "tsup": "^8.0.1",
     "typescript": "^5.3.3",
     "unconfig": "^0.3.11",
     "yargs": "^17.7.2"
+  },
+  "simple-git-hooks": {
+    "pre-commit": "nlx lint-staged"
+  },
+  "lint-staged": {
+    "*": [
+      "nr typecheck",
+      "nr lint --fix"
+    ]
   },
   "lv": {
     "release": {
