@@ -70,9 +70,10 @@ export async function sendRelease() {
       info('Successfully updated a release.')
     }
     else {
-      info('Successfully created a release.')
+      setFailed(`Fail with ${JSON.stringify(createRes.data)}`)
     }
-
-    setFailed(`Fail with ${JSON.stringify(createRes.data)}`)
+  }
+  else {
+    info('Successfully created a release.')
   }
 }
