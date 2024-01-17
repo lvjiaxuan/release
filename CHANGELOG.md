@@ -1,6 +1,26 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.7.1` (29). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.11.0` (30). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.11.0 <sub>(2024-01-17)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.1...v1.11.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- new publish command on testing &nbsp;-&nbsp; by @lvjiaxuan [<samp>(74565)</samp>](https://github.com/lvjiaxuan/release/commit/7456558)
+- ci uses local scripts &nbsp;-&nbsp; by @lvjiaxuan [<samp>(87efa)</samp>](https://github.com/lvjiaxuan/release/commit/87efa57)
+- update release with @actions/pkgs &nbsp;-&nbsp; by @lvjiaxuan [<samp>(a0859)</samp>](https://github.com/lvjiaxuan/release/commit/a0859c0)
+- add hooks &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ebacf)</samp>](https://github.com/lvjiaxuan/release/commit/ebacfe4)
+- remove `--recursive` of publish &nbsp;-&nbsp; by @lvjiaxuan [<samp>(e3cf9)</samp>](https://github.com/lvjiaxuan/release/commit/e3cf931)
+- log publish command. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(40b7c)</samp>](https://github.com/lvjiaxuan/release/commit/40b7ca0)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- define option to publish &nbsp;-&nbsp; by @lvjiaxuan [<samp>(6854f)</samp>](https://github.com/lvjiaxuan/release/commit/6854faf)
+- execa args usage &nbsp;-&nbsp; by @lvjiaxuan [<samp>(7ea5d)</samp>](https://github.com/lvjiaxuan/release/commit/7ea5df7)
+- try to read a file. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(7c5fb)</samp>](https://github.com/lvjiaxuan/release/commit/7c5fb6d)
+- release fetch catch &nbsp;-&nbsp; by @lvjiaxuan [<samp>(d46b0)</samp>](https://github.com/lvjiaxuan/release/commit/d46b058)
+- `--report-summary` must be with `-r` &nbsp;-&nbsp; by @lvjiaxuan [<samp>(2daf8)</samp>](https://github.com/lvjiaxuan/release/commit/2daf8b2)
 
 ## v1.7.1 <sub>(2024-01-15)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.0...v1.7.1)
