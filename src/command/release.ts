@@ -3,6 +3,7 @@ import path from 'node:path'
 import process from 'node:process'
 import { getOctokit } from '@actions/github'
 import { info, setFailed, warning } from '@actions/core'
+import p from 'picocolors'
 
 const cwd = process.cwd()
 
@@ -50,30 +51,34 @@ export async function sendRelease() {
     tag_name: tag!,
   }
 
-  const createRes = await octokit.rest.repos.createRelease(releaseBody)
+  await octokit.rest.repos.createRelease(releaseBody)
+    .then((res) => {
+      info(p.green(`Successfully created a release: ${res.data.html_url} .`))
+    }).catch((err: any) => {
+      // eslint-disable-next-line ts/no-unsafe-member-access
+      if (err.status === 422 && err.data.errors[0].code === 'already_exists') {
+        info(p.yellow(`The tag name \`${tag}\` of release already exists. So update it.`))
 
-  if (createRes.status !== 201) {
-    // @ts-expect-error Validation Failed
-    // eslint-disable-next-line ts/no-unsafe-member-access
-    if (createRes.data.errors[0].code === 'already_exists') {
-      info('The `tag_name` of release already exists. So update it.`')
-      const { data: { id } } = await octokit.rest.repos.getReleaseByTag({
-        owner,
-        repo,
-        tag: tag!,
-      })
+        return octokit.rest.repos.getReleaseByTag({
+          owner,
+          repo,
+          tag: tag!,
+        })
+      }
+      setFailed(`Fail to release. ${err}`)
+      process.exit(1)
+    }).then((res) => {
+      if (res) {
+        const { data: { id } } = res
+        return octokit.rest.repos.updateRelease({
+          release_id: id,
+          ...releaseBody,
+        })
+      }
+    }).then((res) => {
+      if (res)
+        info(p.green(`Successfully updated a release: ${res.data.html_url} .`))
+    })
 
-      await octokit.rest.repos.updateRelease({
-        release_id: id,
-        ...releaseBody,
-      })
-      info('Successfully updated a release.')
-    }
-    else {
-      setFailed(`Fail with ${JSON.stringify(createRes.data)}`)
-    }
-  }
-  else {
-    info('Successfully created a release.')
-  }
+  process.exit(0)
 }
