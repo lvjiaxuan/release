@@ -1,23 +1,9 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.12.1` (32). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v2.0.0` (30). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
 
-## v1.12.1 <sub>(2024-01-18)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.12.0...v1.12.1)
-
-### &nbsp;&nbsp;&nbsp;🐛 Fixes
-
-- **release**: catch unknown error &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1fac1)</samp>](https://github.com/lvjiaxuan/release/commit/1fac171)
-
-## v1.12.0 <sub>(2024-01-18)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.11.0...v1.12.0)
-
-### &nbsp;&nbsp;&nbsp;✨ Enhancements
-
-- separate pnpm workspace &nbsp;-&nbsp; by @lvjiaxuan [<samp>(4b89c)</samp>](https://github.com/lvjiaxuan/release/commit/4b89c1a)
-
-## v1.11.0 <sub>(2024-01-17)</sub>
-[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.1...v1.11.0)
+## v2.0.0 <sub>(2024-01-18)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.1...v2.0.0)
 
 ### &nbsp;&nbsp;&nbsp;✨ Enhancements
 
@@ -27,6 +13,7 @@ Tag ranges `v0.1.0...v1.12.1` (32). [All GitHub Releases](https://github.com/lvj
 - add hooks &nbsp;-&nbsp; by @lvjiaxuan [<samp>(ebacf)</samp>](https://github.com/lvjiaxuan/release/commit/ebacfe4)
 - remove `--recursive` of publish &nbsp;-&nbsp; by @lvjiaxuan [<samp>(e3cf9)</samp>](https://github.com/lvjiaxuan/release/commit/e3cf931)
 - log publish command. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(40b7c)</samp>](https://github.com/lvjiaxuan/release/commit/40b7ca0)
+- separate pnpm workspace &nbsp;-&nbsp; by @lvjiaxuan [<samp>(4b89c)</samp>](https://github.com/lvjiaxuan/release/commit/4b89c1a)
 
 ### &nbsp;&nbsp;&nbsp;🐛 Fixes
 
@@ -35,6 +22,8 @@ Tag ranges `v0.1.0...v1.12.1` (32). [All GitHub Releases](https://github.com/lvj
 - try to read a file. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(7c5fb)</samp>](https://github.com/lvjiaxuan/release/commit/7c5fb6d)
 - release fetch catch &nbsp;-&nbsp; by @lvjiaxuan [<samp>(d46b0)</samp>](https://github.com/lvjiaxuan/release/commit/d46b058)
 - `--report-summary` must be with `-r` &nbsp;-&nbsp; by @lvjiaxuan [<samp>(2daf8)</samp>](https://github.com/lvjiaxuan/release/commit/2daf8b2)
+- execa cannot pass a var only. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(639c9)</samp>](https://github.com/lvjiaxuan/release/commit/639c92e)
+- **release**: catch unknown error &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1fac1)</samp>](https://github.com/lvjiaxuan/release/commit/1fac171)
 
 ## v1.7.1 <sub>(2024-01-15)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.0...v1.7.1)
