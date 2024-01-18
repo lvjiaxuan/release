@@ -12,13 +12,11 @@ jobs:
       id-token: write
     uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
     with:
-      install: true
       run_script: nr lvr release
     secrets: inherit
 
   publish:
     uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
     with:
-      install: true
       run_script: nr lvr publish --sync-cnpm
     secrets: inherit

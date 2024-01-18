@@ -2,7 +2,7 @@ import { promises as fsp } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { getOctokit } from '@actions/github'
-import { info, setFailed, warning } from '@actions/core'
+import { error, info, setFailed, warning } from '@actions/core'
 import p from 'picocolors'
 
 const cwd = process.cwd()
@@ -78,6 +78,12 @@ export async function sendRelease() {
     }).then((res) => {
       if (res)
         info(p.green(`Successfully updated a release: ${res.data.html_url} .`))
+    }).catch((err: any) => {
+      if (err) {
+        setFailed(`Fail to release. ${err}`)
+        // eslint-disable-next-line ts/no-unsafe-argument
+        error(JSON.parse(err))
+      }
     })
 
   process.exit(0)
