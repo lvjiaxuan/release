@@ -2,7 +2,7 @@ import { promises as fsp } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { getOctokit } from '@actions/github'
-import { error, info, setFailed, warning } from '@actions/core'
+import { endGroup, info, setFailed, startGroup, warning } from '@actions/core'
 import p from 'picocolors'
 
 const cwd = process.cwd()
@@ -18,7 +18,7 @@ export function resolveChangelogSection(content: string) {
   catch {
   }
 
-  warning('Failed to resolve release notes on CHANGELOG.md. Callback to "".')
+  warning('Failed to resolve release notes on CHANGELOG.md. Callback to "".\n')
 
   return ''
 }
@@ -31,12 +31,12 @@ export async function sendRelease() {
   const octokit = getOctokit(token!)
 
   if (CI !== 'true') {
-    warning('Not in CI env. Skip release.')
+    warning('Not in CI env. Skip release.\n')
     return
   }
 
   if (!token) {
-    warning('No token in env. Skip release.')
+    warning('No token in env. Skip release.\n')
     return
   }
 
@@ -53,11 +53,15 @@ export async function sendRelease() {
 
   await octokit.rest.repos.createRelease(releaseBody)
     .then((res) => {
-      info(p.green(`Successfully created a release: ${res.data.html_url} .`))
+      info(p.green(`Successfully created a release: ${res.data.html_url} .\n`))
     }).catch((err: any) => {
-      // eslint-disable-next-line ts/no-unsafe-member-access
-      if (err.status === 422 && err.data.errors[0].code === 'already_exists') {
-        info(p.yellow(`The tag name \`${tag}\` of release already exists. So update it.`))
+      startGroup('Create release error.')
+      info(JSON.stringify(err))
+      endGroup()
+
+      // eslint-disable-next-line ts/no-unsafe-member-access, ts/no-unsafe-call
+      if (err.response.status === 422 && err.response.data.errors.some((e: any) => e.code === 'already_exists')) {
+        info(p.yellow(`The tag name \`${tag}\` of release already exists. So update it.\n`))
 
         return octokit.rest.repos.getReleaseByTag({
           owner,
@@ -65,8 +69,7 @@ export async function sendRelease() {
           tag: tag!,
         })
       }
-      setFailed(`Fail to release. ${err}`)
-      process.exit(1)
+      return Promise.reject(err)
     }).then((res) => {
       if (res) {
         const { data: { id } } = res
@@ -79,12 +82,7 @@ export async function sendRelease() {
       if (res)
         info(p.green(`Successfully updated a release: ${res.data.html_url} .`))
     }).catch((err: any) => {
-      if (err) {
-        setFailed(`Fail to release. ${err}`)
-        // eslint-disable-next-line ts/no-unsafe-argument
-        error(JSON.parse(err))
-      }
+      if (err)
+        setFailed(`Fail to release with ${err}\n`)
     })
-
-  process.exit(0)
 }

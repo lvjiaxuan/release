@@ -2,7 +2,7 @@ import process from 'node:process'
 import path from 'node:path'
 import fsp from 'node:fs/promises'
 import p from 'picocolors'
-import { info } from '@actions/core'
+import { info, setOutput } from '@actions/core'
 import { $ } from 'execa'
 import type { PublishOption } from '..'
 
@@ -20,9 +20,11 @@ export async function publish(options: PublishOption) {
     return false
   })()
 
+  setOutput('isWorkspace', isWorkspace)
+
   const publishCommand = `pnpm publish${isWorkspace ? ' -r --report-summary' : ''} --no-git-checks`
   info(`${p.blue(publishCommand)}\n`)
-  await $$`${publishCommand}`
+  await $$`pnpm publish --no-git-checks`
 
   if (options.syncCnpm) {
     let publishedNames: string[] = []
@@ -53,6 +55,4 @@ export async function publish(options: PublishOption) {
     info(p.blue(`cnpm sync ${publishedNames.join(' ')} --sync-publish\n`))
     await $$`cnpm sync ${publishedNames.join(' ')} --sync-publish`
   }
-
-  process.exit(0)
 }

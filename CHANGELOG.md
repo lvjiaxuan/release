@@ -1,6 +1,13 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.12.0` (31). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.12.1` (32). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.12.1 <sub>(2024-01-18)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.12.0...v1.12.1)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- **release**: catch unknown error &nbsp;-&nbsp; by @lvjiaxuan [<samp>(1fac1)</samp>](https://github.com/lvjiaxuan/release/commit/1fac171)
 
 ## v1.12.0 <sub>(2024-01-18)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.11.0...v1.12.0)
