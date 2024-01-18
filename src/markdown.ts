@@ -86,7 +86,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
     '',
   ]
 
-  const scopes = groupBy(commits, 'scope')!
+  const scopes = groupBy(commits, 'scope')
   let useScopeGroup = true
 
   // group scopes only when one of the scope have multiple commits

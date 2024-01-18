@@ -1,7 +1,7 @@
 {
   "name": "lvr",
   "type": "module",
-  "version": "1.12.1",
+  "version": "1.7.1",
   "private": false,
   "description": "My own release cli tool.",
   "author": "lvjiaxuan <471501748@qq.com> (https://github.com/lvjiaxuan)",
@@ -74,11 +74,10 @@
     "yargs": "^17.7.2"
   },
   "simple-git-hooks": {
-    "pre-commit": "nlx lint-staged --concurrent false"
+    "pre-commit": ["nr typecheck", "nlx lint-staged --concurrent false"]
   },
   "lint-staged": {
-    "*": "eslint --fix",
-    "*.?([cm])ts?(x)": "nr typecheck"
+    "*": "eslint --fix"
   },
   "lv": {
     "release": {

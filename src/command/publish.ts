@@ -22,9 +22,14 @@ export async function publish(options: PublishOption) {
 
   setOutput('isWorkspace', isWorkspace)
 
-  const publishCommand = `pnpm publish${isWorkspace ? ' -r --report-summary' : ''} --no-git-checks`
-  info(`${p.blue(publishCommand)}\n`)
-  await $$`pnpm publish --no-git-checks`
+  const publishArgs = ['--no-git-checks']
+  if (isWorkspace) {
+    publishArgs.unshift('--report-summary')
+    publishArgs.unshift('-r')
+  }
+
+  info(p.blue(`pnpm publish ${publishArgs.join(' ')}\n`))
+  await $$`pnpm publish ${publishArgs}`
 
   if (options.syncCnpm) {
     let publishedNames: string[] = []

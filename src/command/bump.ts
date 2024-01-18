@@ -135,7 +135,7 @@ export async function bump(options: Option) {
   let commitTagName: string
 
   if (rootBumpVersion)
-    commitTagName = `v${ rootBumpVersion }`
+    commitTagName = `v${rootBumpVersion}`
   else if (!isMonorepo)
     commitTagName = `v${pkgsJson[0]!.bumpVersion}`
   else if (pkgsJson.length > 1)
