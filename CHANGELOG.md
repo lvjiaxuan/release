@@ -1,6 +1,13 @@
 # Changelog
 
-Tag ranges `v0.1.0...v1.11.0` (30). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v1.12.0` (31). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v1.12.0 <sub>(2024-01-18)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v1.11.0...v1.12.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- separate pnpm workspace &nbsp;-&nbsp; by @lvjiaxuan [<samp>(4b89c)</samp>](https://github.com/lvjiaxuan/release/commit/4b89c1a)
 
 ## v1.11.0 <sub>(2024-01-17)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.1...v1.11.0)
