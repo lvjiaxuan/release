@@ -13,5 +13,5 @@
     "forceConsistentCasingInFileNames": true, /* Enable all strict type-checking options. */
     "skipLibCheck": true /* Skip type checking all .d.ts files. */
   },
-  "include": ["./**/*.ts", "./**/*.d.ts", "jest.config.mjs", "eslint.config.js", "./bin/cli.mjs"]
+  "include": ["**/*.ts"]
 }

@@ -1,3 +1,4 @@
+import { describe, expect, it } from 'vitest'
 import { resolveChangelogSection } from '../src'
 
 describe('`resolveChangelogSection` test cases', () => {
