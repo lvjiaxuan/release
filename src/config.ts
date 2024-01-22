@@ -4,11 +4,15 @@ import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import pc from 'picocolors'
 import { getGitHubRepo } from '.'
-import type { AllOption, CliOption, MarkdownOption } from '.'
+import type { AllOption, ChangelogOption, CliOption, MarkdownOption } from '.'
 
 const cwd = process.cwd()
 
-export const MarkdownOptionDefaults: MarkdownOption = {
+const ChangelogOptionDefaults: ChangelogOption = {
+  // tag: '10',
+}
+
+const MarkdownOptionDefaults: MarkdownOption = {
   types: {
     feat: { title: '✨ Enhancements' },
     perf: { title: '⚡️ Performance' },
@@ -62,11 +66,11 @@ export async function resolveConfig<T extends AllOption>(options: T) {
   let mergeOptions: T
 
   if (!config.sources.length) {
-    mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, options)
+    mergeOptions = lodashMerge(Object.create(null) as T, options, CliOptionDefaults, MarkdownOptionDefaults, ChangelogOptionDefaults)
   }
   else {
     console.log(pc.green(`\nConfig file found: ${config.sources[0]}:\n`), pc.gray(JSON.stringify(config.config)))
-    mergeOptions = lodashMerge(CliOptionDefaults, MarkdownOptionDefaults, config.config, options)
+    mergeOptions = lodashMerge(Object.create(null), options, CliOptionDefaults, MarkdownOptionDefaults, ChangelogOptionDefaults, config.config) as T
   }
 
   if (!mergeOptions.github)
