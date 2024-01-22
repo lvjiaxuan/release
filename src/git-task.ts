@@ -13,10 +13,10 @@ export async function execGitJobs(options: Pick<CliOption, 'commit' | 'tag' | 'p
     console.log(pc.green(`git commit -m "${options.commit}"`))
     !dry && await execCMD('git', ['commit', '-m', options.commit])
 
-    if (typeof options.tag === 'string') {
-      const tagName = options.tag ? options.tag : commitTagName
-      console.log(pc.green(`git tag ${tagName}`))
-      !dry && await execCMD('git', ['tag', tagName])
+    // @ts-expect-error `no-xxx` type
+    if (options.tag !== false) {
+      console.log(pc.green(`git tag ${commitTagName}`))
+      !dry && await execCMD('git', ['tag', commitTagName])
     }
     else {
       console.log(pc.yellow('Skip Tag.'))

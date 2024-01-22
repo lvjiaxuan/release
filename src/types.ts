@@ -25,7 +25,7 @@ export interface ChangelogOption {
 export interface CliOption {
   yml?: boolean
   commit?: string
-  tag?: string
+  tag?: string | number
   push?: string
   dry?: boolean
   mainPkg?: boolean

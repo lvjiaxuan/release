@@ -32,7 +32,7 @@ async function resolveFormToList({ tags, from }: { tags?: string[] | number, fro
     if (tags >= allTags.length)
       list.unshift(['', allTags[0]])
 
-    tags = allTags.slice(-tags - 1)
+    tags = allTags.slice(-tags)
   }
 
   for (let i = 0, n = tags.length; i < n - 1; i++)
@@ -216,9 +216,9 @@ export async function changelog(options: AllOption, tagForHead?: string) {
     // All tags.
     fromToList = await resolveFormToList({ from: options.from })
   }
-  else if (options.tag!.includes('...')) {
+  else if (typeof options.tag === 'string' && options.tag.includes('...')) {
     // A tag range.
-    const from2to = options.tag!.split('...') as [ string, string ]
+    const from2to = options.tag.split('...') as [ string, string ]
     fromToList = await resolveFormToList({ tags: from2to })
   }
   else if (Number.isInteger(-options.tag!)) {
