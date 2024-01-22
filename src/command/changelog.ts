@@ -169,12 +169,12 @@ async function generate({ fromToList, titleMap, options }: {
 
   processBar.start(fromToList.length, 0)
 
-  for (const [from, to] of fromToList) {
+  ;(await Promise.all(fromToList.map(async ([from, to], idx) => {
     const parsedCommits = await getParsedCommits(from, to, Object.keys(options.types))
 
     await resolveCommitAuthors(parsedCommits, options)
 
-    md += await generateMarkdown({
+    const md = await generateMarkdown({
       ...options,
       parsedCommits,
       from,
@@ -183,7 +183,12 @@ async function generate({ fromToList, titleMap, options }: {
     })
 
     processBar.increment()
-  }
+
+    return {
+      order: idx,
+      md,
+    }
+  }))).sort((a, b) => a.order - b.order).forEach(({ md: i }) => (md += i))
 
   if (globalAuthorsError.size) {
     console.log(pc.yellow('\nFail to resolved these follow authors and fallback to origin name:'))
