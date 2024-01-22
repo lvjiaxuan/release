@@ -4,7 +4,7 @@ import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import pc from 'picocolors'
 import { getGitHubRepo } from '.'
-import type { BumpOption, ChangelogOption, CliOption, MarkdownOption } from '.'
+import type { AllOption, CliOption, MarkdownOption } from '.'
 
 const cwd = process.cwd()
 
@@ -31,8 +31,6 @@ const CliOptionDefaults: CliOption = {
   commit: 'Release {r}',
   cwd,
 }
-
-export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
 
 export async function resolveConfig<T extends AllOption>(options: T) {
   const config = await loadConfig<T>({

@@ -53,3 +53,5 @@ export interface MarkdownOption {
 export interface PublishOption {
   syncCnpm?: boolean
 }
+
+export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption

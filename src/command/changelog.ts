@@ -8,7 +8,7 @@ import pc from 'picocolors'
 import semver from 'semver'
 import cliProgress from 'cli-progress'
 import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
-import type { AllOption, ChangelogOption } from '..'
+import type { AllOption } from '..'
 
 async function resolveFormToList({ tags, from }: { tags?: string[] | number, from?: string } = { from: '' }) {
   const list: string[][] = []
@@ -50,11 +50,17 @@ async function verifyTags(tags: string[][], ignores?: (string | void)[]) {
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
 const globalAuthorsCache = new Map<string, AuthorInfo>()
 const globalAuthorsError = new Map<string, any>()
-async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
+async function resolveAuthorInfo(options: AllOption, info: AuthorInfo) {
   if (globalAuthorsCache.has(info.email))
     return globalAuthorsCache.get(info.email)!
 
   if (info.login) {
+    globalAuthorsCache.set(info.email, info)
+    return info
+  }
+
+  if (options.dry) {
+    info.login = 'dry-run-name'
     globalAuthorsCache.set(info.email, info)
     return info
   }
@@ -92,7 +98,7 @@ async function resolveAuthorInfo(options: ChangelogOption, info: AuthorInfo) {
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L82
-async function resolveCommitAuthors(commits: Commit[], options: ChangelogOption) {
+async function resolveCommitAuthors(commits: Commit[], options: AllOption) {
   const map = new Map<string, AuthorInfo>()
   commits.forEach(commit => commit.resolvedAuthors = commit.authors.map((a, idx) => {
     if (!a.email || !a.name)
