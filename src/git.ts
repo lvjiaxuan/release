@@ -1,10 +1,8 @@
 import { type GitCommit, type GitCommitAuthor, type Reference, getGitDiff } from 'changelogen'
 import pc from 'picocolors'
+import { $ } from 'execa'
 
-export async function execCMD(cmd: string, args: string[]) {
-  const { execaSync } = await import('execa')
-  return execaSync(cmd, args)
-}
+export const $$ = $({ stdio: 'inherit' })
 
 export const getTags = (() => {
   let cache: string[] = []
@@ -14,7 +12,7 @@ export const getTags = (() => {
     promise = async () => {
       if (!cache.length)
 
-        cache = (await execCMD('git', ['--no-pager', 'tag', '-l', '--sort=creatordate'])).stdout.trim().split('\n')
+        cache = (await $$`git --no-pager tag -l --sort=creatordate`).stdout.trim().split('\n')
 
       return cache.filter(Boolean)
     }
@@ -25,7 +23,7 @@ export const getTags = (() => {
 
 export async function getGitHubRepo() {
   try {
-    const url = (await execCMD('git', ['config', '--get', 'remote.origin.url'])).stdout.trim()
+    const url = (await $$`git config --get remote.origin.url`).stdout.trim()
     const match = url.match(/github\.com[/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i)
     if (!match) {
       console.log(`Can not parse GitHub repo from url ${pc.bgCyan(url)}`)
@@ -49,17 +47,17 @@ export async function getLastGitTag(delta = 0) {
   return tags[tags.length + delta - 1]
 }
 
-export const findTag = async (tag: string) => (await execCMD('git', ['tag', '-l', tag])).stdout.trim()
+export const findTag = async (tag: string) => (await $$`git tag -l ${tag}`).stdout.trim()
 
-export const getFirstGitCommit = async () => (await execCMD('git', ['rev-list', '--max-parents=0', 'HEAD'])).stdout.trim()
+export const getFirstGitCommit = async () => (await $$`git rev-list --max-parents=0 HEAD`).stdout.trim()
 
 export async function getCurrentGitBranch() {
-  return (await execCMD('git', ['tag', '--points-at', 'HEAD'])).stdout.trim()
-    || (await execCMD('git', ['rev-parse', '--abbrev-ref', 'HEAD'])).stdout.trim()
+  return (await $$`git tag --points-at HEAD`).stdout.trim()
+    || (await $$`git rev-par --abbrev-ref HEAD`).stdout.trim()
 }
 
 export async function getCommitFormatTime(commit: string) {
-  const time = await execCMD('git', ['log', '-1', '--format=%ai', commit])
+  const time = await $$`git log -1 --format=%ai ${commit}`
   return time.stdout.trim().slice(0, 10)
 }
 

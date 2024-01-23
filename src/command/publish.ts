@@ -3,13 +3,11 @@ import path from 'node:path'
 import fsp from 'node:fs/promises'
 import p from 'picocolors'
 import { info, setOutput } from '@actions/core'
-import { $ } from 'execa'
 import type { PublishOption } from '..'
+import { $$ } from '..'
 
 export async function publish(options: PublishOption) {
   const cwd = process.cwd()
-
-  const $$ = $({ stdio: 'inherit' })
 
   const isWorkspace = await (async () => {
     try {
