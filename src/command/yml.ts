@@ -1,7 +1,7 @@
 import { promises as fsp } from 'node:fs'
 import pc from 'picocolors'
 
-export async function addYml(isDry?: boolean) {
+export async function addYml(dryRun?: boolean) {
   const yml = `name: Release and Publish
 
 on:
@@ -39,7 +39,7 @@ jobs:
       - run: cnpm sync @lvjiaxuan/eslint-config --sync-publish
 `
 
-  if (isDry) {
+  if (dryRun) {
     console.log(yml)
     return
   }

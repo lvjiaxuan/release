@@ -11,9 +11,6 @@ devDependencies:
   '@actions/github':
     specifier: ^6.0.0
     version: 6.0.0
-  '@antfu/eslint-config':
-    specifier: ^2.6.3
-    version: 2.6.3(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
   '@antfu/utils':
     specifier: ^0.7.7
     version: 0.7.7
@@ -29,6 +26,9 @@ devDependencies:
   '@types/conventional-recommended-bump':
     specifier: ^9.0.3
     version: 9.0.3
+  '@types/fs-extra':
+    specifier: ^11.0.4
+    version: 11.0.4
   '@types/lodash.merge':
     specifier: ^4.6.9
     version: 4.6.9
@@ -74,6 +74,9 @@ devDependencies:
   fast-glob:
     specifier: ^3.3.2
     version: 3.3.2
+  fs-extra:
+    specifier: ^11.2.0
+    version: 11.2.0
   human-id:
     specifier: ^4.1.0
     version: 4.1.0
@@ -954,6 +957,13 @@ packages:
     resolution: {integrity: sha512-/kYRxGDLWzHOB7q+wtSUQlFrtcdUccpfy+X+9iMBpHK8QLLhx2wIPYuS5DYtR9Wa/YlZAbIovy7qVdB1Aq6Lyw==}
     dev: true
 
+  /@types/fs-extra@11.0.4:
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 20.11.5
+    dev: true
+
   /@types/git-raw-commits@2.0.4:
     resolution: {integrity: sha512-PYmTK156j6TilbwtnO2JErH4TCC1izpgP3kRE3KUX35bjBOD2A+syCGeercqHXBcM6wL+DU0WbJB2Gz8fPR+8A==}
     dependencies:
@@ -962,6 +972,12 @@ packages:
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
+    dev: true
+
+  /@types/jsonfile@6.1.4:
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+    dependencies:
+      '@types/node': 20.11.5
     dev: true
 
   /@types/lodash.merge@4.6.9:

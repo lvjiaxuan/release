@@ -6,6 +6,14 @@ import { version } from '../package.json'
 import { addYml, bump, changelog, lvr, publish, resolveConfig, sendRelease } from '.'
 import type { AllOption, PublishOption } from '.'
 
+async function commandHandler(args: AllOption, commandFun: typeof bump | typeof changelog) {
+  args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
+  console.log(`lvr@${version}\n`)
+  await commandFun(await resolveConfig(args))
+  args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+  process.exit(0)
+}
+
 // yargs api refers to https://github.com/yargs/yargs/blob/main/docs/api.md
 void (yargs(hideBin(process.argv)) as Argv<AllOption>)
   .scriptName('lvr')
@@ -26,36 +34,20 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     aliases: 'b',
     describe: 'Bump only.',
     builder: y => y,
-    handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
-      console.log(`lvr@${version}\n`)
-      console.log(pc.cyan('Run bump command.'))
-      await bump(await resolveConfig(args))
-      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
-      process.exit(0)
-    },
+    handler: args => commandHandler(args, bump),
   }).command({
     command: 'changelog [options]',
     aliases: 'c',
     describe: 'Generate CHANGELOG only.',
     builder: y => y,
-    handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
-      console.log(`lvr@${version}\n`)
-      console.log(pc.cyan('Run CHANGELOG command.'))
-      await changelog(await resolveConfig(args))
-      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
-      process.exit(0)
-    },
+    handler: args => commandHandler(args, changelog),
   }).command({
     command: 'yml',
     describe: 'Add a workflow file at `.github/workflows/lvr.yml`.',
     builder: y => y,
     handler: async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
-      await addYml(args.dry as boolean)
-      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      await addYml(args.dry)
       process.exit(0)
     },
   }).command({
@@ -65,6 +57,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     handler: async () => {
       console.log(`lvr@${version}\n`)
       await sendRelease()
+      process.exit(0)
     },
   }).command({
     command: 'publish',
@@ -75,6 +68,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     handler: async (args) => {
       console.log(`lvr@${version}\n`)
       await publish(args as PublishOption)
+      process.exit(0)
     },
   }).option('all', {
     boolean: true,
