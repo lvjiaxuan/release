@@ -1,9 +1,6 @@
-import antfu from '@antfu/eslint-config'
+import lv from '@lvjiaxuan/eslint-config'
 
-export default antfu({
-  typescript: {
-    tsconfigPath: 'tsconfig.json',
-  },
+export default lv({
   rules: {
     'no-console': 'off',
   },

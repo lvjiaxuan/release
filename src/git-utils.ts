@@ -1,8 +1,6 @@
 import { type GitCommit, type GitCommitAuthor, type Reference, getGitDiff } from 'changelogen'
 import pc from 'picocolors'
-import { $ } from 'execa'
-
-export const $$ = $({ stdio: 'inherit' })
+import { $$ } from '.'
 
 export const getTags = (() => {
   let cache: string[] = []
