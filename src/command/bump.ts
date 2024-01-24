@@ -1,6 +1,5 @@
 import fsp from 'node:fs/promises'
 import path from 'node:path'
-import process from 'node:process'
 import conventionalRecommendedBump from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
@@ -129,7 +128,7 @@ export async function bump(options: Option) {
 
   console.log(pkgsJson.map(i => `* ${i!.currentVersion} → ${i!.bumpVersion} ${i!.package}`).join('\n'))
 
-  if (process.env.NODE_ENV !== 'test' && !options.dry)
+  if (!options.dry)
     await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item!.package), item!.jsonStr, 'utf-8')))
 
   let commitTagName: string

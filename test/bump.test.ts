@@ -1,6 +1,5 @@
-import process from 'node:process'
 import { join } from 'node:path'
-import { afterAll, beforeAll, expect, it } from 'vitest'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { $ } from 'execa'
 import fs from 'fs-extra'
 
@@ -11,33 +10,41 @@ const monoDir = join(fixturesDir, 'monorepo')
 const single$ = $({ cwd: singleDir })
 const mono$ = $({ cwd: monoDir })
 
-beforeAll(async () => {
-
-  const singleInit = async () => {
-    await fs.remove(join(singleDir, '.git')),
-    await single$`git init`
-  }
-
-  const monoInit = async () => {
-    await fs.remove(join(monoDir, '.git')),
-    await mono$`git init`
-  }
-
-  await Promise.all([singleInit(), monoInit()])
-})
-
-afterAll(async () => {
+async function clean() {
   await Promise.all([
     fs.remove(join(singleDir, '.git')),
     fs.remove(join(monoDir, '.git')),
+    fs.remove(join(singleDir, 'package.json')),
   ])
+}
+
+beforeAll(async () => {
+  await clean()
+  await Promise.all([single$`git init`, mono$`git init`])
 })
 
-it('single test',async () => {
-  await fs.writeJson(join(singleDir, 'package.json'), {
-    name: 'singlerepo',
-    version: '1.0.0',
-  })
+afterAll(async () => {
+  await clean()
+})
 
-  expect(1).equals(1)
-}, 10 * 1000)
+describe('single repo test', () => {
+  it('base', async () => {
+    await fs.writeJson(join(singleDir, 'package.json'), {
+      name: 'singlerepo',
+      version: '1.0.0',
+    })
+
+    await single$`git add .`
+    await single$`git commit -m ${['feat: empty feat.']}`
+    await single$`jiti ./../../../src/cli.ts b`
+
+    const json = (await fs.readJson(join(singleDir, 'package.json'))) as string
+
+    expect(json).toMatchInlineSnapshot(`
+      {
+        "name": "singlerepo",
+        "version": "1.1.0",
+      }
+    `)
+  }, 30 * 1000)
+})
