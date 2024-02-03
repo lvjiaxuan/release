@@ -15,11 +15,8 @@ devDependencies:
     specifier: ^0.7.7
     version: 0.7.7
   '@lvjiaxuan/eslint-config':
-    specifier: ^1.7.0
-    version: 1.7.0(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
-  '@lvjiaxuan/eslint-plugin':
-    specifier: ^1.7.0
-    version: 1.7.0(eslint@8.56.0)(typescript@5.3.3)
+    specifier: ^1.8.2
+    version: 1.8.2(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
   '@types/cli-progress':
     specifier: ^3.11.5
     version: 3.11.5
@@ -582,11 +579,12 @@ packages:
     resolution: {integrity: sha512-eF2rxCRulEKXHTRiDrDy6erMYWqNw4LPdQ8UQA4huuxaQsVeRPFl2oM8oDGxMFhJUWZf9McpLtJasDDZb/Bpeg==}
     dev: true
 
-  /@lvjiaxuan/eslint-config@1.7.0(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1):
-    resolution: {integrity: sha512-GvPnHDTL4E+TTuLTuR474/DgkAJ18L2nvmNNJ0VDqqFEGwtMA2loRiNNanqntiBK5UuaWO1oCMb+Q3DaLJqF1g==}
+  /@lvjiaxuan/eslint-config@1.8.2(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1):
+    resolution: {integrity: sha512-GTMdZoOoUJdaFL9D7SFNWb+p3g/wScSgMl5Ulrt+gVUdqGzQJcc2atiCzFfxcyZsJLlUkiowW/ZRYhGjW97N4w==}
     dependencies:
       '@antfu/eslint-config': 2.6.3(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
-      '@lvjiaxuan/eslint-plugin': 1.7.0(eslint@8.56.0)(typescript@5.3.3)
+      '@lvjiaxuan/eslint-plugin': 1.8.2(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
+      '@lvjiaxuan/eslint-plugin-oxlint': 1.8.2
       fs-extra: 11.2.0
     transitivePeerDependencies:
       - '@unocss/eslint-plugin'
@@ -607,16 +605,37 @@ packages:
       - vitest
     dev: true
 
-  /@lvjiaxuan/eslint-plugin@1.7.0(eslint@8.56.0)(typescript@5.3.3):
-    resolution: {integrity: sha512-6vuHMOW9aMWiesuhb8NEuA/GhsSPJHwWlm1yvWyIlrmqrU89OVmQlNQGk+aDvxqTSCQVr7oBXyFqj+61LbLg8A==}
+  /@lvjiaxuan/eslint-plugin-oxlint@1.8.2:
+    resolution: {integrity: sha512-IQB//Gr725l21q//S6xIHRrdiJ/pAb4EdNWFbAcIg9Af3Ao9KJJm62Lz/ge5f88Nf4EoUa75PT39OdfYzBKOXQ==}
+    dependencies:
+      execa: 8.0.1
+      local-pkg: 0.5.0
+    dev: true
+
+  /@lvjiaxuan/eslint-plugin@1.8.2(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1):
+    resolution: {integrity: sha512-KZdwmxv/KmeXxt71E4gP/gyrFoxeTcGS8iBWsvlVgJJo0vb2gvKw4tMNsT4u0rpzufBXJ9Zeq/QyBR2hLlN1Og==}
     peerDependencies:
       eslint: '>=8'
     dependencies:
+      '@antfu/eslint-config': 2.6.3(@vue/compiler-sfc@3.3.13)(eslint@8.56.0)(typescript@5.3.3)(vitest@1.2.1)
       '@typescript-eslint/utils': 6.19.0(eslint@8.56.0)(typescript@5.3.3)
       eslint: 8.56.0
     transitivePeerDependencies:
+      - '@unocss/eslint-plugin'
+      - '@vue/compiler-sfc'
+      - astro-eslint-parser
+      - eslint-import-resolver-typescript
+      - eslint-import-resolver-webpack
+      - eslint-plugin-format
+      - eslint-plugin-react
+      - eslint-plugin-react-hooks
+      - eslint-plugin-react-refresh
+      - eslint-plugin-svelte
       - supports-color
+      - svelte
+      - svelte-eslint-parser
       - typescript
+      - vitest
     dev: true
 
   /@nodelib/fs.scandir@2.1.5:
