@@ -59,7 +59,7 @@ async function resolveAuthorInfo(options: AllOption, info: AuthorInfo) {
     return info
   }
 
-  if (options.dry) {
+  if (options.dryRun) {
     info.login = 'dry-run-name'
     globalAuthorsCache.set(info.email, info)
     return info
@@ -251,7 +251,7 @@ export async function changelog(options: AllOption, tagForHead?: string) {
 
   const md = await generate({ fromToList, titleMap, options })
 
-  if (process.env.NODE_ENV !== 'test' && !options.dry)
+  if (process.env.NODE_ENV !== 'test' && !options.dryRun)
     fs.writeFileSync(path.resolve(options.cwd, 'CHANGELOG.md'), md, 'utf-8')
 
   return md

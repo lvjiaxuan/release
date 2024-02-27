@@ -7,10 +7,10 @@ import { addYml, bump, changelog, lvr, publish, resolveConfig, sendRelease } fro
 import type { AllOption, PublishOption } from '.'
 
 async function commandHandler(args: AllOption, commandFun: typeof bump | typeof changelog) {
-  args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
+  args.dryRun && console.log(`${pc.bgCyan(' Dry run ')}\n`)
   console.log(`lvr@${version}\n`)
   await commandFun(await resolveConfig(args))
-  args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+  args.dryRun && console.log(`\n${pc.bgCyan(' Dry run ')}`)
   process.exit(0)
 }
 
@@ -22,11 +22,11 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     'Bump → CHANGELOG → Commit → Tag → Push',
     yargs => yargs,
     async (args) => {
-      args.dry && console.log(`${pc.bgCyan(' Dry run ')}\n`)
+      args.dryRun && console.log(`${pc.bgCyan(' Dry run ')}\n`)
       console.log(`lvr@${version}\n`)
       console.log(pc.cyan('Bump → CHANGELOG → Commit → Tag → Push'))
       await lvr(await resolveConfig(args))
-      args.dry && console.log(`\n${pc.bgCyan(' Dry run ')}`)
+      args.dryRun && console.log(`\n${pc.bgCyan(' Dry run ')}`)
       process.exit(0)
     },
   ).command({
@@ -47,7 +47,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     builder: y => y,
     handler: async (args) => {
       console.log(`lvr@${version}\n`)
-      await addYml(args.dry)
+      await addYml(args.dryRun)
       process.exit(0)
     },
   }).command({
@@ -114,7 +114,7 @@ void (yargs(hideBin(process.argv)) as Argv<AllOption>)
     string: true,
     description: 'A GitHub token for fetching author info.',
     group: 'CHANGELOG',
-  }).option('dry', {
+  }).option('dry-run', {
     alias: 'd',
     boolean: true,
     description: 'Dry run.',

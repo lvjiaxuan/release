@@ -27,7 +27,7 @@ export interface CliOption {
   commit?: string
   tag?: string | number
   push?: string
-  dry?: boolean
+  dryRun?: boolean
   mainPkg?: boolean
   cwd: string
   debug?: boolean

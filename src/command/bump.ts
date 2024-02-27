@@ -128,7 +128,7 @@ export async function bump(options: Option) {
 
   console.log(pkgsJson.map(i => `* ${i!.currentVersion} → ${i!.bumpVersion} ${i!.package}`).join('\n'))
 
-  if (!options.dry)
+  if (!options.dryRun)
     await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item!.package), item!.jsonStr, 'utf-8')))
 
   let commitTagName: string
