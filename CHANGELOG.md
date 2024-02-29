@@ -1,6 +1,26 @@
 # Changelog
 
-Tag ranges `v0.1.0...v2.0.0` (30). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+Tag ranges `v0.1.0...v2.1.0` (31). [All GitHub Releases](https://github.com/lvjiaxuan/release/releases).
+
+## v2.1.0 <sub>(2024-02-29)</sub>
+[Compare changes](https://github.com/lvjiaxuan/release/compare/v2.0.0...v2.1.0)
+
+### &nbsp;&nbsp;&nbsp;✨ Enhancements
+
+- no fetch in dry-run &nbsp;-&nbsp; by @lvjiaxuan [<samp>(71edd)</samp>](https://github.com/lvjiaxuan/release/commit/71edd0e)
+- **changelog**: concurrent fetch &nbsp;-&nbsp; by @lvjiaxuan [<samp>(e319e)</samp>](https://github.com/lvjiaxuan/release/commit/e319e66)
+
+### &nbsp;&nbsp;&nbsp;🐛 Fixes
+
+- adjust configs Pri. &nbsp;-&nbsp; by @lvjiaxuan [<samp>(da8ed)</samp>](https://github.com/lvjiaxuan/release/commit/da8ed25)
+- tag name is nothing to do with `options.tag` &nbsp;-&nbsp; by @lvjiaxuan [<samp>(2f1b9)</samp>](https://github.com/lvjiaxuan/release/commit/2f1b9b7)
+- stdout=pipe &nbsp;-&nbsp; by @lvjiaxuan [<samp>(e4256)</samp>](https://github.com/lvjiaxuan/release/commit/e425638)
+- filter error &nbsp;-&nbsp; by @lvjiaxuan [<samp>(9a3de)</samp>](https://github.com/lvjiaxuan/release/commit/9a3de43)
+- typo of git command &nbsp;-&nbsp; by @lvjiaxuan [<samp>(fa4c3)</samp>](https://github.com/lvjiaxuan/release/commit/fa4c3b8)
+
+### &nbsp;&nbsp;&nbsp;📝 Documentation
+
+- updating &nbsp;-&nbsp; by @lvjiaxuan [<samp>(3a297)</samp>](https://github.com/lvjiaxuan/release/commit/3a29781)
 
 ## v2.0.0 <sub>(2024-01-18)</sub>
 [Compare changes](https://github.com/lvjiaxuan/release/compare/v1.7.1...v2.0.0)
