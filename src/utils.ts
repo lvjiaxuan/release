@@ -3,7 +3,7 @@ import process from 'node:process'
 import fg from 'fast-glob'
 import { $ } from 'execa'
 
-export const $$ = $({ stdio: 'inherit' })
+export const $$ = $({ stdout: 'pipe' })
 
 export const packages = (() => {
   const _ = fg.sync('**/package.json', {
