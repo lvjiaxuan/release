@@ -92,34 +92,36 @@ export async function bump(options: Option) {
   })()
 
   const bumpVersionMap = new Map<string, string>()
-  const pkgsJson = await Promise.all(bumpPackages.map(async (pkg) => {
-    const pkgJson = JSON.parse(await fsp.readFile(path.resolve(options.cwd, pkg), 'utf-8')) as { version?: string, name: string }
-    const currentVersion = pkgJson.version
+  const pkgsJson = (await Promise.all(
+    bumpPackages.map(async (pkg) => {
+      const pkgJson = JSON.parse(await fsp.readFile(path.resolve(options.cwd, pkg), 'utf-8')) as { version?: string, name: string }
+      const currentVersion = pkgJson.version
 
-    if (!currentVersion)
-      return
+      if (!currentVersion)
+        return
 
-    let bumpVersion: string
-    if (rootBumpVersion) {
-      bumpVersion = rootBumpVersion
-    }
-    else if (bumpVersionMap.has(currentVersion)) {
-      bumpVersion = bumpVersionMap.get(currentVersion)!
-    }
-    else {
-      bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, preid)!
-      bumpVersionMap.set(currentVersion, bumpVersion)
-    }
+      let bumpVersion: string
+      if (rootBumpVersion) {
+        bumpVersion = rootBumpVersion
+      }
+      else if (bumpVersionMap.has(currentVersion)) {
+        bumpVersion = bumpVersionMap.get(currentVersion)!
+      }
+      else {
+        bumpVersion = semver.inc(currentVersion, bumpType.releaseType as ReleaseType, preid)!
+        bumpVersionMap.set(currentVersion, bumpVersion)
+      }
 
-    pkgJson.version = bumpVersion
-    return {
-      package: pkg,
-      currentVersion,
-      bumpVersion: pkgJson.version,
-      json: pkgJson,
-      jsonStr: JSON.stringify(pkgJson, null, 2),
-    }
-  }).filter(Boolean))
+      pkgJson.version = bumpVersion
+      return {
+        package: pkg,
+        currentVersion,
+        bumpVersion: pkgJson.version,
+        json: pkgJson,
+        jsonStr: JSON.stringify(pkgJson, null, 2),
+      }
+    }),
+  )).filter(Boolean)
 
   if (isMonorepo)
     console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages to ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}, ${bumpType.reason}:`))
