@@ -51,7 +51,7 @@ export const getFirstGitCommit = async () => (await $$`git rev-list --max-parent
 
 export async function getCurrentGitBranch() {
   return (await $$`git tag --points-at HEAD`).stdout.trim()
-    || (await $$`git rev-par --abbrev-ref HEAD`).stdout.trim()
+    || (await $$`git rev-parse --abbrev-ref HEAD`).stdout.trim()
 }
 
 export async function getCommitFormatTime(commit: string) {
