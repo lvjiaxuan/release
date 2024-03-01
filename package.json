@@ -24,14 +24,14 @@
     "dist"
   ],
   "scripts": {
-    "dev": "nr build --watch",
+    "dev": "pnpm run build --watch",
     "build": "tsup src/cli.ts --clean --format=cjs",
     "test": "vitest bump.test.ts",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
     "lvr": "jiti src/cli.ts",
     "link": "pnpm link --global",
-    "prepublishOnly": "nr build"
+    "prepublishOnly": "pnpm run build"
   },
   "devDependencies": {
     "@actions/core": "^1.10.1",
@@ -73,8 +73,8 @@
   },
   "simple-git-hooks": {
     "pre-commit": [
-      "nr typecheck",
-      "nlx lint-staged --concurrent false"
+      "pnpm run typecheck",
+      "pnpm dlx lint-staged --concurrent false"
     ]
   },
   "lint-staged": {
