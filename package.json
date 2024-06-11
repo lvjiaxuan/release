@@ -67,7 +67,7 @@
     "simple-git-hooks": "^2.11.1",
     "tsup": "^8.1.0",
     "typescript": "^5.4.5",
-    "unconfig": "^0.4.2",
+    "unconfig": "^0.3.13",
     "vitest": "^1.6.0",
     "yargs": "^17.7.2"
   },

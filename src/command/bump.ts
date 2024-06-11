@@ -1,16 +1,16 @@
 import fsp from 'node:fs/promises'
 import path from 'node:path'
-import conventionalRecommendedBump from 'conventional-recommended-bump'
+import { Bumper, type BumperRecommendation } from 'conventional-recommended-bump'
 import semver from 'semver'
 import prompts from 'prompts'
 import pc from 'picocolors'
 import { humanId } from 'human-id'
 import type { BumpOption, CliOption, MarkdownOption, ReleaseType } from '..'
-import { getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
+import { cwd, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 
 type Option = BumpOption & CliOption & MarkdownOption
 
-async function resolveBumpType(options: Option): Promise<conventionalRecommendedBump.Recommendation & { preid?: string }> {
+async function resolveBumpType(options: Option): Promise<BumperRecommendation & { preid?: string }> {
   let releaseType: ReleaseType | false = false
   ;(['major', 'minor', 'patch'] as const).forEach(i => Object.hasOwn(options, i) && (releaseType = i))
 
@@ -23,14 +23,10 @@ async function resolveBumpType(options: Option): Promise<conventionalRecommended
   })
 
   if (!releaseType) {
-    return await conventionalRecommendedBump({
-      preset: 'conventionalcommits',
-      // @ts-expect-error missing gitRawCommitsOpts type
-      gitRawCommitsOpts: options.from
-        ? {
-            from: options.from,
-          }
-        : {},
+    const bumper = new Bumper(cwd).loadPreset('conventionalcommits')
+    return await bumper.bump(commits => {
+      // options.from
+      return commits
     })
   }
 

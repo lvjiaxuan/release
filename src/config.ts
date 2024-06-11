@@ -6,7 +6,7 @@ import pc from 'picocolors'
 import { getGitHubRepo } from '.'
 import type { AllOption, ChangelogOption, CliOption, MarkdownOption } from '.'
 
-const cwd = process.cwd()
+export const cwd = process.cwd()
 
 const ChangelogOptionDefaults: ChangelogOption = {
   // tag: '10',

@@ -14,3 +14,4 @@ jobs:
     uses: lvjiaxuan/github-action-templates/.github/workflows/update-deps.yml@main
     with:
       email: 11309921+lvjiaxuan@users.noreply.github.com
+      args: -x unconfig
