@@ -1,4 +1,5 @@
-import { type GitCommit, type GitCommitAuthor, type Reference, getGitDiff } from 'changelogen'
+import type { GitCommit, GitCommitAuthor, Reference } from 'changelogen'
+import { getGitDiff } from 'changelogen'
 import pc from 'picocolors'
 import { $$ } from '.'
 
@@ -22,7 +23,7 @@ export const getTags = (() => {
 export async function getGitHubRepo() {
   try {
     const url = (await $$`git config --get remote.origin.url`).stdout.trim()
-    const match = url.match(/github\.com[/:]([\w\d._-]+?)\/([\w\d._-]+?)(\.git)?$/i)
+    const match = url.match(/github\.com[/:]([\w.\-]+)\/([\w.\-]+?)(\.git)?$/i)
     if (!match) {
       console.log(`Can not parse GitHub repo from url ${pc.bgCyan(url)}`)
       return ''
@@ -61,9 +62,9 @@ export async function getCommitFormatTime(commit: string) {
 
 export async function getParsedCommits(from: string, to: string, types: string[]) {
   const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i
-  const CoAuthoredByRegex = /Co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gmi
-  const PullRequestRE = /\([a-z ]*(#[0-9]+)\s*\)/gm
-  const IssueRE = /(#[0-9]+)/gm
+  const CoAuthoredByRegex = /Co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gi
+  const PullRequestRE = /\([a-z ]*(#\d+)\s*\)/g
+  const IssueRE = /(#\d+)/g
 
   const rawCommits = await getGitDiff(from, to)
 

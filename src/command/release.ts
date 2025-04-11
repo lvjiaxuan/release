@@ -1,8 +1,8 @@
 import { promises as fsp } from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
-import { getOctokit } from '@actions/github'
 import { endGroup, info, setFailed, startGroup, warning } from '@actions/core'
+import { getOctokit } from '@actions/github'
 import p from 'picocolors'
 
 const cwd = process.cwd()
@@ -54,7 +54,8 @@ export async function sendRelease() {
   await octokit.rest.repos.createRelease(releaseBody)
     .then((res) => {
       info(p.green(`Successfully created a release: ${res.data.html_url} .\n`))
-    }).catch((err: any) => {
+    })
+    .catch(async (err: any) => {
       startGroup('Create release error.')
       info(JSON.stringify(err))
       endGroup()
@@ -70,7 +71,8 @@ export async function sendRelease() {
         })
       }
       return Promise.reject(err)
-    }).then((res) => {
+    })
+    .then(async (res) => {
       if (res) {
         const { data: { id } } = res
         return octokit.rest.repos.updateRelease({
@@ -78,10 +80,12 @@ export async function sendRelease() {
           ...releaseBody,
         })
       }
-    }).then((res) => {
+    })
+    .then((res) => {
       if (res)
         info(p.green(`Successfully updated a release: ${res.data.html_url} .`))
-    }).catch((err: any) => {
+    })
+    .catch((err: any) => {
       if (err)
         setFailed(`Fail to release with ${err}\n`)
     })

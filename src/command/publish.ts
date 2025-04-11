@@ -1,9 +1,9 @@
-import process from 'node:process'
-import path from 'node:path'
-import fsp from 'node:fs/promises'
-import p from 'picocolors'
-import { info, setOutput } from '@actions/core'
 import type { PublishOption } from '..'
+import fsp from 'node:fs/promises'
+import path from 'node:path'
+import process from 'node:process'
+import { info, setOutput } from '@actions/core'
+import p from 'picocolors'
 import { $$ } from '..'
 
 export async function publish(options: PublishOption) {

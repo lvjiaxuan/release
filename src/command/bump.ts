@@ -1,16 +1,15 @@
+import type { BumperRecommendation } from 'conventional-recommended-bump'
+import type { AllOptions, ReleaseType } from '..'
 import fsp from 'node:fs/promises'
 import path from 'node:path'
-import { Bumper, type BumperRecommendation } from 'conventional-recommended-bump'
-import semver from 'semver'
-import prompts from 'prompts'
-import pc from 'picocolors'
+import { Bumper } from 'conventional-recommended-bump'
 import { humanId } from 'human-id'
-import type { BumpOption, CliOption, MarkdownOption, ReleaseType } from '..'
+import pc from 'picocolors'
+import prompts from 'prompts'
+import semver from 'semver'
 import { cwd, getLastGitTag, getParsedCommits, isMonorepo, packages } from '..'
 
-type Option = BumpOption & CliOption & MarkdownOption
-
-async function resolveBumpType(options: Option): Promise<BumperRecommendation & { preid?: string }> {
+async function resolveBumpType(options: AllOptions): Promise<BumperRecommendation & { preid?: string }> {
   let releaseType: ReleaseType | false = false
   ;(['major', 'minor', 'patch'] as const).forEach(i => Object.hasOwn(options, i) && (releaseType = i))
 
@@ -24,16 +23,13 @@ async function resolveBumpType(options: Option): Promise<BumperRecommendation & 
 
   if (!releaseType) {
     const bumper = new Bumper(cwd).loadPreset('conventionalcommits')
-    return await bumper.bump(commits => {
-      // options.from
-      return commits
-    })
+    return bumper.bump()
   }
 
   return { releaseType, preid, reason: 'specified' }
 }
 
-async function resolveChangedPackagesSinceLastTag(options: Option) {
+async function resolveChangedPackagesSinceLastTag(options: AllOptions) {
   const from = await getLastGitTag() ?? ''
   const to = 'HEAD'
   const commits = await getParsedCommits(from, to, Object.keys(options?.titles))
@@ -52,7 +48,7 @@ async function resolveChangedPackagesSinceLastTag(options: Option) {
   return packages.filter(pkg => changedFile.some(file => file.startsWith(path.dirname(pkg))))
 }
 
-function resolveBumpPackages(options: Option) {
+async function resolveBumpPackages(options: AllOptions) {
   if (isMonorepo && options.pkg) {
     console.log()
     return prompts({
@@ -66,10 +62,11 @@ function resolveBumpPackages(options: Option) {
   else if (!isMonorepo || options.all) {
     return packages
   }
+
   return resolveChangedPackagesSinceLastTag(options)
 }
 
-export async function bump(options: Option) {
+export async function bump(options: AllOptions) {
   console.log()
 
   const [bumpType, bumpPackages] = await Promise.all([
@@ -120,14 +117,14 @@ export async function bump(options: Option) {
   )).filter(Boolean)
 
   if (isMonorepo)
-    console.log(pc.green(`Detect as a monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages to ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}, ${bumpType.reason}:`))
+    console.log(pc.green(`Detected monorepo. Bump ${pc.bold(options.all ? 'all' : 'changed')}(${pkgsJson.length}) packages to ${pc.bold(`${bumpType.releaseType}${'preid' in bumpType ? `=${bumpType.preid}` : ''}`)}. ${bumpType.reason}:`))
   else
     console.log(pc.green('Bump result:'))
 
   console.log(pkgsJson.map(i => `* ${i!.currentVersion} → ${i!.bumpVersion} ${i!.package}`).join('\n'))
 
   if (!options.dryRun)
-    await Promise.all(pkgsJson.map(async item => await fsp.writeFile(path.resolve(options.cwd, item!.package), item!.jsonStr, 'utf-8')))
+    await Promise.all(pkgsJson.map(async item => fsp.writeFile(path.resolve(options.cwd, item!.package), item!.jsonStr, 'utf-8')))
 
   let commitTagName: string
 

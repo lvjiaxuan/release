@@ -1,17 +1,24 @@
 {
   "compilerOptions": {
-    "target": "ESNext", /* Set the JavaScript language version for emitted JavaScript and include compatible library declarations. */
-    "module": "ESNext", /* Specify what module code is generated. */
-    "moduleResolution": "Bundler", /* Specify how TypeScript looks up a file from a given module specifier. */
-    "paths": {
-      "@/*": ["./src/*"]
-    }, /* Specify a set of entries that re-map imports to additional lookup locations. */
-    "resolveJsonModule": true, /* Ensure that casing is correct in imports. */
-    "strict": true, /* Enable importing .json files. */
-
-    "esModuleInterop": true, /* Emit additional JavaScript to ease support for importing CommonJS modules. This enables 'allowSyntheticDefaultImports' for type compatibility. */
-    "forceConsistentCasingInFileNames": true, /* Enable all strict type-checking options. */
-    "skipLibCheck": true /* Skip type checking all .d.ts files. */
+    // Reference to https://bun.sh/docs/typescript#suggested-compileroptions
+    "target": "ESNext",
+    "jsx": "react-jsx",
+    "lib": ["ESNext"],
+    "moduleDetection": "force",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "allowJs": true,
+    "strict": true,
+    "noFallthroughCasesInSwitch": true,
+    "noPropertyAccessFromIndexSignature": false,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
+    "noEmit": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true
   },
-  "include": ["**/*.ts"]
+  "references": [{ "path": "./tsconfig.app.json" }, { "path": "./tsconfig.test.json" }],
+  "files": []
 }

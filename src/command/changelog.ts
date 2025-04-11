@@ -1,14 +1,14 @@
+import type { AuthorInfo, Commit } from 'changelogithub'
+import type { AllOptions } from '..'
 import fs from 'node:fs'
 import path from 'node:path'
 import process from 'node:process'
 import { notNullish } from '@antfu/utils'
+import cliProgress from 'cli-progress'
 import { ofetch } from 'ofetch'
-import type { AuthorInfo, Commit } from 'changelogithub'
 import pc from 'picocolors'
 import semver from 'semver'
-import cliProgress from 'cli-progress'
 import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
-import type { AllOption } from '..'
 
 async function resolveFormToList({ tags, from }: { tags?: string[] | number, from?: string } = { from: '' }) {
   const list: string[][] = []
@@ -50,7 +50,7 @@ async function verifyTags(tags: string[][], ignores?: (string | void)[]) {
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L50
 const globalAuthorsCache = new Map<string, AuthorInfo>()
 const globalAuthorsError = new Map<string, any>()
-async function resolveAuthorInfo(options: AllOption, info: AuthorInfo) {
+async function resolveAuthorInfo(options: AllOptions, info: AuthorInfo) {
   if (globalAuthorsCache.has(info.email))
     return globalAuthorsCache.get(info.email)!
 
@@ -68,37 +68,42 @@ async function resolveAuthorInfo(options: AllOption, info: AuthorInfo) {
   const headers: { [x: string]: string } = { accept: 'application/vnd.github+json' }
   options.token && (headers.authorization = `${options.token}`)
 
-  /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
-  try {
-    const data = await ofetch (`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
-    info.login = data.items[0].login
-  }
-  catch (e: any) {
-    globalAuthorsError.set(info.name ?? info.email, e)
-  }
+  if (options.strictAuthor) {
+    /* eslint-disable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
+    try {
+      const data = await ofetch (`https://api.github.com/search/users?q=${encodeURIComponent(info.email)}`, { headers })
+      info.login = data.items[0].login
+    }
+    catch (e: any) {
+      globalAuthorsError.set(info.name ?? info.email, e)
+    }
 
-  if (!info.login && info.commits.length && options.github) {
-    for await (const commit of info.commits) {
-      try {
-        const data = await ofetch (`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
-        info.login = data.author.login
-        globalAuthorsError.delete(info.name ?? info.email)
-        break
-      }
-      catch (e: any) {
-        globalAuthorsError.set(info.name ?? info.email, e)
-        continue
+    if (!info.login && info.commits.length && options.github) {
+      for await (const commit of info.commits) {
+        try {
+          const data = await ofetch (`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
+          info.login = data.author.login
+          globalAuthorsError.delete(info.name ?? info.email)
+          break
+        }
+        catch (e: any) {
+          globalAuthorsError.set(info.name ?? info.email, e)
+          continue
+        }
       }
     }
+    /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
   }
-  /* eslint-enable ts/no-unsafe-assignment, ts/no-unsafe-member-access */
+  else {
+    info.login = info.name
+  }
 
   globalAuthorsCache.set(info.email, info)
   return info
 }
 
 // https://github.com/antfu/changelogithub/blob/f6995c9cb4dda18a0fa21efe908a0ee6a1fc26b9/src/github.ts#L82
-async function resolveCommitAuthors(commits: Commit[], options: AllOption) {
+async function resolveCommitAuthors(commits: Commit[], options: AllOptions) {
   const map = new Map<string, AuthorInfo>()
   commits.forEach(commit => commit.resolvedAuthors = commit.authors.map((a, idx) => {
     if (!a.email || !a.name)
@@ -122,7 +127,7 @@ async function resolveCommitAuthors(commits: Commit[], options: AllOption) {
     return info
   }).filter(notNullish))
   const authors = Array.from(map.values())
-  const resolved = await Promise.all(authors.map(info => resolveAuthorInfo(options, info)))
+  const resolved = await Promise.all(authors.map(async info => resolveAuthorInfo(options, info)))
 
   const loginSet = new Set<string>()
   const nameSet = new Set<string>()
@@ -146,7 +151,7 @@ async function resolveCommitAuthors(commits: Commit[], options: AllOption) {
 async function generate({ fromToList, titleMap, options }: {
   fromToList: string[][]
   titleMap: { [x: string]: string }
-  options: AllOption
+  options: AllOptions
 }) {
   let md = '# Changelog\n\n'
   if (fromToList.length > 1)
@@ -202,7 +207,7 @@ async function generate({ fromToList, titleMap, options }: {
   return md
 }
 
-export async function changelog(options: AllOption, tagForHead?: string) {
+export async function changelog(options: AllOptions, tagForHead?: string) {
   console.log()
 
   // @ts-expect-error false if `--no-changelog`

@@ -1,8 +1,6 @@
-import type conventionalRecommendedBump from 'conventional-recommended-bump'
+export type ReleaseType = 'major' | 'minor' | 'patch' | 'prerelease' | 'premajor' | 'preminor' | 'prepatch'
 
-export type ReleaseType = conventionalRecommendedBump.Recommendation.ReleaseType | 'prerelease' | 'premajor' | 'preminor' | 'prepatch'
-
-export interface BumpOption {
+export interface BumpOptions {
   all?: boolean
   pkg?: boolean
   prompt?: boolean
@@ -15,14 +13,15 @@ export interface BumpOption {
   prerelease?: string
 }
 
-export interface ChangelogOption {
+export interface ChangelogOptions {
   tag?: string
   verbose?: boolean
   token?: string
   github?: string
+  strictAuthor?: boolean
 }
 
-export interface CliOption {
+export interface CliOptions {
   yml?: boolean
   commit?: string
   tag?: string | number
@@ -34,7 +33,7 @@ export interface CliOption {
   from?: string
 }
 
-export interface MarkdownOption {
+export interface MarkdownOptions {
   /**
    * **Optional**
    * Resolved by `git config --get remote.origin.url'` for generating a detailed CHANGELOG.md.
@@ -54,4 +53,4 @@ export interface PublishOption {
   syncCnpm?: boolean
 }
 
-export type AllOption = BumpOption & ChangelogOption & CliOption & MarkdownOption
+export type AllOptions = BumpOptions & ChangelogOptions & CliOptions & MarkdownOptions

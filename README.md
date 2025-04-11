@@ -124,6 +124,7 @@ lvr changelog --verbose
 > # .env.local
 > GITHUB_TOKEN = your-github-pat
 > ```
+> After v1.13.0, `--strict-author` options is provided to determine whether to fetch the real author information.
 
 #### Commit / Tag / Push
 

@@ -1,8 +1,8 @@
+import type { CliOptions } from '.'
 import pc from 'picocolors'
-import type { CliOption } from '.'
 import { $$ } from '.'
 
-export async function execGitJobs(options: Pick<CliOption, 'commit' | 'tag' | 'push' | 'dryRun'>, commitTagName: string) {
+export async function execGitJobs(options: Pick<CliOptions, 'commit' | 'tag' | 'push' | 'dryRun'>, commitTagName: string) {
   const { dryRun } = options
 
   console.log()
@@ -10,8 +10,8 @@ export async function execGitJobs(options: Pick<CliOption, 'commit' | 'tag' | 'p
     options.commit = options.commit.replace('{r}', commitTagName)
     console.log(pc.green('git add .'))
     !dryRun && await $$`git add .`
-    console.log(pc.green(`git commit -m "${options.commit}"`))
-    !dryRun && await $$`git commit -m ${options.commit}`
+    console.log(pc.green(`git commit -m "${options.commit}" -n`))
+    !dryRun && await $$`git commit -m ${options.commit} -n`
 
     // @ts-expect-error `no-xxx` type
     if (options.tag !== false) {

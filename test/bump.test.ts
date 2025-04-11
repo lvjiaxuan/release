@@ -1,7 +1,7 @@
 import { join } from 'node:path'
-import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { $ } from 'execa'
 import fs from 'fs-extra'
+import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 
 const fixturesDir = join(__dirname, 'fixtures')
 const singleDir = join(fixturesDir, 'singlerepo')

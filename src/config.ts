@@ -1,18 +1,18 @@
+import type { AllOptions, ChangelogOptions, CliOptions, MarkdownOptions } from '.'
 import path from 'node:path'
 import process from 'node:process'
-import { loadConfig } from 'unconfig'
 import lodashMerge from 'lodash.merge'
 import pc from 'picocolors'
+import { loadConfig } from 'unconfig'
 import { getGitHubRepo } from '.'
-import type { AllOption, ChangelogOption, CliOption, MarkdownOption } from '.'
 
 export const cwd = process.cwd()
 
-const ChangelogOptionDefaults: ChangelogOption = {
+const ChangelogOptionDefaults: ChangelogOptions = {
   // tag: '10',
 }
 
-const MarkdownOptionDefaults: MarkdownOption = {
+const MarkdownOptionDefaults: MarkdownOptions = {
   types: {
     feat: { title: '✨ Enhancements' },
     perf: { title: '⚡️ Performance' },
@@ -31,12 +31,12 @@ const MarkdownOptionDefaults: MarkdownOption = {
   titles: { breakingChanges: '💥 Breaking Changes' },
 }
 
-const CliOptionDefaults: CliOption = {
+const CliOptionDefaults: CliOptions = {
   commit: 'Release {r}',
   cwd,
 }
 
-export async function resolveConfig<T extends AllOption>(options: T) {
+export async function resolveConfig<T extends AllOptions>(options: T) {
   const config = await loadConfig<T>({
     sources: [
       // load from `lvr.xx`

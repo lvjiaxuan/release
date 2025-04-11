@@ -1,7 +1,7 @@
 import type { Reference } from 'changelogen'
 import type { Commit } from 'changelogithub'
+import type { MarkdownOptions } from './index'
 import { partition } from '@antfu/utils'
-import type { MarkdownOption } from './index'
 import { getCommitFormatTime } from './index'
 
 function groupBy<T>(items: T[], key: keyof T, groups?: Record<string, T[]>) {
@@ -53,7 +53,7 @@ function formatReferences(references: Reference[], github: string | undefined, t
   return referencesString
 }
 
-function formatLine(commit: Commit, options: MarkdownOption) {
+function formatLine(commit: Commit, options: MarkdownOptions) {
   const prRefs = formatReferences(commit.references, options.github, 'issues')
   const hashRefs = formatReferences(commit.references, options.github, 'hash')
 
@@ -76,7 +76,7 @@ function formatLine(commit: Commit, options: MarkdownOption) {
   return [commit.description, refs].filter(i => i.trim()).join(' ')
 }
 
-function formatSection(commits: Commit[], sectionName: string, options: MarkdownOption) {
+function formatSection(commits: Commit[], sectionName: string, options: MarkdownOptions) {
   if (!commits.length)
     return []
 
@@ -115,7 +115,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
   return lines
 }
 
-export async function generateMarkdown(options: MarkdownOption & {
+export async function generateMarkdown(options: MarkdownOptions & {
   parsedCommits: Commit[]
   from: string
   to: string
