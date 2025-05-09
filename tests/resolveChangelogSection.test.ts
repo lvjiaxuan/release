@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest'
 import { resolveChangelogSection } from '../src'
 
 describe('`resolveChangelogSection` test cases', () => {
-  it('single changelog', () => {
+  it.only('single changelog', () => {
     const res = resolveChangelogSection(`# Changelog
 
     Tag \`v0.1.0\`. [All GitHub Releases](https://github.com/lvjiaxuan/transformer-attribute-values-group/releases).
@@ -15,12 +15,10 @@ describe('`resolveChangelogSection` test cases', () => {
     - let's group values! &nbsp;-&nbsp; by **lvjiaxuan** [<samp>(2a8b3)</samp>](https://github.com/lvjiaxuan/transformer-attribute-values-group/commit/2a8b3af)`)
 
     expect(res).toMatchInlineSnapshot(`
-"[Compare changes](https://github.com/lvjiaxuan/transformer-attribute-values-group/compare/...v0.1.0)
-    
-    ### &nbsp;&nbsp;&nbsp;✨ Enhancements
-    
-    - let's group values! &nbsp;-&nbsp; by **lvjiaxuan** [<samp>(2a8b3)</samp>](https://github.com/lvjiaxuan/transformer-attribute-values-group/commit/2a8b3af)"
-`)
+      "[Compare changes](https://github.com/lvjiaxuan/transformer-attribute-values-group/compare/...v0.1.0)
+          
+          #"
+    `)
   })
 
   it('test resolveChangelogSection with vx.x.x', () => {

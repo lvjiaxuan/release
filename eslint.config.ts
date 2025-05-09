@@ -1,6 +1,6 @@
-import a from '@antfu/eslint-config'
+import lv from '@lvjiaxuan/eslint-config'
 
-export default a({
+export default lv({
   typescript: {
     tsconfigPath: './tsconfig.json',
     overridesTypeAware: {

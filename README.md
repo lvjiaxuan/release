@@ -5,23 +5,23 @@
 Perform jobs related to the release flows, such as:
 1. Bump version.
 2. Generate `CHANGELOG.md`.
-3. Commit / Tag / Push.
-4. Create a release and publish node packages.
+3. Do git Commit / Tag / Push.
+4. ~~Create a gh release and publish packages to npm.~~ by Github Action.
 
 ## Features
 
-1. One brief script is good to go, may be a little opinionated by default options.
+1. One brief script is good to go, maybe a little opinionated by default options.
 2. Generate a tag-ranged `CHANGELOG.md`.
 3. Publish job supports sync to cnpm.
 
 ## Usage
 
-Perform Bump :point_right: CHANGELOG :point_right: Commit :point_right: Tag :point_right: Push in one script:
+Start with Bump :point_right: CHANGELOG :point_right: Commit :point_right: Tag :point_right: Push in one script:
 ```sh
 npx lvr
 ```
 
-Use the dry run option to confirm what will be executed:
+Use the dry run option to see what will be executed:
 ```sh
 # npx lvr --dry-run
 npx lvr -d
@@ -115,7 +115,7 @@ lvr changelog --verbose
 > [!NOTE]
 > **About author**
 >
-> To be able to generate the format of `@authorName` for the interaction in the GitHub's release note, I need to fetch the GitHub Rest API. However, it occurred to me that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for an IP.
+> To generate the format of `@authorName` for the interaction in the GitHub's release note, I need to fetch the GitHub Rest API. However, it occurred to me that the API has a [rate limit](https://docs.github.com/rest/overview/resources-in-the-rest-api#rate-limiting) for an IP.
 >
 > So we have to pass a [GitHub PAT](https://github.com/settings/tokens?type=beta) by `--token` when encountering this situation 😔.
 >
@@ -124,7 +124,8 @@ lvr changelog --verbose
 > # .env.local
 > GITHUB_TOKEN = your-github-pat
 > ```
-> After v1.13.0, `--strict-author` options is provided to determine whether to fetch the real author information.
+>
+> After v1.13.0, `--strict-author`(defaults to false) option is provided to determine whether to fetch the real author information.
 
 #### Commit / Tag / Push
 
@@ -154,7 +155,7 @@ lvr --push=tag
 > [!NOTE]
 > It is not recommended to release more than one package at the same time in order to ensure a concise commit message and tag name.
 
-### Send a GitHub Release on CI
+### Send a GitHub Release bt GitHub Action
 
 See [yml.ts](./src/command/yml.ts) and modify on your own.
 
@@ -163,7 +164,7 @@ See [yml.ts](./src/command/yml.ts) and modify on your own.
 lvr yml
 ```
 
-### Publish on CI
+### Publish by Github Action
 
 See [publish.ts](./src/command/publish.ts).
 

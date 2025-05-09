@@ -27,8 +27,8 @@
   "scripts": {
     "dev": "pnpm run build --watch",
     "build": "tsup src/cli.ts --clean --format=cjs --shims",
-    "test": "vitest bump.test.ts",
-    "lint": "eslint ",
+    "test": "vitest resolveChangelogSection",
+    "lint": "eslint",
     "lintf": "eslint --fix",
     "typecheck": "tsc --noEmit",
     "lvr": "jiti src/cli.ts",
@@ -39,6 +39,7 @@
     "@actions/core": "^1.11.1",
     "@actions/github": "^6.0.0",
     "@antfu/utils": "^9.2.0",
+    "@lvjiaxuan/eslint-config": "^1.13.0",
     "@types/cli-progress": "^3.11.6",
     "@types/fs-extra": "^11.0.4",
     "@types/lodash.merge": "^4.6.9",

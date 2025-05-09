@@ -23,7 +23,7 @@ function join(array?: string[], glue = ', ', finalGlue = ' and '): string {
     return ''
 
   if (array.length === 1)
-    return array[0]
+    return array[0]!
 
   if (array.length === 2)
     return array.join(finalGlue)
@@ -90,8 +90,9 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
   let useScopeGroup = true
 
   // group scopes only when one of the scope have multiple commits
-  if (!Object.entries(scopes).some(([k, v]) => k && v.length > 1))
+  if (!Object.entries(scopes).some(([k, v]) => !!k && v.length > 1)) {
     useScopeGroup = false
+  }
 
   Object.keys(scopes).sort().forEach((scope) => {
     let padding = ''
@@ -106,7 +107,7 @@ function formatSection(commits: Commit[], sectionName: string, options: Markdown
     }
 
     lines.push(
-      ...scopes[scope]
+      ...scopes[scope]!
         .reverse()
         .map(commit => `${padding}- ${prefix}${formatLine(commit, options)}`),
     )
@@ -144,7 +145,7 @@ export async function generateMarkdown(options: MarkdownOptions & {
   for (const type of Object.keys(options.types)) {
     const items = group[type] || []
     lines.push(
-      ...formatSection(items, options.types[type].title, options),
+      ...formatSection(items, options.types[type]!.title, options),
     )
   }
 

@@ -12,32 +12,16 @@ on:
 jobs:
   release:
     permissions:
-      # Allow to create a release.
       contents: write
-      # Fetch an OpenID Connect token.
       id-token: write
     uses: lvjiaxuan/github-action-templates/.github/workflows/lvr-release.yml@main
     secrets: inherit
 
   publish:
-    uses: lvjiaxuan/github-action-templates/.github/workflows/pnpm-ni.yml@main
+    uses: lvjiaxuan/github-action-templates/.github/workflows/lvr-publish.yml@main
     with:
-      install: true
-      run_script: pnpm -r publish --access public --no-git-checks
-    secrets: inherit
-
-  cnpm_sync:
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/setup-node@v3
-        with:
-          node-version: 18
-
-      - run: npm install -g cnpm
-
-      - run: cnpm sync @lvjiaxuan/eslint-config --sync-publish
-`
+      sync_cnpm: true
+    secrets: inherit`
 
   if (dryRun) {
     console.log(yml)

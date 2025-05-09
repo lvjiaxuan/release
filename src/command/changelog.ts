@@ -11,12 +11,16 @@ import semver from 'semver'
 import { generateMarkdown, getCurrentGitBranch, getParsedCommits, getTags } from '..'
 
 async function resolveFormToList({ tags, from }: { tags?: string[] | number, from?: string } = { from: '' }) {
-  const list: string[][] = []
   const allTags = await getTags()
+  if (allTags.length === 0) {
+    return [['', 'HEAD']]
+  }
 
-  if (!tags) {
+  const list: string[][] = []
+
+  if (tags == null) {
     tags = allTags
-    tags[0] && list.unshift([from ?? '', tags[0]])
+    list.unshift([from ?? '', tags[0]!])
   }
   else if (Array.isArray(tags)) {
     const typeTags = tags
@@ -29,21 +33,22 @@ async function resolveFormToList({ tags, from }: { tags?: string[] | number, fro
       return []
   }
   else {
+    // number
     if (tags >= allTags.length)
-      list.unshift(['', allTags[0]])
+      list.unshift(['', allTags[0]!])
 
     tags = allTags.slice(-tags)
   }
 
   for (let i = 0, n = tags.length; i < n - 1; i++)
-    list.push([tags[i], tags[i + 1]])
+    list.push([tags[i]!, tags[i + 1]!])
 
   return list.reverse()
 }
 
 async function verifyTags(tags: string[][], ignores?: (string | void)[]) {
   const existTags = await getTags()
-  const flatTags = tags.flat().filter(tag => tag && !ignores?.includes(tag))
+  const flatTags = tags.flat().filter(tag => !!tag && !ignores?.includes(tag))
   return flatTags.every(tag => existTags.includes(tag))
 }
 
@@ -79,7 +84,7 @@ async function resolveAuthorInfo(options: AllOptions, info: AuthorInfo) {
     }
 
     if (!info.login && info.commits.length && options.github) {
-      for await (const commit of info.commits) {
+      for (const commit of info.commits) {
         try {
           const data = await ofetch (`https://api.github.com/repos/${options.github}/commits/${commit}`, { headers })
           info.login = data.author.login
@@ -155,12 +160,12 @@ async function generate({ fromToList, titleMap, options }: {
 }) {
   let md = '# Changelog\n\n'
   if (fromToList.length > 1)
-    md += `Tag ranges \`${fromToList[fromToList.length - 1][1]}...${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\` (${fromToList.length}).`
+    md += `Tag ranges \`${fromToList[fromToList.length - 1]![1]}...${titleMap[fromToList[0]![1]!] ? titleMap[fromToList[0]![1]!] : fromToList[0]![1]}\` (${fromToList.length}).`
   else if (fromToList.length === 1)
-    md += `Tag \`${titleMap[fromToList[0][1]] ? titleMap[fromToList[0][1]] : fromToList[0][1]}\`.`
+    md += `\`${titleMap[fromToList[0]![1]!] ? titleMap[fromToList[0]![1]!] : fromToList[0]![1]}\`.`
 
   if (options.github)
-    md += ` [All GitHub Releases](https://github.com/${options.github}/releases).`
+    md += `\n[All GitHub Releases](https://github.com/${options.github}/releases).`
 
   if (!options.verbose)
     delete options.types.__OTHER__
@@ -227,7 +232,7 @@ export async function changelog(options: AllOptions, tagForHead?: string) {
     fromToList = await resolveFormToList({ tags: from2to })
   }
   else if (Number.isInteger(-options.tag!)) {
-    // Few last few tags.
+    // A few of latest few tags.
     fromToList = await resolveFormToList({ tags: +options.tag! })
   }
   else if (semver.valid(options.tag)) {

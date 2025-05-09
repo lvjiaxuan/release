@@ -5,25 +5,19 @@ import { $$ } from '.'
 
 export const getTags = (() => {
   let cache: string[] = []
-  let promise: (() => Promise<string[]>) | undefined = void 0
 
-  if (!promise) {
-    promise = async () => {
-      if (!cache.length)
+  return async () => {
+    if (!cache.length)
+      cache = (await $$`git --no-pager tag -l --sort=creatordate`).stdout.trim().split('\n').filter(Boolean)
 
-        cache = (await $$`git --no-pager tag -l --sort=creatordate`).stdout.trim().split('\n')
-
-      return cache.filter(Boolean)
-    }
+    return cache
   }
-
-  return promise
 })()
 
 export async function getGitHubRepo() {
   try {
     const url = (await $$`git config --get remote.origin.url`).stdout.trim()
-    const match = url.match(/github\.com[/:]([\w.\-]+)\/([\w.\-]+?)(\.git)?$/i)
+    const match = url.match(/github\.com[/:]([\w.\-]+)\/([\w.\-]+?)\.git?$/i)
     if (!match) {
       console.log(`Can not parse GitHub repo from url ${pc.bgCyan(url)}`)
       return ''
@@ -60,12 +54,11 @@ export async function getCommitFormatTime(commit: string) {
   return time.stdout.trim().slice(0, 10)
 }
 
+const ConventionalCommitRegex = /(?<type>[a-z]+)(?:\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i
+const CoAuthoredByRegex = /co-authored-by: (?<name>.+?) <(?<email>.+)>/gi
+const PullRequestRegex = /\([a-z ]*(#\d+)\s*\)/g
+const IssueRE = /(#\d+)/g
 export async function getParsedCommits(from: string, to: string, types: string[]) {
-  const ConventionalCommitRegex = /(?<type>[a-z]+)(\((?<scope>.+)\))?(?<breaking>!)?: (?<description>.+)/i
-  const CoAuthoredByRegex = /Co-authored-by:\s*(?<name>.+)(<(?<email>.+)>)/gi
-  const PullRequestRE = /\([a-z ]*(#\d+)\s*\)/g
-  const IssueRE = /(#\d+)/g
-
   const rawCommits = await getGitDiff(from, to)
 
   return rawCommits.reduce((preValue, commit) => {
@@ -78,17 +71,18 @@ export async function getParsedCommits(from: string, to: string, types: string[]
 
     // Extract references from message
     const references: Reference[] = []
-    for (const m of description.matchAll(PullRequestRE))
-      references.push({ type: 'pull-request', value: m[1] })
+    for (const m of description.matchAll(PullRequestRegex))
+      references.push({ type: 'pull-request', value: m[1]! })
 
     for (const m of description.matchAll(IssueRE)) {
       if (!references.find(i => i.value === m[1]))
-        references.push({ type: 'issue', value: m[1] })
+        references.push({ type: 'issue', value: m[1]! })
     }
-    references.push({ value: commit.shortHash, type: 'hash' })
+
+    references.push({ type: 'hash', value: commit.shortHash })
 
     // Remove references and normalize
-    description = description.replace(PullRequestRE, '').trim()
+    description = description.replace(PullRequestRegex, '').trim()
 
     // Find all authors
     const authors: GitCommitAuthor[] = [commit.author]

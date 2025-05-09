@@ -10,8 +10,8 @@ const cwd = process.cwd()
 export function resolveChangelogSection(content: string) {
   try {
     content += '## v'
-    const match = content.match(/(?<notes>(?<=## (v\d+\.\d+\.\d+|[A-Za-z]+).+<\/sub>)[\s\S]+?(?=## \w))/)
-    const notes = match?.groups?.notes.trim()
+    const match = content.match(/(?<notes>(?<=## .+? <sub>.+?<\/sub>)[\s\S]+?(?=## ))/)
+    const notes = match?.groups?.notes?.trim()
     if (notes)
       return notes
   }
@@ -26,7 +26,7 @@ export function resolveChangelogSection(content: string) {
 export async function sendRelease() {
   const { CI, GITHUB_REPOSITORY: repository, GITHUB_REF_NAME: tag, GITHUB_TOKEN: token } = process.env
 
-  const [owner, repo] = repository!.split('/')
+  const [owner, repo] = repository!.split('/') as [string, string]
 
   const octokit = getOctokit(token!)
 
@@ -60,7 +60,7 @@ export async function sendRelease() {
       info(JSON.stringify(err))
       endGroup()
 
-      // eslint-disable-next-line ts/no-unsafe-member-access, ts/no-unsafe-call
+      // eslint-disable-next-line ts/no-unsafe-member-access, ts/no-unsafe-call, ts/strict-boolean-expressions
       if (err.response.status === 422 && err.response.data.errors.some((e: any) => e.code === 'already_exists')) {
         info(p.yellow(`The tag name \`${tag}\` of release already exists. So update it.\n`))
 
@@ -86,6 +86,7 @@ export async function sendRelease() {
         info(p.green(`Successfully updated a release: ${res.data.html_url} .`))
     })
     .catch((err: any) => {
+      // eslint-disable-next-line ts/strict-boolean-expressions
       if (err)
         setFailed(`Fail to release with ${err}\n`)
     })
